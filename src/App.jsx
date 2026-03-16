@@ -45,6 +45,7 @@ const AuthenticatedApp = () => {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Drivers" element={<Drivers />} />
         <Route path="/Settings" element={<Settings />} />
+        <Route path="/ImportData" element={<ImportData />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
