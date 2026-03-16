@@ -46,7 +46,7 @@ export default function Layout() {
       <div className="flex flex-1 pt-14">
         {/* Sidebar */}
         <div
-          className={`fixed left-0 top-14 h-[calc(100vh-56px)] bg-gray-900 text-white flex flex-col transition-all duration-200 overflow-hidden z-30 ${
+          className={`fixed left-0 top-14 h-screen bg-gray-900 text-white flex flex-col transition-all duration-200 overflow-y-auto z-30 ${
             sidebarExpanded ? 'w-60' : 'w-16'
           }`}
         >

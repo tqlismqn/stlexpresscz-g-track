@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight } from 'lucide-react';
+import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight, Edit2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const avatarColors = [

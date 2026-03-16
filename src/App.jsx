@@ -10,7 +10,6 @@ import Layout from '@/components/Layout';
 import Dashboard from '@/pages/Dashboard';
 import Drivers from '@/pages/Drivers';
 import Settings from '@/pages/Settings';
-import ImportData from '@/pages/ImportData';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -45,7 +44,6 @@ const AuthenticatedApp = () => {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Drivers" element={<Drivers />} />
         <Route path="/Settings" element={<Settings />} />
-        <Route path="/ImportData" element={<ImportData />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
