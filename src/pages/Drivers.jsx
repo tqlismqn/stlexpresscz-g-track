@@ -70,11 +70,11 @@ export default function Drivers() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full px-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Водители</h1>
 
         <div className="flex gap-6">
-          <div className="flex-1">
+          <div className="w-[45%] min-w-0">
             <DriverFilters filters={filters} setFilters={setFilters} />
             <DriverList
               drivers={filteredDrivers}
@@ -84,7 +84,7 @@ export default function Drivers() {
               isLoading={isLoading}
             />
           </div>
-          <div className="w-96">
+          <div className="w-[55%] min-w-0">
             <DriverDetail
               driver={selectedDriver}
               editMode={editMode}
