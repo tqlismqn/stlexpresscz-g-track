@@ -1,0 +1,94 @@
+import React, { useEffect, useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import StatCard from '@/components/dashboard/StatCard';
+import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWidget';
+import ReadinessChart from '@/components/dashboard/ReadinessChart';
+import { Users, AlertCircle, Clock, XCircle } from 'lucide-react';
+
+export default function Dashboard() {
+  const [stats, setStats] = useState({
+    activeDrivers: 0,
+    readyDrivers: 0,
+    expiringDocs: 0,
+    expiredDocs: 0
+  });
+  const [drivers, setDrivers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const driversList = await base44.entities.Driver.list();
+        setDrivers(driversList);
+
+        const docsList = await base44.entities.DriverDocument.list();
+
+        const activeCount = driversList.filter(d => d.status === 'active').length;
+        const readyCount = driversList.filter(d => d.trip_readiness_pct === 100).length;
+        const expiringCount = docsList.filter(d => d.status === 'expiring').length;
+        const expiredCount = docsList.filter(d => d.status === 'expired').length;
+
+        setStats({
+          activeDrivers: activeCount,
+          readyDrivers: readyCount,
+          expiringDocs: expiringCount,
+          expiredDocs: expiredCount
+        });
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <div className="p-8 text-center">Загрузка...</div>;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Панель</h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatCard
+            title="Активных водителей"
+            value={stats.activeDrivers}
+            icon={Users}
+            color="blue"
+          />
+          <StatCard
+            title="Готовы к рейсу"
+            value={stats.readyDrivers}
+            icon={AlertCircle}
+            color="green"
+          />
+          <StatCard
+            title="Истекающие документы"
+            value={stats.expiringDocs}
+            icon={Clock}
+            color="orange"
+          />
+          <StatCard
+            title="Просроченные"
+            value={stats.expiredDocs}
+            icon={XCircle}
+            color="red"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <ExpiringDocumentsWidget />
+          </div>
+          <div>
+            <ReadinessChart drivers={drivers} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
