@@ -371,9 +371,12 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Bulk create documents
+    // Bulk create documents in chunks
     if (driverDocuments.length > 0) {
-      await base44.asServiceRole.entities.DriverDocument.bulkCreate(driverDocuments);
+      for (let i = 0; i < driverDocuments.length; i += chunkSize) {
+        const chunk = driverDocuments.slice(i, i + chunkSize);
+        await base44.asServiceRole.entities.DriverDocument.bulkCreate(chunk);
+      }
     }
 
     // Compute document statuses and driver readiness
