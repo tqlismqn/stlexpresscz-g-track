@@ -7,7 +7,7 @@ export default function DriverList({ drivers, documents, selectedDriver, onSelec
   }
 
   return (
-    <div className="bg-white rounded-lg shadow divide-y overflow-y-auto" style={{ height: 'calc(100vh - 224px)' }}>
+    <div className="bg-white rounded-lg shadow divide-y overflow-y-auto h-full">
       {drivers.length === 0 ? (
         <div className="p-6 text-center text-gray-500">Водители не найдены</div>
       ) : (
