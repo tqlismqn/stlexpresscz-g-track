@@ -34,7 +34,7 @@ export default function ImportData() {
       // Call the import function with CSV data
       const response = await base44.functions.invoke('importDriversCSV', { csv: text });
       
-      setMessage(`✓ Successfully imported ${response.data.drivers_created} drivers and ${response.data.documents_created} documents`);
+      setMessage(`✓ ${response.data.message}`);
       setFile(null);
     } catch (err) {
       setError(`Import failed: ${err.response?.data?.error || err.message}`);
