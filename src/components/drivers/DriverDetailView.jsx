@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText } from 'lucide-react';
+import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight } from 'lucide-react';
 
 const avatarColors = [
   'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-amber-500',
@@ -73,8 +73,17 @@ const requiredEU = [
 const optional = ['adr_certificate', 'chip_card', 'code95'];
 
 export default function DriverDetailView({ driver, documents = [] }) {
+  const [expandedSections, setExpandedSections] = useState({
+    bankDetails: false,
+    additionalData: false
+  });
+
   const readinessPct = driver?.trip_readiness_pct || 0;
   const isNonEU = driver?.nationality_group === 'non-EU';
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
 
   const getDaysLeft = (expiryDate) => {
     if (!expiryDate) return null;
@@ -273,6 +282,80 @@ export default function DriverDetailView({ driver, documents = [] }) {
               </div>
             )}
           </div>
+        </div>
+
+        {/* SECTION 3: Банковские реквизиты */}
+        <div className="border-t">
+          <button
+            onClick={() => toggleSection('bankDetails')}
+            className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          >
+            <h4 className="font-semibold text-gray-900 text-sm">Банковские реквизиты</h4>
+            <ChevronRight
+              className={`w-4 h-4 text-gray-400 transition-transform ${
+                expandedSections.bankDetails ? 'rotate-90' : ''
+              }`}
+            />
+          </button>
+          {expandedSections.bankDetails && (
+            <div className="px-4 pb-4 space-y-3 text-sm bg-gray-50 border-t">
+              <div>
+                <p className="text-xs text-gray-600 mb-0.5">Банк</p>
+                <p className="font-medium text-gray-900">{driver?.bank_name || '—'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 mb-0.5">Счёт / IBAN</p>
+                <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* SECTION 4: Дополнительные данные */}
+        <div className="border-t">
+          <button
+            onClick={() => toggleSection('additionalData')}
+            className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          >
+            <h4 className="font-semibold text-gray-900 text-sm">Дополнительные данные</h4>
+            <ChevronRight
+              className={`w-4 h-4 text-gray-400 transition-transform ${
+                expandedSections.additionalData ? 'rotate-90' : ''
+              }`}
+            />
+          </button>
+          {expandedSections.additionalData && (
+            <div className="px-4 pb-4 space-y-3 text-sm bg-gray-50 border-t">
+              <div>
+                <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
+                <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 mb-0.5">Номер паспорта</p>
+                <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 mb-0.5">Номер ВУ</p>
+                <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
+                <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
+              </div>
+              {driver?.status === 'inactive' && (
+                <>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
+                    <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Причина увольнения</p>
+                    <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
