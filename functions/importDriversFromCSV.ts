@@ -145,8 +145,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No valid drivers found in CSV' }, { status: 400 });
     }
 
-    // Bulk create drivers
-    const createdDrivers = await base44.asServiceRole.entities.Driver.bulkCreate(drivers);
+    // Bulk create drivers in chunks to avoid timeout
+    const chunkSize = 100;
+    const createdDrivers = [];
+    for (let i = 0; i < drivers.length; i += chunkSize) {
+      const chunk = drivers.slice(i, i + chunkSize);
+      const result = await base44.asServiceRole.entities.Driver.bulkCreate(chunk);
+      createdDrivers.push(...result);
+    }
     
     // Now create DriverDocument records
     for (let i = 1; i < lines.length; i++) {
