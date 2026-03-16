@@ -2,10 +2,12 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 const visaTypeMap = {
   'Povoleni k pobytu': 'povoleni_k_pobytu',
+  'Povoleni k pobytu': 'povoleni_k_pobytu',
   'Vizum': 'vizum',
   'Dočasná ochrana': 'docasna_ochrana',
   'Trvaly pobyt': 'trvaly_pobyt',
   'Vízum strpění': 'vizum_strpeni',
+  'Vizum strpení': 'vizum_strpeni',
   'Trvaly pobyt -Dočasná ochrana': 'trvaly_pobyt'
 };
 
