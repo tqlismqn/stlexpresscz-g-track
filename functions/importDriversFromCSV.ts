@@ -55,7 +55,17 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Company STL Express not found' }, { status: 400 });
     }
 
-    const csvData = await req.text();
+    let csvData;
+    if (req.method === 'POST' && req.headers.get('content-type')?.includes('application/json')) {
+      const body = await req.json();
+      csvData = body.csv;
+    } else {
+      csvData = await req.text();
+    }
+    
+    if (!csvData) {
+      return Response.json({ error: 'CSV data not provided' }, { status: 400 });
+    }
     const lines = csvData.trim().split('\n');
     const headers = lines[0].split(',').map(h => h.trim());
     
