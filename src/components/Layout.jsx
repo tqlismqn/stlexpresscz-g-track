@@ -22,24 +22,24 @@ export default function Layout() {
   return (
     <div className="flex flex-col h-screen">
       {/* Top Bar */}
-      <div className="fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 flex items-center px-6 z-40">
+      <div className="fixed top-0 left-0 right-0 h-14 bg-gray-900 border-b border-gray-800 flex items-center px-6 z-40">
         <button
           onClick={() => setSidebarExpanded(!sidebarExpanded)}
-          className="text-gray-700 hover:text-gray-900 mr-4"
+          className="text-gray-300 hover:text-white mr-4"
         >
           <Menu className="w-6 h-6" />
         </button>
         
         <div className="flex-1">
-          <h1 className="text-lg font-bold text-gray-900">G-Track TMS</h1>
-          <p className="text-xs text-gray-500">STL Express</p>
+          <h1 className="text-lg font-bold text-white">G-Track TMS</h1>
+          <p className="text-xs text-gray-400">STL Express</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-            <span className="text-sm font-semibold text-gray-700">AD</span>
+          <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+            <span className="text-sm font-semibold text-white">AD</span>
           </div>
-          <span className="text-sm text-gray-700">Admin</span>
+          <span className="text-sm text-gray-300">Admin</span>
         </div>
       </div>
 

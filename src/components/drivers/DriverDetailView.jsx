@@ -150,7 +150,7 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
   }, [documents, isNonEU]);
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col bg-white">
       {/* HEADER */}
       <div className="p-4 border-b bg-gray-50">
         <div className="flex items-start gap-4">
@@ -291,7 +291,7 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
               {/* Additional Data - Always Visible */}
               <div className="p-4 border-t">
                 <h4 className="font-semibold text-gray-900 mb-3 text-sm">Дополнительные данные</h4>
-                <div className="space-y-3 text-sm">
+                <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
                     <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
