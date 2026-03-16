@@ -100,18 +100,21 @@ Deno.serve(async (req) => {
         row[header] = values[idx] || '';
       });
 
+      // Skip rows with no name or very incomplete data
+      if (!row.driver_name || row.driver_name.toLowerCase() === 'nenastupil') continue;
+
       // Create driver record
       const driver = {
         name: row.driver_name,
         company_id: stlExpress.id,
         status: row.driver_status === 'active' ? 'active' : 'inactive',
-        nationality_group: row.nationality_group,
-        date_of_birth: row.date_of_birth || null,
+        nationality_group: row.nationality_group === 'EU' ? 'EU' : 'non-EU',
+        date_of_birth: (row.date_of_birth && isValidDate(row.date_of_birth)) ? row.date_of_birth : null,
         phone: row.phone || null,
         email: row.email || null,
         passport_number: row.passport_number || null,
         driving_license_number: row.driving_license_number || null,
-        rodne_cislo: row.rodne_cislo || null,
+        rodne_cislo: (row.nationality_group === 'non-EU' && row.rodne_cislo) ? row.rodne_cislo : null,
         address: row.propiska_address || null,
         bank_name: row.bank || null,
         bank_account: row.iban || null,
@@ -121,14 +124,18 @@ Deno.serve(async (req) => {
       // Handle fired dates
       if (row.fired_date && isValidDate(row.fired_date)) {
         driver.fired_date = row.fired_date;
+        driver.status = 'inactive';
       }
       if (row.fired_reason) {
         driver.fired_reason = row.fired_reason;
       }
 
       // Handle visa type
-      if (row.visa_type && visaTypeMap[row.visa_type]) {
-        driver.visa_type = visaTypeMap[row.visa_type];
+      if (row.visa_type) {
+        const mappedVisa = visaTypeMap[row.visa_type.trim()];
+        if (mappedVisa) {
+          driver.visa_type = mappedVisa;
+        }
       }
 
       drivers.push(driver);
