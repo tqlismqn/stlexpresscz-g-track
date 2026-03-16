@@ -3,7 +3,6 @@ import { base44 } from '@/api/base44Client';
 import { Edit2, Plus } from 'lucide-react';
 import DriverDetailView from './DriverDetailView';
 import DriverDetailEdit from './DriverDetailEdit';
-import DriverDocumentsSection from './DriverDocumentsSection';
 
 export default function DriverDetail({ driver, editMode, onEditModeChange, onSave, documents }) {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -42,21 +41,13 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden h-[calc(100vh-200px)] flex flex-col">
-      <div className="p-6 border-b">
-        <div className="flex justify-between items-start mb-4">
+      {editMode && (
+        <div className="p-6 border-b flex justify-between items-start">
           <h3 className="text-lg font-bold text-gray-900">{driver?.name}</h3>
-          {!editMode && (
-            <button
-              onClick={() => onEditModeChange(true)}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-            >
-              <Edit2 className="w-4 h-4" />
-              Изменить
-            </button>
-          )}
         </div>
-
-        {editMode ? (
+      )}
+      {editMode ? (
+        <div className="p-6 overflow-y-auto flex-1">
           <DriverDetailEdit
             driver={driver}
             onSave={async () => {
@@ -65,15 +56,22 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
             }}
             onCancel={() => onEditModeChange(false)}
           />
-        ) : (
-          <DriverDetailView driver={driver} />
-        )}
-      </div>
-
-      {!editMode && (
-        <div className="flex-1 overflow-y-auto">
-          <DriverDocumentsSection documents={documents} driver={driver} />
         </div>
+      ) : (
+        <>
+          {!editMode && (
+            <div className="absolute top-2 right-2 z-10">
+              <button
+                onClick={() => onEditModeChange(true)}
+                className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+              >
+                <Edit2 className="w-4 h-4" />
+                Изменить
+              </button>
+            </div>
+          )}
+          <DriverDetailView driver={driver} documents={documents} />
+        </>
       )}
     </div>
   );
