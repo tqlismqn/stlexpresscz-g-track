@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const avatarColors = [
   'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-amber-500',
@@ -171,93 +172,153 @@ export default function DriverDetailView({ driver, documents = [] }) {
         </div>
       </div>
 
-      {/* CONTENT */}
-      <div className="flex-1 overflow-y-auto divide-y divide-gray-200">
-        {/* SECTION 1: Основная информация */}
-        <div className="p-4">
-          <h4 className="font-semibold text-gray-900 mb-3 text-sm">Основная информация</h4>
-          <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Имя</p>
-              <p className="font-medium text-gray-900">{driver?.name || '-'}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Статус</p>
-              <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
-                {driver?.status === 'active' ? 'Активный' : 'Неактивный'}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Национальность</p>
-              <p className="font-medium text-gray-900">{driver?.nationality_group === 'EU' ? 'ЕС' : 'Не-ЕС'}</p>
-            </div>
-            {isNonEU && (
-              <div>
-                <p className="text-xs text-gray-600 mb-0.5">Тип визы</p>
-                <p className="font-medium text-gray-900">{visaTypeMap[driver?.visa_type] || '-'}</p>
-              </div>
-            )}
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Дата рождения</p>
-              <p className="font-medium text-gray-900">{driver?.date_of_birth || '-'}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Телефон</p>
-              <p className="font-medium text-gray-900">{driver?.phone || '-'}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Email</p>
-              <p className="font-medium text-gray-900">{driver?.email || '-'}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Место работы</p>
-              <p className="font-medium text-gray-900">{mistoVykonuPraceMap[driver?.misto_vykonu_prace] || '-'}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-600 mb-0.5">Pas souhlas</p>
-              <p className="font-medium text-gray-900">{driver?.pas_souhlas ? '✓' : '✗'}</p>
-            </div>
-          </div>
-        </div>
+      {/* TABS */}
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <Tabs defaultValue="overview" className="flex-1 flex flex-col">
+          <TabsList className="w-full justify-start border-b bg-transparent p-0 rounded-none h-auto">
+            <TabsTrigger value="overview" className="rounded-none">Обзор</TabsTrigger>
+            <TabsTrigger value="documents" className="rounded-none">Документы</TabsTrigger>
+            <TabsTrigger value="comments" className="rounded-none">Комментарии</TabsTrigger>
+            <TabsTrigger value="history" className="rounded-none">История</TabsTrigger>
+          </TabsList>
 
-        {/* SECTION 2: Документы */}
-        <div className="p-4">
-          <h4 className="font-semibold text-gray-900 mb-3 text-sm">Документы</h4>
-          <div className="space-y-4">
-            {/* Required */}
-            <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Обязательные</p>
-              <div className="space-y-2">
-                {categorizedDocuments.required.map(({ type, label, doc, status }) => (
-                  <div key={type} className="flex items-center gap-2 text-xs text-gray-800 bg-gray-50 p-2 rounded">
-                    <div className="flex-shrink-0">{documentStatusIcons[status]}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium">{label}</p>
-                      <p className="text-gray-600">
-                        {doc?.document_number ? `№${doc.document_number}` : '—'}
-                        {doc?.issue_date && ` | ${format(new Date(doc.issue_date), 'dd.MM.yyyy', { locale: ru })}`}
-                        {doc?.expiry_date && ` → ${format(new Date(doc.expiry_date), 'dd.MM.yyyy', { locale: ru })}`}
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0 text-right">
-                      {doc?.expiry_date && (
-                        <p className={`text-xs font-medium ${status === 'expiring' ? 'text-amber-600' : status === 'expired' ? 'text-red-600' : 'text-gray-500'}`}>
-                          {getDaysLeft(doc.expiry_date)}
-                        </p>
-                      )}
-                      {doc?.file_url && <FileText className="w-3 h-3 text-blue-500 mt-1" />}
-                    </div>
+          {/* TAB 1: Обзор (Overview) */}
+          <TabsContent value="overview" className="flex-1 overflow-y-auto p-0">
+            <div className="divide-y divide-gray-200">
+              {/* Basic Info */}
+              <div className="p-4">
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm">Основная информация</h4>
+                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Имя</p>
+                    <p className="font-medium text-gray-900">{driver?.name || '-'}</p>
                   </div>
-                ))}
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Статус</p>
+                    <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
+                      {driver?.status === 'active' ? 'Активный' : 'Неактивный'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Национальность</p>
+                    <p className="font-medium text-gray-900">{driver?.nationality_group === 'EU' ? 'ЕС' : 'Не-ЕС'}</p>
+                  </div>
+                  {isNonEU && (
+                    <div>
+                      <p className="text-xs text-gray-600 mb-0.5">Тип визы</p>
+                      <p className="font-medium text-gray-900">{visaTypeMap[driver?.visa_type] || '-'}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Дата рождения</p>
+                    <p className="font-medium text-gray-900">{driver?.date_of_birth || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Телефон</p>
+                    <p className="font-medium text-gray-900">{driver?.phone || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Email</p>
+                    <p className="font-medium text-gray-900">{driver?.email || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Место работы</p>
+                    <p className="font-medium text-gray-900">{mistoVykonuPraceMap[driver?.misto_vykonu_prace] || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Pas souhlas</p>
+                    <p className="font-medium text-gray-900">{driver?.pas_souhlas ? '✓' : '✗'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Document Summary */}
+              <div className="p-4">
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm">Сводка документов</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {categorizedDocuments.required.map(({ type, label, status }) => (
+                    <div key={type} className="flex items-center gap-2 text-xs">
+                      <div className="flex-shrink-0 text-lg">
+                        {status === 'valid' && '●'}
+                        {status === 'expiring' && '⚠'}
+                        {status === 'expired' && '✗'}
+                        {status === 'missing' && '—'}
+                      </div>
+                      <span className={`text-gray-900 ${
+                        status === 'valid' ? 'text-green-600' :
+                        status === 'expiring' ? 'text-amber-600' :
+                        status === 'expired' ? 'text-red-600' : 'text-gray-400'
+                      }`}>{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Additional Data Collapsible */}
+              <div className="border-t">
+                <button
+                  onClick={() => toggleSection('additionalData')}
+                  className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                >
+                  <h4 className="font-semibold text-gray-900 text-sm">Дополнительные данные</h4>
+                  <ChevronRight
+                    className={`w-4 h-4 text-gray-400 transition-transform ${
+                      expandedSections.additionalData ? 'rotate-90' : ''
+                    }`}
+                  />
+                </button>
+                {expandedSections.additionalData && (
+                  <div className="px-4 pb-4 space-y-3 text-sm bg-gray-50 border-t">
+                    <div>
+                      <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
+                      <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600 mb-0.5">Номер паспорта</p>
+                      <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600 mb-0.5">Номер ВУ</p>
+                      <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
+                      <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600 mb-0.5">Банк</p>
+                      <p className="font-medium text-gray-900">{driver?.bank_name || '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-600 mb-0.5">Счёт / IBAN</p>
+                      <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
+                    </div>
+                    {driver?.status === 'inactive' && (
+                      <>
+                        <div>
+                          <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
+                          <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-600 mb-0.5">Причина увольнения</p>
+                          <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
+          </TabsContent>
 
-            {/* Optional */}
-            {categorizedDocuments.optional.length > 0 && (
+          {/* TAB 2: Документы (Documents) */}
+          <TabsContent value="documents" className="flex-1 overflow-y-auto p-4">
+            <div className="space-y-4">
+              {/* Required */}
               <div>
-                <p className="text-xs font-semibold text-gray-700 mb-2">Дополнительные</p>
+                <p className="text-xs font-semibold text-gray-700 mb-2">Обязательные</p>
                 <div className="space-y-2">
-                  {categorizedDocuments.optional.map(({ type, label, doc, status }) => (
+                  {categorizedDocuments.required.map(({ type, label, doc, status }) => (
                     <div key={type} className="flex items-center gap-2 text-xs text-gray-800 bg-gray-50 p-2 rounded">
                       <div className="flex-shrink-0">{documentStatusIcons[status]}</div>
                       <div className="flex-1 min-w-0">
@@ -280,83 +341,55 @@ export default function DriverDetailView({ driver, documents = [] }) {
                   ))}
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* SECTION 3: Банковские реквизиты */}
-        <div className="border-t">
-          <button
-            onClick={() => toggleSection('bankDetails')}
-            className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-          >
-            <h4 className="font-semibold text-gray-900 text-sm">Банковские реквизиты</h4>
-            <ChevronRight
-              className={`w-4 h-4 text-gray-400 transition-transform ${
-                expandedSections.bankDetails ? 'rotate-90' : ''
-              }`}
-            />
-          </button>
-          {expandedSections.bankDetails && (
-            <div className="px-4 pb-4 space-y-3 text-sm bg-gray-50 border-t">
-              <div>
-                <p className="text-xs text-gray-600 mb-0.5">Банк</p>
-                <p className="font-medium text-gray-900">{driver?.bank_name || '—'}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-600 mb-0.5">Счёт / IBAN</p>
-                <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* SECTION 4: Дополнительные данные */}
-        <div className="border-t">
-          <button
-            onClick={() => toggleSection('additionalData')}
-            className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-          >
-            <h4 className="font-semibold text-gray-900 text-sm">Дополнительные данные</h4>
-            <ChevronRight
-              className={`w-4 h-4 text-gray-400 transition-transform ${
-                expandedSections.additionalData ? 'rotate-90' : ''
-              }`}
-            />
-          </button>
-          {expandedSections.additionalData && (
-            <div className="px-4 pb-4 space-y-3 text-sm bg-gray-50 border-t">
-              <div>
-                <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
-                <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-600 mb-0.5">Номер паспорта</p>
-                <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-600 mb-0.5">Номер ВУ</p>
-                <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
-                <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
-              </div>
-              {driver?.status === 'inactive' && (
-                <>
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
-                    <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
+              {/* Optional */}
+              {categorizedDocuments.optional.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-700 mb-2">Дополнительные</p>
+                  <div className="space-y-2">
+                    {categorizedDocuments.optional.map(({ type, label, doc, status }) => (
+                      <div key={type} className="flex items-center gap-2 text-xs text-gray-800 bg-gray-50 p-2 rounded">
+                        <div className="flex-shrink-0">{documentStatusIcons[status]}</div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium">{label}</p>
+                          <p className="text-gray-600">
+                            {doc?.document_number ? `№${doc.document_number}` : '—'}
+                            {doc?.issue_date && ` | ${format(new Date(doc.issue_date), 'dd.MM.yyyy', { locale: ru })}`}
+                            {doc?.expiry_date && ` → ${format(new Date(doc.expiry_date), 'dd.MM.yyyy', { locale: ru })}`}
+                          </p>
+                        </div>
+                        <div className="flex-shrink-0 text-right">
+                          {doc?.expiry_date && (
+                            <p className={`text-xs font-medium ${status === 'expiring' ? 'text-amber-600' : status === 'expired' ? 'text-red-600' : 'text-gray-500'}`}>
+                              {getDaysLeft(doc.expiry_date)}
+                            </p>
+                          )}
+                          {doc?.file_url && <FileText className="w-3 h-3 text-blue-500 mt-1" />}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Причина увольнения</p>
-                    <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
-                  </div>
-                </>
+                </div>
               )}
             </div>
-          )}
-        </div>
+          </TabsContent>
+
+          {/* TAB 3: Комментарии (Comments) */}
+          <TabsContent value="comments" className="flex-1 overflow-y-auto p-4">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">Комментарии и заметки</h4>
+              <p className="text-sm text-gray-500">Пока нет записей.</p>
+            </div>
+          </TabsContent>
+
+          {/* TAB 4: История (History) */}
+          <TabsContent value="history" className="flex-1 overflow-y-auto p-4">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">История изменений</h4>
+              <p className="text-sm text-gray-500">Пока нет записей.</p>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
