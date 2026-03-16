@@ -1,0 +1,84 @@
+import React, { useEffect, useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { Clock } from 'lucide-react';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
+
+const docTypeLabels = {
+  work_contract: 'Трудовой договор',
+  transport_licence: 'Лицензия на транспорт',
+  a1_certificate: 'Сертификат A1',
+  declaration: 'Декларация',
+  insurance: 'Страховка',
+  travel_insurance: 'Путешественческая страховка',
+  visa: 'Виза',
+  passport: 'Паспорт',
+  driver_license: 'Водительское удостоверение',
+  medical_certificate: 'Медицинское свидетельство',
+  psihotest: 'Психотест',
+  adr_certificate: 'Сертификат ADR',
+  chip_card: 'Чип-карта',
+  code95: 'Код 95'
+};
+
+export default function ExpiringDocumentsWidget() {
+  const [expiringDocs, setExpiringDocs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const docs = await base44.entities.DriverDocument.list();
+        const drivers = await base44.entities.Driver.list();
+        const driverMap = new Map(drivers.map(d => [d.id, d]));
+
+        const expiring = docs
+          .filter(d => d.status === 'expiring')
+          .map(d => ({
+            ...d,
+            driverName: driverMap.get(d.driver_id)?.name || 'Unknown'
+          }))
+          .sort((a, b) => new Date(a.expiry_date) - new Date(b.expiry_date))
+          .slice(0, 10);
+
+        setExpiringDocs(expiring);
+      } catch (error) {
+        console.error('Error loading expiring documents:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <div className="bg-white rounded-lg shadow p-6">Загрузка...</div>;
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <Clock className="w-5 h-5 text-orange-600" />
+        <h2 className="text-lg font-bold text-gray-900">Истекающие документы</h2>
+      </div>
+      <div className="space-y-3">
+        {expiringDocs.length === 0 ? (
+          <p className="text-gray-500 text-sm">Нет истекающих документов</p>
+        ) : (
+          expiringDocs.map(doc => (
+            <div key={doc.id} className="flex justify-between items-center p-3 bg-orange-50 rounded border border-orange-200">
+              <div>
+                <p className="font-medium text-gray-900">{doc.driverName}</p>
+                <p className="text-sm text-gray-600">{docTypeLabels[doc.document_type]}</p>
+              </div>
+              <p className="text-sm font-medium text-orange-600">
+                {doc.expiry_date ? format(new Date(doc.expiry_date), 'd MMM', { locale: ru }) : 'N/A'}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
