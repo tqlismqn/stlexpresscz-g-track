@@ -10,6 +10,7 @@ import Layout from '@/components/Layout';
 import Dashboard from '@/pages/Dashboard';
 import Drivers from '@/pages/Drivers';
 import Settings from '@/pages/Settings';
+import ImportData from '@/pages/ImportData';
 // Add page imports here
 
 const AuthenticatedApp = () => {
