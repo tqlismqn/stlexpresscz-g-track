@@ -73,6 +73,40 @@ const requiredEU = [
 
 const optional = ['adr_certificate', 'chip_card', 'code95'];
 
+const documentAbbreviations = {
+  work_contract: 'CON',
+  transport_licence: 'LIC',
+  a1_certificate: 'A1',
+  declaration: 'DEC',
+  insurance: 'INS',
+  travel_insurance: 'TIN',
+  visa: 'VISA',
+  passport: 'PAS',
+  driver_license: 'DL',
+  medical_certificate: 'MED',
+  psihotest: 'PSI',
+  adr_certificate: 'ADR',
+  chip_card: 'CHIP',
+  code95: 'C95'
+};
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'valid':
+      return 'text-green-500';
+    case 'expiring':
+      return 'text-amber-500';
+    case 'expired':
+      return 'text-red-500';
+    case 'pending_renewal':
+      return 'text-blue-500';
+    case 'missing':
+      return 'text-gray-400';
+    default:
+      return 'text-gray-400';
+  }
+};
+
 export default function DriverDetailView({ driver, documents = [] }) {
   const [expandedSections, setExpandedSections] = useState({
     bankDetails: false,
@@ -201,7 +235,7 @@ export default function DriverDetailView({ driver, documents = [] }) {
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Национальность</p>
-                    <p className="font-medium text-gray-900">{driver?.nationality_group === 'EU' ? 'ЕС' : 'Не-ЕС'}</p>
+                    <p className="font-medium text-gray-900">{driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}</p>
                   </div>
                   {isNonEU && (
                     <div>
@@ -238,75 +272,54 @@ export default function DriverDetailView({ driver, documents = [] }) {
                 <div className="grid grid-cols-2 gap-2">
                   {categorizedDocuments.required.map(({ type, label, status }) => (
                     <div key={type} className="flex items-center gap-2 text-xs">
-                      <div className="flex-shrink-0 text-lg">
-                        {status === 'valid' && '●'}
-                        {status === 'expiring' && '⚠'}
-                        {status === 'expired' && '✗'}
-                        {status === 'missing' && '—'}
-                      </div>
-                      <span className={`text-gray-900 ${
-                        status === 'valid' ? 'text-green-600' :
-                        status === 'expiring' ? 'text-amber-600' :
-                        status === 'expired' ? 'text-red-600' : 'text-gray-400'
-                      }`}>{label}</span>
+                      <div className={`flex-shrink-0 text-lg font-bold ${getStatusColor(status)}`}>●</div>
+                      <span className="text-gray-900">{label} ({documentAbbreviations[type]})</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Additional Data Collapsible */}
-              <div className="border-t">
-                <button
-                  onClick={() => toggleSection('additionalData')}
-                  className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-                >
-                  <h4 className="font-semibold text-gray-900 text-sm">Дополнительные данные</h4>
-                  <ChevronRight
-                    className={`w-4 h-4 text-gray-400 transition-transform ${
-                      expandedSections.additionalData ? 'rotate-90' : ''
-                    }`}
-                  />
-                </button>
-                {expandedSections.additionalData && (
-                  <div className="px-4 pb-4 space-y-3 text-sm bg-gray-50 border-t">
-                    <div>
-                      <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
-                      <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600 mb-0.5">Номер паспорта</p>
-                      <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600 mb-0.5">Номер ВУ</p>
-                      <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
-                      <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600 mb-0.5">Банк</p>
-                      <p className="font-medium text-gray-900">{driver?.bank_name || '—'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600 mb-0.5">Счёт / IBAN</p>
-                      <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
-                    </div>
-                    {driver?.status === 'inactive' && (
-                      <>
-                        <div>
-                          <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
-                          <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-600 mb-0.5">Причина увольнения</p>
-                          <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
-                        </div>
-                      </>
-                    )}
+              {/* Additional Data - Always Visible */}
+              <div className="p-4 border-t">
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm">Дополнительные данные</h4>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
+                    <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
                   </div>
-                )}
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Номер паспорта</p>
+                    <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Номер ВУ</p>
+                    <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
+                    <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Банк</p>
+                    <p className="font-medium text-gray-900">{driver?.bank_name || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-0.5">Счёт / IBAN</p>
+                    <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
+                  </div>
+                  {driver?.status === 'inactive' && (
+                    <>
+                      <div>
+                        <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
+                        <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-600 mb-0.5">Причина увольнения</p>
+                        <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </TabsContent>
