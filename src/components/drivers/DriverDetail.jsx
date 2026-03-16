@@ -9,7 +9,7 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
 
   if (!driver && !showCreateForm) {
     return (
-      <div className="bg-white rounded-lg shadow p-6 h-[calc(100vh-200px)] flex flex-col items-center justify-center">
+      <div className="bg-white rounded-lg shadow p-6 h-full flex flex-col items-center justify-center overflow-y-auto">
         <p className="text-gray-500">Выберите водителя или создайте нового</p>
         <button
           onClick={() => setShowCreateForm(true)}
@@ -40,10 +40,22 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden h-[calc(100vh-200px)] flex flex-col">
+    <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col">
       {editMode && (
         <div className="p-6 border-b flex justify-between items-start">
           <h3 className="text-lg font-bold text-gray-900">{driver?.name}</h3>
+        </div>
+      )}
+      {!editMode && (
+        <div className="p-4 border-b flex items-center justify-between">
+          <h3 className="text-lg font-bold text-gray-900">{driver?.name}</h3>
+          <button
+            onClick={() => onEditModeChange(true)}
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+          >
+            <Edit2 className="w-4 h-4" />
+            Изменить
+          </button>
         </div>
       )}
       {editMode ? (
@@ -58,20 +70,7 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
           />
         </div>
       ) : (
-        <>
-          {!editMode && (
-            <div className="absolute top-2 right-2 z-10">
-              <button
-                onClick={() => onEditModeChange(true)}
-                className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-              >
-                <Edit2 className="w-4 h-4" />
-                Изменить
-              </button>
-            </div>
-          )}
-          <DriverDetailView driver={driver} documents={documents} />
-        </>
+        <DriverDetailView driver={driver} documents={documents} />
       )}
     </div>
   );

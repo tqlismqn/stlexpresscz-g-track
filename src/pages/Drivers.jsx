@@ -69,30 +69,37 @@ export default function Drivers() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="w-full px-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Водители</h1>
+    <div className="h-screen flex flex-col">
+      {/* Sticky header + filters */}
+      <div className="sticky top-0 z-20 bg-white border-b border-gray-200">
+        <div className="w-full px-6 py-6">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Водители</h1>
+          <DriverFilters filters={filters} setFilters={setFilters} />
+        </div>
+      </div>
 
-        <div className="flex gap-6">
-          <div className="w-[60%] min-w-0">
-            <DriverFilters filters={filters} setFilters={setFilters} />
-            <DriverList
-              drivers={filteredDrivers}
-              documents={documents}
-              selectedDriver={selectedDriver}
-              onSelectDriver={setSelectedDriver}
-              isLoading={isLoading}
-            />
-          </div>
-          <div className="w-[40%] min-w-0">
-            <DriverDetail
-              driver={selectedDriver}
-              editMode={editMode}
-              onEditModeChange={setEditMode}
-              onSave={handleSaveDriver}
-              documents={documents.filter(d => d.driver_id === selectedDriver?.id)}
-            />
-          </div>
+      {/* Main content: two independent scroll areas */}
+      <div className="flex flex-1 gap-6 overflow-hidden px-6 pb-6">
+        {/* Left: Driver list */}
+        <div className="w-[60%] min-w-0 flex flex-col">
+          <DriverList
+            drivers={filteredDrivers}
+            documents={documents}
+            selectedDriver={selectedDriver}
+            onSelectDriver={setSelectedDriver}
+            isLoading={isLoading}
+          />
+        </div>
+
+        {/* Right: Driver detail panel */}
+        <div className="w-[40%] min-w-0">
+          <DriverDetail
+            driver={selectedDriver}
+            editMode={editMode}
+            onEditModeChange={setEditMode}
+            onSave={handleSaveDriver}
+            documents={documents.filter(d => d.driver_id === selectedDriver?.id)}
+          />
         </div>
       </div>
     </div>

@@ -46,7 +46,7 @@ export default function Layout() {
       <div className="flex flex-1 pt-14">
         {/* Sidebar */}
         <div
-          className={`bg-gray-900 text-white flex flex-col transition-all duration-200 overflow-hidden ${
+          className={`fixed left-0 top-14 h-[calc(100vh-56px)] bg-gray-900 text-white flex flex-col transition-all duration-200 overflow-hidden z-30 ${
             sidebarExpanded ? 'w-60' : 'w-16'
           }`}
         >
@@ -132,7 +132,7 @@ export default function Layout() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto">
+        <div className={`flex-1 overflow-auto transition-all duration-200 ${sidebarExpanded ? 'ml-60' : 'ml-16'}`}>
           <div className="p-6">
             <Outlet />
           </div>
