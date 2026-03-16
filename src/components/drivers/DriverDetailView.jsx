@@ -225,7 +225,7 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
           </TabsList>
 
         {/* SCROLLABLE CONTENT */}
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto pb-6">
           {/* TAB 1: Обзор (Overview) */}
           <TabsContent value="overview" className="p-0">
             <div className="divide-y divide-gray-200">
