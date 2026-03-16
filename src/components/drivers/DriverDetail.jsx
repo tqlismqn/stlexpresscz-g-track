@@ -58,7 +58,7 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
           />
         </div>
       ) : (
-        <div className="overflow-y-auto flex-1">
+        <div className="overflow-y-auto flex-1 min-h-0">
           <DriverDetailView driver={driver} documents={documents} onEditModeChange={onEditModeChange} />
         </div>
       )}
