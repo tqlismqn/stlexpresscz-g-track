@@ -78,6 +78,7 @@ export default function Drivers() {
             <DriverFilters filters={filters} setFilters={setFilters} />
             <DriverList
               drivers={filteredDrivers}
+              documents={documents}
               selectedDriver={selectedDriver}
               onSelectDriver={setSelectedDriver}
               isLoading={isLoading}

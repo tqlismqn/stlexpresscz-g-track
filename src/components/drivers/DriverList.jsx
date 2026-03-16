@@ -1,7 +1,7 @@
 import React from 'react';
 import DriverListItem from './DriverListItem';
 
-export default function DriverList({ drivers, selectedDriver, onSelectDriver, isLoading }) {
+export default function DriverList({ drivers, documents, selectedDriver, onSelectDriver, isLoading }) {
   if (isLoading) {
     return <div className="bg-white rounded-lg shadow p-4">Загрузка...</div>;
   }
@@ -15,6 +15,7 @@ export default function DriverList({ drivers, selectedDriver, onSelectDriver, is
           <DriverListItem
             key={driver.id}
             driver={driver}
+            documents={documents.filter(d => d.driver_id === driver.id)}
             isSelected={selectedDriver?.id === driver.id}
             onSelect={onSelectDriver}
           />
