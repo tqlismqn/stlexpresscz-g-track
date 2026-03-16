@@ -37,7 +37,12 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      {/* Add your page Route elements here */}
+      <Route element={<Layout />}>
+        <Route path="/" element={<Navigate to="/Dashboard" replace />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Drivers" element={<Drivers />} />
+        <Route path="/Settings" element={<Settings />} />
+      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
