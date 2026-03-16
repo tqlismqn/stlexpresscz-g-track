@@ -175,7 +175,14 @@ Deno.serve(async (req) => {
         row[header] = values[idx] || '';
       });
 
-      const driverId = createdDrivers[i - 1].id;
+      // Skip invalid rows
+      if (!row.driver_name || row.driver_name.toLowerCase() === 'nenastupil') continue;
+
+      // Find matching driver by name from createdDrivers
+      const driver = createdDrivers.find(d => d.name === row.driver_name);
+      if (!driver) continue;
+
+      const driverId = driver.id;
       const isNonEU = row.nationality_group === 'non-EU';
 
       // work_contract
