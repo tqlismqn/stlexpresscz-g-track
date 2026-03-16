@@ -132,6 +132,10 @@ Deno.serve(async (req) => {
       drivers.push(driver);
     }
 
+    if (drivers.length === 0) {
+      return Response.json({ error: 'No valid drivers found in CSV' }, { status: 400 });
+    }
+
     // Bulk create drivers
     const createdDrivers = await base44.asServiceRole.entities.Driver.bulkCreate(drivers);
     
@@ -140,7 +144,23 @@ Deno.serve(async (req) => {
       const line = lines[i];
       if (!line.trim()) continue;
 
-      const values = line.split(',').map(v => v.trim());
+      // Simple CSV parser that handles quoted fields
+      const values = [];
+      let current = '';
+      let inQuotes = false;
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          values.push(current.trim().replace(/^"|"$/g, ''));
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      values.push(current.trim().replace(/^"|"$/g, ''));
+
       const row = {};
       headers.forEach((header, idx) => {
         row[header] = values[idx] || '';
