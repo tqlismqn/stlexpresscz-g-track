@@ -46,18 +46,6 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
           <h3 className="text-lg font-bold text-gray-900">{driver?.name}</h3>
         </div>
       )}
-      {!editMode && (
-        <div className="p-4 border-b flex items-center justify-between">
-          <h3 className="text-lg font-bold text-gray-900">{driver?.name}</h3>
-          <button
-            onClick={() => onEditModeChange(true)}
-            className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-          >
-            <Edit2 className="w-4 h-4" />
-            Изменить
-          </button>
-        </div>
-      )}
       {editMode ? (
         <div className="p-6 overflow-y-auto flex-1">
           <DriverDetailEdit
@@ -70,7 +58,7 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
           />
         </div>
       ) : (
-        <DriverDetailView driver={driver} documents={documents} />
+        <DriverDetailView driver={driver} documents={documents} onEditModeChange={onEditModeChange} />
       )}
     </div>
   );

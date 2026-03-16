@@ -107,7 +107,7 @@ const getStatusColor = (status) => {
   }
 };
 
-export default function DriverDetailView({ driver, documents = [] }) {
+export default function DriverDetailView({ driver, documents = [], onEditModeChange }) {
   const [expandedSections, setExpandedSections] = useState({
     bankDetails: false,
     additionalData: false
@@ -159,7 +159,7 @@ export default function DriverDetailView({ driver, documents = [] }) {
             {getInitials(driver?.name)}
           </div>
 
-          {/* Name, DRV-ID, Nationality */}
+          {/* Name, DRV-ID, Nationality, Edit Button */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <h3 className="text-xl font-bold text-gray-900">{driver?.name}</h3>
@@ -171,6 +171,15 @@ export default function DriverDetailView({ driver, documents = [] }) {
               }`}>
                 {driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}
               </span>
+              {onEditModeChange && (
+                <button
+                  onClick={() => onEditModeChange(true)}
+                  className="ml-auto flex items-center gap-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                >
+                  <Edit2 className="w-3 h-3" />
+                  Изменить
+                </button>
+              )}
             </div>
 
             {/* Status + Readiness */}

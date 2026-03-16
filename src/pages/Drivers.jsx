@@ -71,7 +71,7 @@ export default function Drivers() {
   return (
     <div className="h-screen flex flex-col">
       {/* Sticky header + filters */}
-      <div className="sticky top-0 z-20 bg-white border-b border-gray-200">
+      <div className="sticky top-14 z-20 bg-white border-b border-gray-200">
         <div className="w-full px-6 py-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Водители</h1>
           <DriverFilters filters={filters} setFilters={setFilters} />
