@@ -50,15 +50,6 @@ export default function Layout() {
             sidebarExpanded ? 'w-60' : 'w-16'
           }`}
         >
-          {/* Sidebar Header */}
-          <div className="h-14 flex items-center justify-center border-b border-gray-800">
-            {sidebarExpanded ? (
-              <span className="text-xs font-semibold text-gray-400">G-Track</span>
-            ) : (
-              <span className="text-lg font-bold text-white">G</span>
-            )}
-          </div>
-
           {/* Navigation */}
           <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navigation.map((item, idx) => {

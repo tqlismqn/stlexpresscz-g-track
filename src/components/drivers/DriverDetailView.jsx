@@ -150,9 +150,9 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
   }, [documents, isNonEU]);
 
   return (
-    <div className="flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-white">
       {/* HEADER */}
-      <div className="p-4 border-b bg-gray-50">
+      <div className="flex-shrink-0 p-4 border-b bg-gray-50">
         <div className="flex items-start gap-4">
           {/* Avatar */}
           <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0 ${getAvatarColor(driver?.name)}`}>
@@ -216,17 +216,18 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
       </div>
 
       {/* TABS */}
-      <div className="flex-1 overflow-hidden flex flex-col">
-        <Tabs defaultValue="overview" className="flex-1 flex flex-col">
-          <TabsList className="w-full justify-start border-b bg-transparent p-0 rounded-none h-auto">
+      <Tabs defaultValue="overview" className="h-full flex flex-col">
+        <TabsList className="flex-shrink-0 w-full justify-start border-b bg-transparent p-0 rounded-none h-auto">
             <TabsTrigger value="overview" className="rounded-none">Обзор</TabsTrigger>
             <TabsTrigger value="documents" className="rounded-none">Документы</TabsTrigger>
             <TabsTrigger value="comments" className="rounded-none">Комментарии</TabsTrigger>
             <TabsTrigger value="history" className="rounded-none">История</TabsTrigger>
           </TabsList>
 
+        {/* SCROLLABLE CONTENT */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
           {/* TAB 1: Обзор (Overview) */}
-          <TabsContent value="overview" className="flex-1 overflow-y-auto p-0">
+          <TabsContent value="overview" className="p-0">
             <div className="divide-y divide-gray-200">
               {/* Basic Info */}
               <div className="p-4">
@@ -334,7 +335,7 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
           </TabsContent>
 
           {/* TAB 2: Документы (Documents) */}
-          <TabsContent value="documents" className="flex-1 overflow-y-auto p-4">
+          <TabsContent value="documents" className="p-4">
             <div className="space-y-4">
               {/* Required */}
               <div>
@@ -397,7 +398,7 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
           </TabsContent>
 
           {/* TAB 3: Комментарии (Comments) */}
-          <TabsContent value="comments" className="flex-1 overflow-y-auto p-4">
+          <TabsContent value="comments" className="p-4">
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">Комментарии и заметки</h4>
               <p className="text-sm text-gray-500">Пока нет записей.</p>
@@ -405,14 +406,14 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
           </TabsContent>
 
           {/* TAB 4: История (History) */}
-          <TabsContent value="history" className="flex-1 overflow-y-auto p-4">
+          <TabsContent value="history" className="p-4">
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">История изменений</h4>
               <p className="text-sm text-gray-500">Пока нет записей.</p>
             </div>
           </TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </div>
   );
 }
