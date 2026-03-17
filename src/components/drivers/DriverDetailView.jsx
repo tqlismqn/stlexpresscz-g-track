@@ -562,6 +562,34 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         </div>
       </Tabs>
 
+      {/* Restore confirmation modal */}
+      {showRestoreModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Восстановить водителя?</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Водитель <span className="font-semibold">{formatDriverName(driver?.name)}</span> будет восстановлен со статусом «Неактивный». Чтобы вернуть водителя к работе, измените статус на «Активный».
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setShowRestoreModal(false)}
+                disabled={isRestoring}
+                className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 disabled:opacity-50"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleRestore}
+                disabled={isRestoring}
+                className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center gap-1.5"
+              >
+                {isRestoring ? 'Восстановление...' : 'Восстановить'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Archive confirmation modal */}
       {showArchiveModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
