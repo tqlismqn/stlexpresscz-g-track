@@ -117,10 +117,6 @@ function CountryCombobox({ value, onChange }) {
 }
 
 export default function DriverDetailView({ driver, documents = [], onSave }) {
-  const [expandedSections, setExpandedSections] = useState({
-    bankDetails: false,
-    additionalData: false
-  });
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
 
