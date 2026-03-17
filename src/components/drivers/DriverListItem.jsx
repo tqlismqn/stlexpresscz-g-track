@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getIncompleteFields } from '@/lib/dataCompleteness';
+import { getCountryByCode } from '@/lib/countries';
 
 const avatarColors = [
   'bg-blue-500',
