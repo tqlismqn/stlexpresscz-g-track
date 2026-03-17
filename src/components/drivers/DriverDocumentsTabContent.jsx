@@ -188,10 +188,30 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     if (onEditingChange) onEditingChange(false);
   };
 
-  const handleSave = () => {
-    // API calls will be added in Step 2b
-    setIsEditing(false);
-    if (onEditingChange) onEditingChange(false);
+  const handleSave = async () => {
+    try {
+      for (const [docType, docData] of Object.entries(editDocs)) {
+        const existingDoc = documents.find(d => d.document_type === docType);
+        if (existingDoc) {
+          const { id, ...updateData } = docData;
+          await DriverDocument.update(existingDoc.id, updateData);
+        } else {
+          const hasData = docData.document_number || docData.issue_date || docData.expiry_date;
+          if (hasData) {
+            await DriverDocument.create({
+              ...docData,
+              document_type: docType,
+              driver_id: driver.id,
+            });
+          }
+        }
+      }
+      setIsEditing(false);
+      if (onEditingChange) onEditingChange(false);
+      if (onDocumentsChange) onDocumentsChange();
+    } catch (error) {
+      console.error('Document save failed:', error);
+    }
   };
 
   const handleDocFieldChange = (docType, field, value) => {
