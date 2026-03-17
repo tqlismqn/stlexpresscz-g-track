@@ -16,6 +16,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { getCountryByCode, isEUCountry, getSortedCountries } from "@/lib/countries";
 import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { formatDriverId } from '@/lib/driverUtils';
+import { useAuth } from '@/lib/AuthContext';
 
 const Driver = base44.entities.Driver;
 
@@ -172,6 +173,7 @@ const buildDescription = (field, oldVal, newVal) => {
 };
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
+  const { user: currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -183,6 +185,19 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [formData, setFormData] = useState({});
+
+  // DEBUG: Log currentUser role
+  useEffect(() => {
+    if (currentUser) {
+      console.log('=== G-TRACK DEBUG ===');
+      console.log('currentUser:', JSON.stringify(currentUser, null, 2));
+      console.log('role:', currentUser.role);
+      console.log('role type:', typeof currentUser.role);
+      console.log('role === "admin":', currentUser.role === 'admin');
+      console.log('role === "Admin":', currentUser.role === 'Admin');
+      console.log('=== END DEBUG ===');
+    }
+  }, [currentUser]);
 
   // Reset form when switching drivers or entering create mode
   useEffect(() => {
