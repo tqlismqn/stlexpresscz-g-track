@@ -7,7 +7,6 @@ import DriverFilters from '@/components/drivers/DriverFilters';
 
 export default function Drivers() {
   const [selectedDriver, setSelectedDriver] = useState(null);
-  const [editMode, setEditMode] = useState(false);
   const [filters, setFilters] = useState({
     status: 'all',
     visaType: 'all',
