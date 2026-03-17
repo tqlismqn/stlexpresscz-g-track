@@ -62,7 +62,10 @@ export default function Drivers() {
     return result;
   }, [drivers, documents, filters]);
 
-  const handleSaveDriver = async () => {
+  const handleSaveDriver = async (updatedDriver) => {
+    if (updatedDriver) {
+      setSelectedDriver(updatedDriver);
+    }
     await refetch();
   };
 

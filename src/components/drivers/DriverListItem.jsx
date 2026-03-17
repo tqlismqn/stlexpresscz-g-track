@@ -31,12 +31,24 @@ const documentConfig = {
 const euRequiredDocs = ['work_contract', 'a1_certificate', 'declaration', 'insurance', 'passport', 'driver_license', 'medical_certificate', 'psihotest'];
 const nonEuRequiredDocs = ['work_contract', 'transport_licence', 'a1_certificate', 'declaration', 'insurance', 'travel_insurance', 'visa', 'passport', 'driver_license', 'medical_certificate', 'psihotest'];
 
-function getInitials(name) {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[1][0]).toUpperCase();
+const formatDriverName = (fullName) => {
+  if (!fullName) return '';
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length > 1) {
+    const lastName = parts[0];
+    const firstName = parts.slice(1).join(' ');
+    return `${firstName} ${lastName}`;
   }
-  return name.substring(0, 2).toUpperCase();
+  return fullName;
+};
+
+function getInitials(name) {
+  if (!name) return '??';
+  const formatted = formatDriverName(name);
+  const parts = formatted.split(' ');
+  let initials = parts[0]?.[0] || '';
+  if (parts.length > 1) initials += parts[parts.length - 1]?.[0] || '';
+  return initials.toUpperCase();
 }
 
 function hashString(str) {
