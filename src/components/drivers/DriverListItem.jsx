@@ -134,9 +134,7 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
     return pills;
   }, [driver.nationality_group, documents]);
 
-  const drvId = driver.internal_number
-    ? String(driver.internal_number).padStart(3, '0')
-    : driver.id.slice(-4);
+  const drvId = formatDriverId(driver);
 
   return (
     <button
@@ -159,7 +157,7 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
             {hasIncomplete && (
               <span title="Неполные данные" className="text-amber-400 text-xs leading-none">⚠</span>
             )}
-            <span className="text-xs text-muted-foreground">DRV-{drvId}</span>
+            <span className="text-xs text-muted-foreground">{drvId}</span>
             {getCountryByCode(driver.country_code)?.flag ? (
               <span className="text-sm leading-none" title={getCountryByCode(driver.country_code)?.name}>
                 {getCountryByCode(driver.country_code).flag}

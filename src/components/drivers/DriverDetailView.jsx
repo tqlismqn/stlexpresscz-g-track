@@ -195,7 +195,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <h3 className="text-xl font-bold text-gray-900">{formatDriverName(driver?.name)}</h3>
-              <span className="text-xs text-gray-500">DRV-{driver?.internal_number ? String(driver.internal_number).padStart(3, '0') : driver?.id?.slice(-4)}</span>
+              <span className="text-xs text-gray-500">{formatDriverId(driver)}</span>
               <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
                 driver?.nationality_group === 'EU'
                   ? 'bg-blue-100 text-blue-700'
