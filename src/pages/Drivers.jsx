@@ -5,12 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import DriverList from '@/components/drivers/DriverList';
 import DriverDetail from '@/components/drivers/DriverDetail';
 import DriverFilters from '@/components/drivers/DriverFilters';
+import { formatDriverId } from '@/lib/driverUtils';
 
 export default function Drivers() {
   const [selectedDriver, setSelectedDriver] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({
-    status: 'all',
-    visaType: 'all',
+    statusFilter: 'all',
+    nationalityFilter: 'all',
     search: '',
     sortBy: 'name'
   });
@@ -25,38 +27,92 @@ export default function Drivers() {
     queryFn: () => base44.entities.DriverDocument.list()
   });
 
+  const counts = useMemo(() => {
+    if (!drivers.length) return { all: 0, ready: 0, expiring: 0, expired: 0, inactive: 0, archive: 0 };
+
+    let src = drivers;
+    if (filters.nationalityFilter !== 'all') {
+      src = src.filter(d => d.nationality_group === filters.nationalityFilter);
+    }
+
+    const active     = src.filter(d => d.status === 'active');
+    const inactive   = src.filter(d => d.status === 'inactive' || d.status === 'on_leave');
+    const nonArchive = src.filter(d => d.status !== 'terminated');
+
+    const hasDocs = (driver, statuses) => {
+      const docs = documents.filter(doc => doc.driver_id === driver.id);
+      return docs.some(doc => statuses.includes(doc.status));
+    };
+
+    return {
+      all:      nonArchive.length,
+      ready:    active.filter(d => !hasDocs(d, ['expired', 'expiring', 'missing'])).length,
+      expiring: [...active, ...inactive].filter(d => hasDocs(d, ['expiring'])).length,
+      expired:  [...active, ...inactive].filter(d => hasDocs(d, ['expired'])).length,
+      inactive: inactive.length,
+      archive:  src.filter(d => d.status === 'terminated').length
+    };
+  }, [drivers, documents, filters.nationalityFilter]);
+
   const filteredDrivers = useMemo(() => {
-    let result = drivers;
+    if (!drivers.length) return [];
+    let result = [...drivers];
 
-    if (filters.status !== 'all') {
-      if (filters.status === 'not-ready') {
-        result = result.filter(d => d.trip_readiness_pct < 100);
-      } else if (filters.status === 'expiring') {
-        const driverIds = new Set(documents
-          .filter(d => d.status === 'expiring')
-          .map(d => d.driver_id));
-        result = result.filter(d => driverIds.has(d.id));
-      } else {
-        result = result.filter(d => d.status === filters.status);
-      }
+    // Step 1: Status filter
+    switch (filters.statusFilter) {
+      case 'all':
+        result = result.filter(d => d.status !== 'terminated');
+        break;
+      case 'ready':
+        result = result.filter(d => {
+          if (d.status !== 'active') return false;
+          const docs = documents.filter(doc => doc.driver_id === d.id);
+          return !docs.some(doc => ['expired', 'expiring', 'missing'].includes(doc.status));
+        });
+        break;
+      case 'expiring':
+        result = result.filter(d => {
+          if (d.status !== 'active' && d.status !== 'inactive') return false;
+          const docs = documents.filter(doc => doc.driver_id === d.id);
+          return docs.some(doc => doc.status === 'expiring');
+        });
+        break;
+      case 'expired':
+        result = result.filter(d => {
+          if (d.status !== 'active' && d.status !== 'inactive') return false;
+          const docs = documents.filter(doc => doc.driver_id === d.id);
+          return docs.some(doc => doc.status === 'expired');
+        });
+        break;
+      case 'inactive':
+        result = result.filter(d => d.status === 'inactive' || d.status === 'on_leave');
+        break;
+      case 'archive':
+        result = result.filter(d => d.status === 'terminated');
+        break;
+      default:
+        result = result.filter(d => d.status !== 'terminated');
     }
 
-    if (filters.visaType !== 'all') {
-      result = result.filter(d => d.visa_type === filters.visaType);
+    // Step 2: Nationality filter
+    if (filters.nationalityFilter !== 'all') {
+      result = result.filter(d => d.nationality_group === filters.nationalityFilter);
     }
 
+    // Step 3: Search
     if (filters.search) {
+      const term = filters.search.toLowerCase();
       result = result.filter(d =>
-        d.name.toLowerCase().includes(filters.search.toLowerCase())
+        (d.name || '').toLowerCase().includes(term) ||
+        (formatDriverId(d) || '').toLowerCase().includes(term) ||
+        (d.phone || '').toLowerCase().includes(term)
       );
     }
 
+    // Step 4: Sort
     result.sort((a, b) => {
-      if (filters.sortBy === 'name') {
-        return a.name.localeCompare(b.name);
-      } else if (filters.sortBy === 'readiness') {
-        return (b.trip_readiness_pct || 0) - (a.trip_readiness_pct || 0);
-      }
+      if (filters.sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
+      if (filters.sortBy === 'readiness') return (b.trip_readiness_pct || 0) - (a.trip_readiness_pct || 0);
       return 0;
     });
 
@@ -67,6 +123,7 @@ export default function Drivers() {
     if (updatedDriver) {
       setSelectedDriver(updatedDriver);
     }
+    setIsCreating(false);
     await Promise.all([refetch(), refetchDocuments()]);
   };
 
@@ -76,8 +133,12 @@ export default function Drivers() {
       {/* Header + filters */}
       <div className="bg-white border-b border-gray-200 flex-shrink-0">
         <div className="w-full px-6 py-4">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Водители</h1>
-          <DriverFilters filters={filters} setFilters={setFilters} />
+          <DriverFilters
+            filters={filters}
+            setFilters={setFilters}
+            counts={counts}
+            onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
+          />
         </div>
       </div>
 
@@ -89,7 +150,7 @@ export default function Drivers() {
             drivers={filteredDrivers}
             documents={documents}
             selectedDriver={selectedDriver}
-            onSelectDriver={setSelectedDriver}
+            onSelectDriver={(d) => { setSelectedDriver(d); setIsCreating(false); }}
             isLoading={isLoading}
           />
         </div>
@@ -97,9 +158,10 @@ export default function Drivers() {
         {/* Right: Driver detail panel */}
         <div className="w-[40%] min-w-0 flex flex-col min-h-0">
           <DriverDetail
-            driver={selectedDriver}
+            driver={isCreating ? null : selectedDriver}
             onSave={handleSaveDriver}
             documents={documents.filter(d => d.driver_id === selectedDriver?.id)}
+            isCreating={isCreating}
           />
         </div>
       </div>
