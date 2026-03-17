@@ -272,43 +272,105 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                 <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Имя</p>
-                    <p className="font-medium text-gray-900">{driver?.name || '-'}</p>
+                    {isEditing ? (
+                      <Input value={formData.name || ''} onChange={(e) => handleFieldChange('name', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.name || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Статус</p>
-                    <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
-                      {driver?.status === 'active' ? 'Активный' : 'Неактивный'}
-                    </p>
+                    {isEditing ? (
+                      <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
+                        <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Активный</SelectItem>
+                          <SelectItem value="inactive">Неактивный</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
+                        {driver?.status === 'active' ? 'Активный' : 'Неактивный'}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Национальность</p>
-                    <p className="font-medium text-gray-900">{driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}</p>
+                    {isEditing ? (
+                      <Select value={formData.nationality_group || ''} onValueChange={(val) => handleFieldChange('nationality_group', val)}>
+                        <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="EU">EU</SelectItem>
+                          <SelectItem value="non-EU">non-EU</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}</p>
+                    )}
                   </div>
-                  {isNonEU && (
+                  {(isNonEU || (isEditing && formData.nationality_group === 'non-EU')) && (
                     <div>
                       <p className="text-xs text-gray-600 mb-0.5">Тип визы</p>
-                      <p className="font-medium text-gray-900">{visaTypeMap[driver?.visa_type] || '-'}</p>
+                      {isEditing ? (
+                        <Select value={formData.visa_type || ''} onValueChange={(val) => handleFieldChange('visa_type', val)}>
+                          <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            {Object.entries(visaTypeMap).map(([k, v]) => (
+                              <SelectItem key={k} value={k}>{v}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <p className="font-medium text-gray-900">{visaTypeMap[driver?.visa_type] || '—'}</p>
+                      )}
                     </div>
                   )}
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Дата рождения</p>
-                    <p className="font-medium text-gray-900">{driver?.date_of_birth || '-'}</p>
+                    {isEditing ? (
+                      <Input type="date" value={formData.date_of_birth || ''} onChange={(e) => handleFieldChange('date_of_birth', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.date_of_birth || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Телефон</p>
-                    <p className="font-medium text-gray-900">{driver?.phone || '-'}</p>
+                    {isEditing ? (
+                      <Input value={formData.phone || ''} onChange={(e) => handleFieldChange('phone', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.phone || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Email</p>
-                    <p className="font-medium text-gray-900">{driver?.email || '-'}</p>
+                    {isEditing ? (
+                      <Input value={formData.email || ''} onChange={(e) => handleFieldChange('email', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.email || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Место работы</p>
-                    <p className="font-medium text-gray-900">{mistoVykonuPraceMap[driver?.misto_vykonu_prace] || '-'}</p>
+                    {isEditing ? (
+                      <Select value={formData.misto_vykonu_prace || ''} onValueChange={(val) => handleFieldChange('misto_vykonu_prace', val)}>
+                        <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(mistoVykonuPraceMap).map(([k, v]) => (
+                            <SelectItem key={k} value={k}>{v}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="font-medium text-gray-900">{mistoVykonuPraceMap[driver?.misto_vykonu_prace] || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Pas souhlas</p>
-                    <p className="font-medium text-gray-900">{driver?.pas_souhlas ? '✓' : '✗'}</p>
+                    {isEditing ? (
+                      <Checkbox checked={formData.pas_souhlas || false} onCheckedChange={(val) => handleFieldChange('pas_souhlas', val)} />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.pas_souhlas ? 'Да' : 'Нет'}</p>
+                    )}
                   </div>
                 </div>
               </div>
