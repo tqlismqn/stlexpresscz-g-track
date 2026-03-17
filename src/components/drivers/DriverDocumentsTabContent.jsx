@@ -154,7 +154,7 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange }) {
   );
 }
 
-export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange }) {
+export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange, onEditingChange }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editDocs, setEditDocs] = useState({});
 
