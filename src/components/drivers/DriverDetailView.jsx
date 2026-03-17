@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { Edit2, Check, ChevronsUpDown } from 'lucide-react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { format, differenceInDays } from 'date-fns';
+import { ru } from 'date-fns/locale';
+import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight, Edit2, Check, ChevronsUpDown } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -14,7 +15,6 @@ import { cn } from "@/lib/utils";
 import { format as formatDateFns } from "date-fns";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { countries, getCountryByCode, isEUCountry } from "@/lib/countries";
-import DriverDocumentsTabContent from './DriverDocumentsTabContent';
 
 const Driver = base44.entities.Driver;
 
@@ -72,9 +72,73 @@ const getInitials = (name) => {
   return initials.toUpperCase();
 };
 
+const docTypeLabels = {
+  work_contract: 'Трудовой договор',
+  transport_licence: 'Лицензия на транспорт',
+  a1_certificate: 'Сертификат A1',
+  declaration: 'Декларация',
+  insurance: 'Страховка',
+  travel_insurance: 'Путешественническая страховка',
+  visa: 'Виза',
+  passport: 'Паспорт',
+  driver_license: 'Водительское удостоверение',
+  medical_certificate: 'Медицинское свидетельство',
+  psihotest: 'Психотест',
+  adr_certificate: 'Сертификат ADR',
+  chip_card: 'Чип-карта',
+  code95: 'Код 95'
+};
 
+const visaTypeMap = {
+  'povoleni_k_pobytu': 'Povolení k pobytu',
+  'vizum': 'Vízum',
+  'docasna_ochrana': 'Dočasná ochrana',
+  'trvaly_pobyt': 'Trvalý pobyt',
+  'vizum_strpeni': 'Vízum strpění',
+};
 
+const mistoVykonuPraceMap = {
+  'praha': 'Прага',
+  'kladno': 'Кладно',
+};
 
+const documentStatusIcons = {
+  valid: <CheckCircle2 className="w-4 h-4 text-green-500" />,
+  expiring: <AlertCircle className="w-4 h-4 text-orange-500" />,
+  expired: <XCircle className="w-4 h-4 text-red-500" />,
+  missing: <MinusCircle className="w-4 h-4 text-gray-400" />,
+  pending_renewal: <Clock className="w-4 h-4 text-blue-500" />,
+};
+
+const requiredNonEU = [
+  'work_contract', 'transport_licence', 'a1_certificate', 'declaration',
+  'insurance', 'travel_insurance', 'visa', 'passport', 'driver_license',
+  'medical_certificate', 'psihotest'
+];
+
+const requiredEU = [
+  'work_contract', 'a1_certificate', 'declaration', 'insurance',
+  'passport', 'driver_license', 'medical_certificate', 'psihotest'
+];
+
+const optional = ['adr_certificate', 'chip_card', 'code95'];
+
+const documentAbbreviations = {
+  work_contract: 'CON',
+  transport_licence: 'LIC',
+  a1_certificate: 'A1',
+  declaration: 'DEC',
+  insurance: 'INS',
+  travel_insurance: 'TIN',
+  visa: 'VISA',
+  passport: 'PAS',
+  driver_license: 'DL',
+  medical_certificate: 'MED',
+  psihotest: 'PSI',
+  adr_certificate: 'ADR',
+  chip_card: 'CHIP',
+  code95: 'C95'
+};
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -159,6 +223,12 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
+  const getDaysLeft = (expiryDate) => {
+    if (!expiryDate) return null;
+    const days = differenceInDays(new Date(expiryDate), new Date());
+    return days < 0 ? `Просрочено на ${Math.abs(days)} дн.` : `Осталось ${days} дн.`;
+  };
+
   const handleFieldChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -175,7 +245,28 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
     }
   };
 
+  const categorizedDocuments = useMemo(() => {
+    const requiredDocs = isNonEU ? requiredNonEU : requiredEU;
+    const docsMap = new Map(documents.map(d => [d.document_type, d]));
 
+    const required = requiredDocs.map(docType => ({
+      type: docType,
+      label: docTypeLabels[docType],
+      doc: docsMap.get(docType) || null,
+      status: docsMap.get(docType)?.status || 'missing'
+    }));
+
+    const opt = optional
+      .map(docType => ({
+        type: docType,
+        label: docTypeLabels[docType],
+        doc: docsMap.get(docType) || null,
+        status: docsMap.get(docType)?.status || 'missing'
+      }))
+      .filter(item => item.doc);
+
+    return { required, optional: opt };
+  }, [documents, isNonEU]);
 
   return (
     <div className="h-full flex flex-col bg-white">
@@ -417,8 +508,66 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
           </TabsContent>
 
           {/* TAB 2: Документы (Documents) */}
-          <TabsContent value="documents" className="p-0">
-            <DriverDocumentsTabContent driver={driver} documents={documents} onDocumentsChange={onSave} />
+          <TabsContent value="documents" className="p-4">
+            <div className="space-y-4">
+              {/* Required */}
+              <div>
+                <p className="text-xs font-semibold text-gray-700 mb-2">Обязательные</p>
+                <div className="space-y-2">
+                  {categorizedDocuments.required.map(({ type, label, doc, status }) => (
+                    <div key={type} className="flex items-center gap-2 text-xs text-gray-800 bg-gray-50 p-2 rounded">
+                      <div className="flex-shrink-0">{documentStatusIcons[status]}</div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium">{label}</p>
+                        <p className="text-gray-600">
+                          {doc?.document_number ? `№${doc.document_number}` : '—'}
+                          {doc?.issue_date && ` | ${format(new Date(doc.issue_date), 'dd.MM.yyyy', { locale: ru })}`}
+                          {doc?.expiry_date && ` → ${format(new Date(doc.expiry_date), 'dd.MM.yyyy', { locale: ru })}`}
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0 text-right">
+                        {doc?.expiry_date && (
+                          <p className={`text-xs font-medium ${status === 'expiring' ? 'text-amber-600' : status === 'expired' ? 'text-red-600' : 'text-gray-500'}`}>
+                            {getDaysLeft(doc.expiry_date)}
+                          </p>
+                        )}
+                        {doc?.file_url && <FileText className="w-3 h-3 text-blue-500 mt-1" />}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Optional */}
+              {categorizedDocuments.optional.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-700 mb-2">Дополнительные</p>
+                  <div className="space-y-2">
+                    {categorizedDocuments.optional.map(({ type, label, doc, status }) => (
+                      <div key={type} className="flex items-center gap-2 text-xs text-gray-800 bg-gray-50 p-2 rounded">
+                        <div className="flex-shrink-0">{documentStatusIcons[status]}</div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium">{label}</p>
+                          <p className="text-gray-600">
+                            {doc?.document_number ? `№${doc.document_number}` : '—'}
+                            {doc?.issue_date && ` | ${format(new Date(doc.issue_date), 'dd.MM.yyyy', { locale: ru })}`}
+                            {doc?.expiry_date && ` → ${format(new Date(doc.expiry_date), 'dd.MM.yyyy', { locale: ru })}`}
+                          </p>
+                        </div>
+                        <div className="flex-shrink-0 text-right">
+                          {doc?.expiry_date && (
+                            <p className={`text-xs font-medium ${status === 'expiring' ? 'text-amber-600' : status === 'expired' ? 'text-red-600' : 'text-gray-500'}`}>
+                              {getDaysLeft(doc.expiry_date)}
+                            </p>
+                          )}
+                          {doc?.file_url && <FileText className="w-3 h-3 text-blue-500 mt-1" />}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           {/* TAB 3: Комментарии (Comments) */}
