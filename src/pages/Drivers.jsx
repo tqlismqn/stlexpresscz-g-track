@@ -175,6 +175,7 @@ export default function Drivers() {
             onSave={handleSaveDriver}
             documents={documents.filter(d => d.driver_id === selectedDriver?.id)}
             isCreating={isCreating}
+            onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
           />
         </div>
       </div>
