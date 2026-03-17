@@ -16,6 +16,17 @@ import { format as formatDateFns } from "date-fns";
 
 const Driver = base44.entities.Driver;
 
+const formatDriverName = (fullName) => {
+  if (!fullName) return '';
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length > 1) {
+    const lastName = parts[0];
+    const firstName = parts.slice(1).join(' ');
+    return `${firstName} ${lastName}`;
+  }
+  return fullName;
+};
+
 const avatarColors = [
   'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-amber-500',
   'bg-pink-500', 'bg-teal-500', 'bg-indigo-500', 'bg-rose-500'

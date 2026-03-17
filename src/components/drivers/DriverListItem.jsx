@@ -156,7 +156,7 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
         <div className="flex-1 min-w-0">
           {/* Line 1: Name, DRV-ID, Nationality badge */}
           <div className="flex items-center gap-2 mb-1">
-            <p className="font-semibold text-gray-900">{driver.name}</p>
+            <p className="font-semibold text-gray-900">{formatDriverName(driver.name)}</p>
             <span className="text-xs text-muted-foreground">DRV-{drvId}</span>
             <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
               driver.nationality_group === 'EU'
