@@ -16,6 +16,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { getCountryByCode, isEUCountry, getSortedCountries } from "@/lib/countries";
 import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { formatDriverId } from '@/lib/driverUtils';
+import { useAuth } from '@/lib/AuthContext';
 
 const Driver = base44.entities.Driver;
 
@@ -172,6 +173,7 @@ const buildDescription = (field, oldVal, newVal) => {
 };
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
+  const { currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -224,7 +226,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
           driver_id: newDriver.id,
           action: 'created',
           description: `Водитель создан: DRV-${String(newDriver.internal_number).padStart(5, '0')}`,
-          changed_by: 'Admin'
+          changed_by: currentUser?.full_name || 'Unknown'
         });
         
         toast.success('✓ Водитель создан');
@@ -243,7 +245,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               old_value: String(oldVal || ''),
               new_value: String(newVal || ''),
               description: buildDescription(field, oldVal, newVal),
-              changed_by: 'Admin'
+              changed_by: currentUser?.full_name || 'Unknown'
             });
           }
         });
@@ -293,7 +295,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         old_value: driver.status,
         new_value: 'terminated',
         description: 'Водитель архивирован',
-        changed_by: 'Admin'
+        changed_by: currentUser?.full_name || 'Unknown'
       });
       
       toast.success('✓ Водитель архивирован');
@@ -319,7 +321,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         old_value: 'terminated',
         new_value: 'inactive',
         description: 'Водитель восстановлен',
-        changed_by: 'Admin'
+        changed_by: currentUser?.full_name || 'Unknown'
       });
       
       toast.success(`✓ Водитель ${formatDriverName(driver.name)} восстановлен`);

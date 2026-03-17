@@ -3,8 +3,10 @@ import { Trash2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function DriverCommentsTab({ driver, isTerminated }) {
+  const { currentUser } = useAuth();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
       await base44.entities.DriverComment.create({
         driver_id: driver.id,
         text: newComment,
-        author: 'Admin'
+        author: currentUser?.full_name || 'Unknown'
       });
 
       // Create history record
@@ -45,7 +47,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
         action: 'comment_added',
         description: 'Комментарий добавлен',
         new_value: truncated,
-        changed_by: 'Admin'
+        changed_by: currentUser?.full_name || 'Unknown'
       });
 
       setNewComment('');
@@ -71,7 +73,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
         action: 'comment_deleted',
         description: 'Комментарий удалён',
         old_value: truncated,
-        changed_by: 'Admin'
+        changed_by: currentUser?.full_name || 'Unknown'
       });
 
       setDeleteModalOpen(false);

@@ -205,8 +205,6 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
 
   const handleSave = async () => {
     setIsSaving(true);
-    console.log('handleSave called');
-    console.log('editDocs:', JSON.stringify(editDocs));
     try {
       for (const [docType, docData] of Object.entries(editDocs)) {
         const existingDoc = documents.find(d => d.document_type === docType);
@@ -217,9 +215,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
             expiry_date: docData.expiry_date || null,
           };
           if (docData.visa_type) updatePayload.visa_type = docData.visa_type;
-          console.log('Updating', docType, 'id:', existingDoc.id, 'payload:', updatePayload);
           await DriverDocument.update(existingDoc.id, updatePayload);
-          console.log('Updated', docType, 'OK');
         } else {
           const hasData = docData.document_number || docData.issue_date || docData.expiry_date;
           if (hasData) {
@@ -231,15 +227,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
               expiry_date: docData.expiry_date || null,
               status: 'valid',
             };
-            console.log('Creating', docType, 'payload:', createPayload);
             await DriverDocument.create(createPayload);
-            console.log('Created', docType, 'OK');
-          } else {
-            console.log('Skipping', docType, '- no data');
           }
         }
       }
-      console.log('All saves completed');
       setIsEditing(false);
       if (onEditingChange) onEditingChange(false);
       if (onDocumentsChange) onDocumentsChange();
