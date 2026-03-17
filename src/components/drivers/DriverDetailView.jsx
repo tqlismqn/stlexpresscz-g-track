@@ -181,28 +181,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
     }
   };
 
-  const categorizedDocuments = useMemo(() => {
-    const requiredDocs = isNonEU ? requiredNonEU : requiredEU;
-    const docsMap = new Map(documents.map(d => [d.document_type, d]));
 
-    const required = requiredDocs.map(docType => ({
-      type: docType,
-      label: docTypeLabels[docType],
-      doc: docsMap.get(docType) || null,
-      status: docsMap.get(docType)?.status || 'missing'
-    }));
-
-    const opt = optional
-      .map(docType => ({
-        type: docType,
-        label: docTypeLabels[docType],
-        doc: docsMap.get(docType) || null,
-        status: docsMap.get(docType)?.status || 'missing'
-      }))
-      .filter(item => item.doc);
-
-    return { required, optional: opt };
-  }, [documents, isNonEU]);
 
   return (
     <div className="h-full flex flex-col bg-white">
