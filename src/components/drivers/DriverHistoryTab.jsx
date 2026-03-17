@@ -64,7 +64,7 @@ export default function DriverHistoryTab({ driver }) {
                   {config.icon} {entry.description}
                 </p>
                 {showValues && (
-                  <p className="text-xs text-gray-600 mt-1">
+                  <p className={`text-xs mt-1 ${entry.action === 'comment_deleted' ? 'text-gray-500 italic' : 'text-gray-600'}`}>
                     {entry.old_value && entry.new_value ? (
                       <>{entry.old_value} → {entry.new_value}</>
                     ) : entry.new_value ? (

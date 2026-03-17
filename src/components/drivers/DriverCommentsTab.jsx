@@ -58,7 +58,22 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
     if (!window.confirm('Удалить комментарий?')) return;
 
     try {
+      // Get comment text before deletion
+      const commentToDelete = comments.find(c => c.id === commentId);
+      const deletedText = commentToDelete?.text || '';
+      const truncated = deletedText.length > 100 ? deletedText.substring(0, 100) + '...' : deletedText;
+
       await base44.entities.DriverComment.delete(commentId);
+
+      // Create history record for deletion
+      await base44.entities.DriverHistory.create({
+        driver_id: driver.id,
+        action: 'comment_deleted',
+        description: 'Комментарий удалён',
+        old_value: truncated,
+        changed_by: 'Admin'
+      });
+
       await loadComments();
     } catch (error) {
       console.error('Error deleting comment:', error);
