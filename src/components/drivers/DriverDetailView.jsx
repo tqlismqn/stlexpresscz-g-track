@@ -129,17 +129,6 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
   }, [driver]);
 
   const readinessPct = driver?.trip_readiness_pct || 0;
-  const isNonEU = driver?.nationality_group === 'non-EU';
-
-  const toggleSection = (section) => {
-    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
-  };
-
-  const getDaysLeft = (expiryDate) => {
-    if (!expiryDate) return null;
-    const days = differenceInDays(new Date(expiryDate), new Date());
-    return days < 0 ? `Просрочено на ${Math.abs(days)} дн.` : `Осталось ${days} дн.`;
-  };
 
   const handleFieldChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
