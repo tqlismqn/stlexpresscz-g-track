@@ -402,7 +402,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                         className="h-8 text-sm"
                       />
                     ) : (
-                      <p className="font-medium text-gray-900">{driver?.date_of_birth || '—'}</p>
+                      <p className="font-medium text-gray-900">{driver?.date_of_birth ? formatDate(driver.date_of_birth) : '—'}</p>
                     )}
                   </div>
 
