@@ -8,7 +8,8 @@ const actionConfig = {
   status_changed: { icon: '🔄', color: 'text-amber-600', label: 'status_changed' },
   archived: { icon: '📦', color: 'text-red-600', label: 'archived' },
   restored: { icon: '♻️', color: 'text-green-600', label: 'restored' },
-  comment_added: { icon: '💬', color: 'text-gray-600', label: 'comment_added' }
+  comment_added: { icon: '💬', color: 'text-gray-600', label: 'comment_added' },
+  comment_deleted: { icon: '🗑️', color: 'text-red-600', label: 'comment_deleted' }
 };
 
 export default function DriverHistoryTab({ driver }) {
