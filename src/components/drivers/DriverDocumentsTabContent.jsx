@@ -6,7 +6,7 @@ import { DOCUMENT_TYPES, SECTIONS, VISA_TYPES, formatDate, getRemainingDays } fr
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Pencil } from 'lucide-react';
+import { Pencil, X } from 'lucide-react';
 
 const STATUS_COLORS = {
   valid: 'bg-green-500',
