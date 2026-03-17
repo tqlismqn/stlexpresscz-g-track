@@ -3,11 +3,8 @@ import { Trash2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { useAuth } from '@/lib/AuthContext';
 
 export default function DriverCommentsTab({ driver, isTerminated }) {
-  const { user: currentUser } = useAuth();
-  const isAdmin = currentUser?.role === 'admin';
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
@@ -93,7 +90,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
   return (
     <div className="space-y-4">
       {/* Add comment form */}
-      {!isTerminated && isAdmin && (
+      {!isTerminated && (
         <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
           <textarea
             value={newComment}
@@ -128,7 +125,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
                   <span>·</span>
                   <span>{format(new Date(comment.created_date), 'dd.MM.yyyy HH:mm')}</span>
                 </div>
-                {!isTerminated && isAdmin && (
+                {!isTerminated && (
                   <button
                     onClick={() => { setCommentToDelete(comment); setDeleteModalOpen(true); }}
                     className="p-1 text-gray-400 hover:text-red-600 transition-colors"
