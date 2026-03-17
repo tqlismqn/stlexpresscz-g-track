@@ -208,13 +208,11 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
 
         {/* Status badge */}
         <div className="flex-shrink-0">
-          <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-            driver.status === 'active'
-              ? 'bg-green-100 text-green-700'
-              : 'bg-gray-100 text-gray-700'
-          }`}>
-            {driver.status === 'active' ? 'Активный' : 'Неактивный'}
+          {(() => { const sc = statusConfig[driver.status] || statusConfig.active; return (
+          <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${sc.bg}`}>
+            {sc.label}
           </span>
+          ); })()}
         </div>
       </div>
     </button>

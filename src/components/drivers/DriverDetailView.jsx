@@ -386,6 +386,8 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                         <SelectContent>
                           <SelectItem value="active">Активный</SelectItem>
                           <SelectItem value="inactive">Неактивный</SelectItem>
+                          <SelectItem value="on_leave">В отпуске</SelectItem>
+                          <SelectItem value="terminated">Уволен</SelectItem>
                         </SelectContent>
                       </Select>
                     ) : (
