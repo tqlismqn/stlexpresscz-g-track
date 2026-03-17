@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { format as formatDateFns } from "date-fns";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { countries, getCountryByCode, isEUCountry } from "@/lib/countries";
+import DriverDocumentsTabContent from './DriverDocumentsTabContent';
 
 const Driver = base44.entities.Driver;
 
