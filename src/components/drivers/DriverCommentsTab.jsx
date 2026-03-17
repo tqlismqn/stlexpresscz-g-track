@@ -8,6 +8,8 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
 
   useEffect(() => {
     if (!driver?.id) return;
@@ -54,16 +56,14 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
-    if (!window.confirm('Удалить комментарий?')) return;
+  const handleConfirmDeleteComment = async () => {
+    if (!commentToDelete) return;
 
     try {
-      // Get comment text before deletion
-      const commentToDelete = comments.find(c => c.id === commentId);
-      const deletedText = commentToDelete?.text || '';
+      const deletedText = commentToDelete.text || '';
       const truncated = deletedText.length > 100 ? deletedText.substring(0, 100) + '...' : deletedText;
 
-      await base44.entities.DriverComment.delete(commentId);
+      await base44.entities.DriverComment.delete(commentToDelete.id);
 
       // Create history record for deletion
       await base44.entities.DriverHistory.create({
@@ -74,6 +74,8 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
         changed_by: 'Admin'
       });
 
+      setDeleteModalOpen(false);
+      setCommentToDelete(null);
       await loadComments();
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -125,7 +127,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
                 </div>
                 {!isTerminated && (
                   <button
-                    onClick={() => handleDeleteComment(comment.id)}
+                    onClick={() => { setCommentToDelete(comment); setDeleteModalOpen(true); }}
                     className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                     title="Удалить"
                   >
@@ -138,6 +140,32 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
           ))
         )}
       </div>
+
+      {/* Delete confirmation modal */}
+      {deleteModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Удалить комментарий?</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Это действие нельзя отменить.
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleConfirmDeleteComment}
+                className="text-sm bg-red-600 text-white px-4 py-1.5 rounded-md hover:bg-red-700"
+              >
+                Удалить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
