@@ -159,12 +159,6 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  const getDaysLeft = (expiryDate) => {
-    if (!expiryDate) return null;
-    const days = differenceInDays(new Date(expiryDate), new Date());
-    return days < 0 ? `Просрочено на ${Math.abs(days)} дн.` : `Осталось ${days} дн.`;
-  };
-
   const handleFieldChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
