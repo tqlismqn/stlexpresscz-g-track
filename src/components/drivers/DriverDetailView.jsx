@@ -375,9 +375,11 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                   </button>
                 </div>
               ) : (
-                <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                  <Pencil className="w-3.5 h-3.5" /> Изменить
-                </button>
+                !isTerminated && (
+                  <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                    <Pencil className="w-3.5 h-3.5" /> Изменить
+                  </button>
+                )
               )}
             </div>
 
