@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Plus } from 'lucide-react';
 import DriverDetailView from './DriverDetailView';
 
-export default function DriverDetail({ driver, editMode, onEditModeChange, onSave, documents }) {
+export default function DriverDetail({ driver, onSave, documents }) {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   if (!driver && !showCreateForm) {
@@ -21,44 +21,9 @@ export default function DriverDetail({ driver, editMode, onEditModeChange, onSav
     );
   }
 
-  if (showCreateForm && !driver) {
-    return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-bold mb-4 text-gray-900">Создать новго водителя</h3>
-        <DriverDetailEdit
-          driver={null}
-          onSave={async () => {
-            await onSave();
-            setShowCreateForm(false);
-          }}
-          onCancel={() => setShowCreateForm(false)}
-          isCreating={true}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col">
-      {editMode && (
-        <div className="p-6 border-b flex justify-between items-start">
-          <h3 className="text-lg font-bold text-gray-900">{driver?.name}</h3>
-        </div>
-      )}
-      {editMode ? (
-        <div className="p-6 overflow-y-auto flex-1">
-          <DriverDetailEdit
-            driver={driver}
-            onSave={async () => {
-              await onSave();
-              onEditModeChange(false);
-            }}
-            onCancel={() => onEditModeChange(false)}
-          />
-        </div>
-      ) : (
-        <DriverDetailView driver={driver} documents={documents} onEditModeChange={onEditModeChange} />
-      )}
+      <DriverDetailView driver={driver} documents={documents} onSave={onSave} />
     </div>
   );
 }
