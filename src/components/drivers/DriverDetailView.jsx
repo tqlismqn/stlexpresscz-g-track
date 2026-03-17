@@ -199,6 +199,8 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
     }
   }, [currentUser]);
 
+  const isAdmin = currentUser?.role === 'admin';
+
   // Reset form when switching drivers or entering create mode
   useEffect(() => {
     if (isCreating && !driver) {
@@ -379,7 +381,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 )}
               </div>
               {/* Top-right action area */}
-              {!isCreateMode && !isEditing && (
+              {!isCreateMode && !isEditing && isAdmin && (
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                    <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
                    {driver?.status === 'terminated' ? (
@@ -458,7 +460,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
             {/* Edit / Save buttons */}
             <div className="flex justify-end px-4 pt-3 mb-1">
-              {showEditableFields ? (
+              {showEditableFields && isAdmin ? (
                 <div className="flex gap-2">
                   <button onClick={handleCancel} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">
                     Отмена
@@ -474,7 +476,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                   </button>
                 </div>
               ) : (
-                !isTerminated && (
+                !isTerminated && isAdmin && (
                   <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
                     <Pencil className="w-3.5 h-3.5" /> Изменить
                   </button>
