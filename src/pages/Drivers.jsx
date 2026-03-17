@@ -132,12 +132,14 @@ export default function Drivers() {
     return result;
   }, [drivers, documents, filters]);
 
-  const handleSaveDriver = async (updatedDriver) => {
-    if (updatedDriver) {
-      setSelectedDriver(updatedDriver);
-    }
+  const handleSaveDriver = async (savedDriver) => {
     setIsCreating(false);
-    await Promise.all([refetch(), refetchDocuments()]);
+    if (savedDriver) {
+      await Promise.all([refetch(), refetchDocuments()]);
+      setSelectedDriver(savedDriver);
+    } else {
+      setSelectedDriver(null);
+    }
   };
 
   return (
