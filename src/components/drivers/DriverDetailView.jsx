@@ -218,6 +218,20 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
     }
   };
 
+  const handleArchive = async () => {
+    setIsArchiving(true);
+    try {
+      await Driver.update(driver.id, { ...driver, status: 'terminated' });
+      toast.success('✓ Водитель архивирован');
+      setShowArchiveModal(false);
+      if (onSave) onSave({ ...driver, status: 'terminated' });
+    } catch (error) {
+      toast.error('✗ Ошибка архивирования');
+    } finally {
+      setIsArchiving(false);
+    }
+  };
+
   const isCreateMode = isCreating && !driver;
   const showEditableFields = isEditing || isCreateMode;
 
