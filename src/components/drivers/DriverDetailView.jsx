@@ -234,6 +234,20 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
     }
   };
 
+  const handleRestore = async () => {
+    setIsRestoring(true);
+    try {
+      await Driver.update(driver.id, { ...driver, status: 'inactive', fired_date: null });
+      toast.success(`✓ Водитель ${formatDriverName(driver.name)} восстановлен`);
+      setShowRestoreModal(false);
+      if (onSave) onSave({ ...driver, status: 'inactive', fired_date: null });
+    } catch (error) {
+      toast.error('✗ Ошибка восстановления');
+    } finally {
+      setIsRestoring(false);
+    }
+  };
+
   const isCreateMode = isCreating && !driver;
   const showEditableFields = isEditing || isCreateMode;
 

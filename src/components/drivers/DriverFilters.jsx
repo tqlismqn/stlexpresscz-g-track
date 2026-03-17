@@ -52,8 +52,16 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
             placeholder="Поиск по имени, ID, телефону..."
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+            className="w-full pl-10 pr-9 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
           />
+          {filters.search && (
+            <button
+              onClick={() => setFilters({ ...filters, search: '' })}
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         <select
