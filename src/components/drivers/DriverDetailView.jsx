@@ -153,6 +153,8 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const [documentsEditing, setDocumentsEditing] = useState(false);
   const [pendingTab, setPendingTab] = useState(null);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
   const [formData, setFormData] = useState({});
 
   // Reset form when switching drivers or entering create mode
