@@ -383,15 +383,17 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Национальность</p>
                     {isEditing ? (
-                      <Select value={formData.nationality_group || ''} onValueChange={(val) => handleFieldChange('nationality_group', val)}>
-                        <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="EU">EU</SelectItem>
-                          <SelectItem value="non-EU">non-EU</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <CountryCombobox
+                        value={formData.country_code || ''}
+                        onChange={(code) => {
+                          handleFieldChange('country_code', code);
+                          handleFieldChange('nationality_group', isEUCountry(code) ? 'EU' : 'non-EU');
+                        }}
+                      />
                     ) : (
-                      <p className="font-medium text-gray-900">{driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}</p>
+                      <p className="font-medium text-gray-900">
+                        {getCountryByCode(driver?.country_code)?.name || driver?.nationality_group || '—'}
+                      </p>
                     )}
                   </div>
                   {(isNonEU || (isEditing && formData.nationality_group === 'non-EU')) && (
