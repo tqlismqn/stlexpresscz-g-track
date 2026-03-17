@@ -171,7 +171,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
               }`}>
                 {driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}
               </span>
-              {isEditing && (
+              {isEditing && activeTab === 'overview' && (
                 <div className="ml-auto flex items-center gap-2">
                   <button
                     onClick={() => { setFormData({ ...driver }); setIsEditing(false); }}
