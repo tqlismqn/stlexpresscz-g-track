@@ -445,66 +445,8 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
           </TabsContent>
 
           {/* TAB 2: Документы (Documents) */}
-          <TabsContent value="documents" className="p-4">
-            <div className="space-y-4">
-              {/* Required */}
-              <div>
-                <p className="text-xs font-semibold text-gray-700 mb-2">Обязательные</p>
-                <div className="space-y-2">
-                  {categorizedDocuments.required.map(({ type, label, doc, status }) => (
-                    <div key={type} className="flex items-center gap-2 text-xs text-gray-800 bg-gray-50 p-2 rounded">
-                      <div className="flex-shrink-0">{documentStatusIcons[status]}</div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium">{label}</p>
-                        <p className="text-gray-600">
-                          {doc?.document_number ? `№${doc.document_number}` : '—'}
-                          {doc?.issue_date && ` | ${format(new Date(doc.issue_date), 'dd.MM.yyyy', { locale: ru })}`}
-                          {doc?.expiry_date && ` → ${format(new Date(doc.expiry_date), 'dd.MM.yyyy', { locale: ru })}`}
-                        </p>
-                      </div>
-                      <div className="flex-shrink-0 text-right">
-                        {doc?.expiry_date && (
-                          <p className={`text-xs font-medium ${status === 'expiring' ? 'text-amber-600' : status === 'expired' ? 'text-red-600' : 'text-gray-500'}`}>
-                            {getDaysLeft(doc.expiry_date)}
-                          </p>
-                        )}
-                        {doc?.file_url && <FileText className="w-3 h-3 text-blue-500 mt-1" />}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Optional */}
-              {categorizedDocuments.optional.length > 0 && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-700 mb-2">Дополнительные</p>
-                  <div className="space-y-2">
-                    {categorizedDocuments.optional.map(({ type, label, doc, status }) => (
-                      <div key={type} className="flex items-center gap-2 text-xs text-gray-800 bg-gray-50 p-2 rounded">
-                        <div className="flex-shrink-0">{documentStatusIcons[status]}</div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium">{label}</p>
-                          <p className="text-gray-600">
-                            {doc?.document_number ? `№${doc.document_number}` : '—'}
-                            {doc?.issue_date && ` | ${format(new Date(doc.issue_date), 'dd.MM.yyyy', { locale: ru })}`}
-                            {doc?.expiry_date && ` → ${format(new Date(doc.expiry_date), 'dd.MM.yyyy', { locale: ru })}`}
-                          </p>
-                        </div>
-                        <div className="flex-shrink-0 text-right">
-                          {doc?.expiry_date && (
-                            <p className={`text-xs font-medium ${status === 'expiring' ? 'text-amber-600' : status === 'expired' ? 'text-red-600' : 'text-gray-500'}`}>
-                              {getDaysLeft(doc.expiry_date)}
-                            </p>
-                          )}
-                          {doc?.file_url && <FileText className="w-3 h-3 text-blue-500 mt-1" />}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+          <TabsContent value="documents" className="p-0">
+            <DriverDocumentsTabContent driver={driver} documents={documents} onDocumentsChange={onSave} />
           </TabsContent>
 
           {/* TAB 3: Комментарии (Comments) */}
