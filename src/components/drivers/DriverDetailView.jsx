@@ -394,37 +394,69 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
-                    <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
+                    {isEditing ? (
+                      <Input value={formData.rodne_cislo || ''} onChange={(e) => handleFieldChange('rodne_cislo', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Номер паспорта</p>
-                    <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
+                    {isEditing ? (
+                      <Input value={formData.passport_number || ''} onChange={(e) => handleFieldChange('passport_number', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Номер ВУ</p>
-                    <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
+                    {isEditing ? (
+                      <Input value={formData.driving_license_number || ''} onChange={(e) => handleFieldChange('driving_license_number', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
-                    <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
+                    {isEditing ? (
+                      <Input value={formData.address || ''} onChange={(e) => handleFieldChange('address', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Банк</p>
-                    <p className="font-medium text-gray-900">{driver?.bank_name || '—'}</p>
+                    {isEditing ? (
+                      <Input value={formData.bank_name || ''} onChange={(e) => handleFieldChange('bank_name', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.bank_name || '—'}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Счёт / IBAN</p>
-                    <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
+                    {isEditing ? (
+                      <Input value={formData.bank_account || ''} onChange={(e) => handleFieldChange('bank_account', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
+                    )}
                   </div>
-                  {driver?.status === 'inactive' && (
+                  {(driver?.status === 'inactive' || formData?.status === 'inactive') && (
                     <>
                       <div>
                         <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
-                        <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
+                        {isEditing ? (
+                          <Input type="date" value={formData.fired_date || ''} onChange={(e) => handleFieldChange('fired_date', e.target.value)} className="h-8 text-sm" />
+                        ) : (
+                          <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
+                        )}
                       </div>
                       <div>
                         <p className="text-xs text-gray-600 mb-0.5">Причина увольнения</p>
-                        <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
+                        {isEditing ? (
+                          <Input value={formData.fired_reason || ''} onChange={(e) => handleFieldChange('fired_reason', e.target.value)} className="h-8 text-sm" />
+                        ) : (
+                          <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
+                        )}
                       </div>
                     </>
                   )}
