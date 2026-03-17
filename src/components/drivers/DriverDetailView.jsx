@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check, ChevronsUpDown, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
-import { useAuth } from '@/lib/AuthContext';
 import DriverDocumentsTabContent from './DriverDocumentsTabContent';
 import DriverCommentsTab from './DriverCommentsTab';
 import DriverHistoryTab from './DriverHistoryTab';
@@ -173,14 +172,6 @@ const buildDescription = (field, oldVal, newVal) => {
 };
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
-  const { currentUser } = useAuth();
-  const userRole = currentUser?.role?.toLowerCase() || 'viewer';
-  const userName = currentUser?.full_name || 'Неизвестный пользователь';
-  const canEdit = userRole === 'admin' || userRole === 'hr';
-  const canArchive = userRole === 'admin';
-  
-  console.log('--- Debug RBAC ---', { role: currentUser?.role, userRole, canEdit, canArchive, userName });
-  
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -233,7 +224,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
           driver_id: newDriver.id,
           action: 'created',
           description: `Водитель создан: DRV-${String(newDriver.internal_number).padStart(5, '0')}`,
-          changed_by: userName
+          changed_by: 'Admin'
         });
         
         toast.success('✓ Водитель создан');
@@ -252,7 +243,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               old_value: String(oldVal || ''),
               new_value: String(newVal || ''),
               description: buildDescription(field, oldVal, newVal),
-              changed_by: userName
+              changed_by: 'Admin'
             });
           }
         });
@@ -302,7 +293,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         old_value: driver.status,
         new_value: 'terminated',
         description: 'Водитель архивирован',
-        changed_by: userName
+        changed_by: 'Admin'
       });
       
       toast.success('✓ Водитель архивирован');
@@ -328,7 +319,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         old_value: 'terminated',
         new_value: 'inactive',
         description: 'Водитель восстановлен',
-        changed_by: userName
+        changed_by: 'Admin'
       });
       
       toast.success(`✓ Водитель ${formatDriverName(driver.name)} восстановлен`);
@@ -377,28 +368,24 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                    <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
                    {driver?.status === 'terminated' ? (
-                    canArchive && (
-                      <button
-                        onClick={() => setShowRestoreModal(true)}
-                        title="Восстановить водителя"
-                        className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                      >
-                        Восстановить
-                      </button>
-                    )
+                    <button
+                      onClick={() => setShowRestoreModal(true)}
+                      title="Восстановить водителя"
+                      className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                    >
+                      Восстановить
+                    </button>
                   ) : (
-                    canArchive && (
-                      <button
-                        onClick={() => setShowArchiveModal(true)}
-                        title="Архивировать водителя"
-                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="3 6 5 6 21 6"/>
-                          <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                        </svg>
-                      </button>
-                    )
+                    <button
+                      onClick={() => setShowArchiveModal(true)}
+                      title="Архивировать водителя"
+                      className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                      </svg>
+                    </button>
                   )}
                 </div>
               )}
@@ -472,7 +459,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                   </button>
                 </div>
               ) : (
-                !isTerminated && canEdit && (
+                !isTerminated && (
                   <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
                     <Pencil className="w-3.5 h-3.5" /> Изменить
                   </button>
@@ -647,12 +634,12 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
           {/* COMMENTS TAB */}
           <TabsContent value="comments" className="p-4">
-            <DriverCommentsTab driver={driver} isTerminated={isTerminated} currentUserRole={userRole} currentUserName={userName} />
+            <DriverCommentsTab driver={driver} isTerminated={isTerminated} />
           </TabsContent>
 
           {/* HISTORY TAB */}
           <TabsContent value="history" className="p-4">
-            <DriverHistoryTab driver={driver} currentUserRole={userRole} />
+            <DriverHistoryTab driver={driver} />
           </TabsContent>
         </div>
       </Tabs>
