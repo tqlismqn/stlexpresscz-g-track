@@ -351,70 +351,23 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
         <div className="flex-1 min-h-0 overflow-y-auto pb-6">
           {/* TAB 1: Обзор (Overview) */}
           <TabsContent value="overview" className="p-0">
-            <div className="divide-y divide-gray-200">
-              {/* Basic Info */}
+            <div className="divide-y divide-gray-100">
+
+              {/* SECTION 1: Личные данные */}
               <div className="p-4">
-                <h4 className="font-semibold text-gray-900 mb-3 text-sm">Основная информация</h4>
+                <p className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">Личные данные</p>
                 <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                  {/* Row 1: Имя | Дата рождения */}
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Имя</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Имя</p>
                     {isEditing ? (
                       <Input value={formData.name || ''} onChange={(e) => handleFieldChange('name', e.target.value)} className="h-8 text-sm" />
                     ) : (
-                      <p className="font-medium text-gray-900">{driver?.name || '—'}</p>
+                      <p className="font-medium text-gray-900">{formatDriverName(driver?.name) || '—'}</p>
                     )}
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Статус</p>
-                    {isEditing ? (
-                      <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
-                        <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="active">Активный</SelectItem>
-                          <SelectItem value="inactive">Неактивный</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
-                        {driver?.status === 'active' ? 'Активный' : 'Неактивный'}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Национальность</p>
-                    {isEditing ? (
-                      <CountryCombobox
-                        value={formData.country_code || ''}
-                        onChange={(code) => {
-                          handleFieldChange('country_code', code);
-                          handleFieldChange('nationality_group', isEUCountry(code) ? 'EU' : 'non-EU');
-                        }}
-                      />
-                    ) : (
-                      <p className="font-medium text-gray-900">
-                        {getCountryByCode(driver?.country_code)?.name || driver?.nationality_group || '—'}
-                      </p>
-                    )}
-                  </div>
-                  {(isNonEU || (isEditing && formData.nationality_group === 'non-EU')) && (
-                    <div>
-                      <p className="text-xs text-gray-600 mb-0.5">Тип визы</p>
-                      {isEditing ? (
-                        <Select value={formData.visa_type || ''} onValueChange={(val) => handleFieldChange('visa_type', val)}>
-                          <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(visaTypeMap).map(([k, v]) => (
-                              <SelectItem key={k} value={k}>{v}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      ) : (
-                        <p className="font-medium text-gray-900">{visaTypeMap[driver?.visa_type] || '—'}</p>
-                      )}
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Дата рождения</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Дата рождения</p>
                     {isEditing ? (
                       <Input
                         type="text"
@@ -441,8 +394,36 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                       <p className="font-medium text-gray-900">{driver?.date_of_birth || '—'}</p>
                     )}
                   </div>
+
+                  {/* Row 2: Национальность | Rodné číslo */}
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Телефон</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Национальность</p>
+                    {isEditing ? (
+                      <CountryCombobox
+                        value={formData.country_code || ''}
+                        onChange={(code) => {
+                          handleFieldChange('country_code', code);
+                          handleFieldChange('nationality_group', isEUCountry(code) ? 'EU' : 'non-EU');
+                        }}
+                      />
+                    ) : (
+                      <p className="font-medium text-gray-900">
+                        {getCountryByCode(driver?.country_code)?.name || driver?.nationality_group || '—'}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Rodné číslo</p>
+                    {isEditing ? (
+                      <Input value={formData.rodne_cislo || ''} onChange={(e) => handleFieldChange('rodne_cislo', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
+                    )}
+                  </div>
+
+                  {/* Row 3: Телефон | Email */}
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Телефон</p>
                     {isEditing ? (
                       <Input value={formData.phone || ''} onChange={(e) => handleFieldChange('phone', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -450,38 +431,36 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                     )}
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Email</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Email</p>
                     {isEditing ? (
                       <Input value={formData.email || ''} onChange={(e) => handleFieldChange('email', e.target.value)} className="h-8 text-sm" />
                     ) : (
                       <p className="font-medium text-gray-900">{driver?.email || '—'}</p>
                     )}
                   </div>
+
+                  {/* Row 4: Статус | empty */}
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Место работы</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Статус</p>
                     {isEditing ? (
-                      <Select value={formData.misto_vykonu_prace || ''} onValueChange={(val) => handleFieldChange('misto_vykonu_prace', val)}>
+                      <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
                         <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          {Object.entries(mistoVykonuPraceMap).map(([k, v]) => (
-                            <SelectItem key={k} value={k}>{v}</SelectItem>
-                          ))}
+                          <SelectItem value="active">Активный</SelectItem>
+                          <SelectItem value="inactive">Неактивный</SelectItem>
                         </SelectContent>
                       </Select>
                     ) : (
-                      <p className="font-medium text-gray-900">{mistoVykonuPraceMap[driver?.misto_vykonu_prace] || '—'}</p>
+                      <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
+                        {driver?.status === 'active' ? 'Активный' : 'Неактивный'}
+                      </p>
                     )}
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Pas souhlas</p>
-                    {isEditing ? (
-                      <Checkbox checked={formData.pas_souhlas || false} onCheckedChange={(val) => handleFieldChange('pas_souhlas', val)} />
-                    ) : (
-                      <p className="font-medium text-gray-900">{driver?.pas_souhlas ? 'Да' : 'Нет'}</p>
-                    )}
-                  </div>
+                  <div />
+
+                  {/* Full width: Адрес */}
                   <div className="col-span-2">
-                    <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Адрес / Прописка CZ</p>
                     {isEditing ? (
                       <Input value={formData.address || ''} onChange={(e) => handleFieldChange('address', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -491,33 +470,12 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                 </div>
               </div>
 
-              {/* Document Summary */}
+              {/* SECTION 2: Банковские реквизиты */}
               <div className="p-4">
-                <h4 className="font-semibold text-gray-900 mb-3 text-sm">Сводка документов</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {categorizedDocuments.required.map(({ type, label, status }) => (
-                    <div key={type} className="flex items-center gap-2 text-xs">
-                      <div className={`flex-shrink-0 text-lg font-bold ${getStatusColor(status)}`}>●</div>
-                      <span className="text-gray-900">{label} ({documentAbbreviations[type]})</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Additional Data - Always Visible */}
-              <div className="p-4 border-t">
-                <h4 className="font-semibold text-gray-900 mb-3 text-sm">Дополнительные данные</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <p className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">Банковские реквизиты</p>
+                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Rodné číslo</p>
-                    {isEditing ? (
-                      <Input value={formData.rodne_cislo || ''} onChange={(e) => handleFieldChange('rodne_cislo', e.target.value)} className="h-8 text-sm" />
-                    ) : (
-                      <p className="font-medium text-gray-900">{driver?.rodne_cislo || '—'}</p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Банк</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Банк</p>
                     {isEditing ? (
                       <Input value={formData.bank_name || ''} onChange={(e) => handleFieldChange('bank_name', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -525,45 +483,16 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                     )}
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Счёт / IBAN</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Счёт / IBAN</p>
                     {isEditing ? (
                       <Input value={formData.bank_account || ''} onChange={(e) => handleFieldChange('bank_account', e.target.value)} className="h-8 text-sm" />
                     ) : (
                       <p className="font-medium text-gray-900">{driver?.bank_account || '—'}</p>
                     )}
                   </div>
-                  {(driver?.status === 'inactive' || formData?.status === 'inactive') && (
-                    <>
-                      <div>
-                        <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
-                        {isEditing ? (
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button variant="outline" className={cn("w-full h-8 justify-start text-left text-sm font-normal", !formData.fired_date && "text-muted-foreground")}>
-                                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-                                {formData.fired_date ? formatDateFns(new Date(formData.fired_date), "dd.MM.yyyy") : "Выберите дату"}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={formData.fired_date ? new Date(formData.fired_date) : undefined} onSelect={(date) => handleFieldChange('fired_date', date ? formatDateFns(date, "yyyy-MM-dd") : '')} initialFocus />
-                            </PopoverContent>
-                          </Popover>
-                        ) : (
-                          <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-600 mb-0.5">Причина увольнения</p>
-                        {isEditing ? (
-                          <Input value={formData.fired_reason || ''} onChange={(e) => handleFieldChange('fired_reason', e.target.value)} className="h-8 text-sm" />
-                        ) : (
-                          <p className="font-medium text-gray-900">{driver?.fired_reason || '—'}</p>
-                        )}
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
+
             </div>
           </TabsContent>
 
