@@ -55,7 +55,7 @@ const DateInput = ({ value, onChange }) => {
   );
 };
 
-function DocumentRowRead({ docType, config, doc }) {
+function DocumentRowRead({ docType, config, doc, onDelete }) {
   const status = doc?.status || 'missing';
   const dotColor = STATUS_COLORS[status] || 'bg-gray-300';
   const isIndefinite = config.indefiniteByDefault && !doc?.expiry_date;
@@ -85,8 +85,17 @@ function DocumentRowRead({ docType, config, doc }) {
           )}
         </div>
       </div>
-      <div className="text-xs text-right flex-shrink-0">
+      <div className="text-xs text-right flex-shrink-0 flex items-center gap-1">
         {doc?.expiry_date && !isIndefinite && <RemainingDays expiryDate={doc.expiry_date} />}
+        {doc && onDelete && (
+          <button
+            onClick={() => onDelete(doc.id, docType)}
+            className="text-gray-300 hover:text-red-500 transition-colors flex-shrink-0 ml-2"
+            title="Удалить документ"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
     </div>
   );
