@@ -170,25 +170,17 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
               }`}>
                 {driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}
               </span>
-              {!isEditing ? (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="ml-auto flex items-center gap-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-                >
-                  <Edit2 className="w-3 h-3" />
-                  Изменить
-                </button>
-              ) : (
+              {isEditing && (
                 <div className="ml-auto flex items-center gap-2">
                   <button
                     onClick={() => { setFormData({ ...driver }); setIsEditing(false); }}
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                    className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1"
                   >
                     Отмена
                   </button>
                   <button
                     onClick={handleSave}
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
+                    className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700"
                   >
                     Сохранить
                   </button>
