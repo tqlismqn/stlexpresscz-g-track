@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { format, differenceInDays } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { format } from 'date-fns';
 import { Edit2, Check, ChevronsUpDown } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
