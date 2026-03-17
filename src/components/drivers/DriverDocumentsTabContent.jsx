@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+
+const DriverDocument = base44.entities.DriverDocument;
 import { DOCUMENT_TYPES, SECTIONS, VISA_TYPES, formatDate, getRemainingDays } from '@/lib/documentTypes';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
