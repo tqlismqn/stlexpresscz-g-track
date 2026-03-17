@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import StatCard from '@/components/dashboard/StatCard';
 import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWidget';
@@ -6,13 +7,16 @@ import ReadinessChart from '@/components/dashboard/ReadinessChart';
 import { Users, AlertCircle, Clock, XCircle } from 'lucide-react';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     activeDrivers: 0,
     readyDrivers: 0,
     expiringDocs: 0,
-    expiredDocs: 0
+    expiredDocs: 0,
+    breakdown: ''
   });
   const [drivers, setDrivers] = useState([]);
+  const [activeDrivers, setActiveDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,18 +25,33 @@ export default function Dashboard() {
         const driversList = await base44.entities.Driver.list();
         setDrivers(driversList);
 
-        const docsList = await base44.entities.DriverDocument.list();
+        const active = driversList.filter(d => d.status === 'active');
+        setActiveDrivers(active);
 
-        const activeCount = driversList.filter(d => d.status === 'active').length;
-        const readyCount = driversList.filter(d => d.trip_readiness_pct === 100).length;
-        const expiringCount = docsList.filter(d => d.status === 'expiring').length;
-        const expiredCount = docsList.filter(d => d.status === 'expired').length;
+        const docsList = await base44.entities.DriverDocument.list();
+        const activeDriverIds = new Set(active.map(d => d.id));
+
+        const activeCount = active.length;
+        const readyCount = active.filter(d => d.trip_readiness_pct === 100).length;
+        const expiringCount = docsList.filter(d => d.status === 'expiring' && activeDriverIds.has(d.driver_id)).length;
+        const expiredCount = docsList.filter(d => d.status === 'expired' && activeDriverIds.has(d.driver_id)).length;
+
+        const onLeave = driversList.filter(d => d.status === 'on_leave').length;
+        const inactive = driversList.filter(d => d.status === 'inactive').length;
+        const terminated = driversList.filter(d => d.status === 'terminated').length;
+
+        const breakdownParts = [];
+        if (activeCount > 0) breakdownParts.push(`${activeCount} активных`);
+        if (onLeave > 0) breakdownParts.push(`${onLeave} в отпуске`);
+        if (inactive > 0) breakdownParts.push(`${inactive} неакт.`);
+        if (terminated > 0) breakdownParts.push(`${terminated} архив`);
 
         setStats({
           activeDrivers: activeCount,
           readyDrivers: readyCount,
           expiringDocs: expiringCount,
-          expiredDocs: expiredCount
+          expiredDocs: expiredCount,
+          breakdown: breakdownParts.join(' · ')
         });
       } catch (error) {
         console.error('Error loading dashboard data:', error);
