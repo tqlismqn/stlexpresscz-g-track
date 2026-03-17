@@ -210,6 +210,7 @@ export default function Drivers() {
             documents={selectedDocuments}
             isCreating={isCreating}
             onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
+            initialTab={selectedTab}
           />
         </div>
       </div>
