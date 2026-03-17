@@ -18,6 +18,17 @@ import { countries, getCountryByCode, isEUCountry } from "@/lib/countries";
 
 const Driver = base44.entities.Driver;
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return '—';
+  try {
+    const d = new Date(dateStr);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return `${dd}.${mm}.${yyyy}`;
+  } catch { return dateStr; }
+};
+
 const formatDriverName = (fullName) => {
   if (!fullName) return '';
   const parts = fullName.trim().split(/\s+/);
