@@ -136,6 +136,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
   }, [driver]);
 
   const readinessPct = driver?.trip_readiness_pct || 0;
+  const incompleteFields = getIncompleteFields(isEditing ? formData : driver);
 
   const handleFieldChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));

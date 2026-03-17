@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { getIncompleteFields } from '@/lib/dataCompleteness';
 
 const avatarColors = [
   'bg-blue-500',
@@ -12,24 +13,25 @@ const avatarColors = [
 ];
 
 const documentConfig = {
-  work_contract: { abbr: 'CON', isRequired: true },
-  transport_licence: { abbr: 'LIC', isRequired: true },
-  a1_certificate: { abbr: 'A1', isRequired: true },
-  declaration: { abbr: 'DEC', isRequired: true },
-  insurance: { abbr: 'INS', isRequired: true },
-  travel_insurance: { abbr: 'TIS', isRequired: true },
-  visa: { abbr: 'VIS', isRequired: true },
-  passport: { abbr: 'PAS', isRequired: true },
-  driver_license: { abbr: 'DL', isRequired: true },
+  work_contract:       { abbr: 'CON', isRequired: true },
+  transport_licence:   { abbr: 'LIC', isRequired: true },
+  a1_certificate:      { abbr: 'A1',  isRequired: true },
+  declaration:         { abbr: 'DEC', isRequired: true },
+  insurance:           { abbr: 'INS', isRequired: true },
+  travel_insurance:    { abbr: 'TIS', isRequired: true },  // required for non-EU only
+  visa:                { abbr: 'VIS', isRequired: true },  // required for non-EU only
+  passport:            { abbr: 'PAS', isRequired: true },
+  driver_license:      { abbr: 'DL',  isRequired: true },
   medical_certificate: { abbr: 'MED', isRequired: true },
-  psihotest: { abbr: 'PSI', isRequired: true },
-  adr_certificate: { abbr: 'ADR', isRequired: false },
-  chip_card: { abbr: 'TCH', isRequired: false },
-  code95: { abbr: 'C95', isRequired: false }
+  psihotest:           { abbr: 'PSI', isRequired: true },
+  adr_certificate:     { abbr: 'ADR', isRequired: false },
+  chip_card:           { abbr: 'TCH', isRequired: false },
+  code95:              { abbr: 'C95', isRequired: false },
 };
 
-const euRequiredDocs = ['work_contract', 'transport_licence', 'a1_certificate', 'declaration', 'insurance', 'passport', 'driver_license', 'medical_certificate', 'psihotest'];
+const euRequiredDocs    = ['work_contract', 'transport_licence', 'a1_certificate', 'declaration', 'insurance', 'passport', 'driver_license', 'medical_certificate', 'psihotest'];
 const nonEuRequiredDocs = ['work_contract', 'transport_licence', 'a1_certificate', 'declaration', 'insurance', 'travel_insurance', 'visa', 'passport', 'driver_license', 'medical_certificate', 'psihotest'];
+const optionalDocs      = ['adr_certificate', 'chip_card', 'code95'];
 
 const formatDriverName = (fullName) => {
   if (!fullName) return '';
@@ -78,7 +80,7 @@ function getReadinessTextColor(pct) {
   return 'text-red-600';
 }
 
-function getStatusPillClass(status) {
+function getPillClass(status, isRequired) {
   switch (status) {
     case 'valid':
       return 'bg-green-100 text-green-700 border border-green-300';
@@ -89,55 +91,50 @@ function getStatusPillClass(status) {
     case 'pending_renewal':
       return 'bg-blue-100 text-blue-700 border border-blue-300';
     case 'missing':
-      return 'bg-gray-50 text-gray-400 border border-dashed border-gray-300';
+      return isRequired
+        ? 'bg-red-50 text-red-400 border border-dashed border-red-300'
+        : 'bg-gray-50 text-gray-300 border border-dashed border-gray-200';
     default:
-      return 'bg-gray-50 text-gray-400 border border-dashed border-gray-300';
+      return 'bg-gray-50 text-gray-300 border border-dashed border-gray-200';
   }
 }
 
 export default function DriverListItem({ driver, documents, isSelected, onSelect }) {
   const readiness = driver.trip_readiness_pct || 0;
-  
+  const incompleteFields = getIncompleteFields(driver);
+  const hasIncomplete = incompleteFields.length > 0;
+
   const documentPills = useMemo(() => {
     const isEU = driver.nationality_group === 'EU';
     const requiredDocTypes = isEU ? euRequiredDocs : nonEuRequiredDocs;
-    
-    // Create a map of document types to their statuses
+
     const docMap = new Map();
-    documents.forEach(doc => {
-      docMap.set(doc.document_type, doc.status);
-    });
+    documents.forEach(doc => { docMap.set(doc.document_type, doc.status); });
 
-    // Build required pills
-    const pills = requiredDocTypes.map(docType => {
-      const config = documentConfig[docType];
-      const status = docMap.get(docType) || 'missing';
-      return {
-        type: docType,
-        abbr: config.abbr,
-        status,
-        isRequired: true
-      };
-    });
+    // Required pills (always shown)
+    const pills = requiredDocTypes.map(docType => ({
+      type: docType,
+      abbr: documentConfig[docType].abbr,
+      status: docMap.get(docType) || 'missing',
+      isRequired: true,
+    }));
 
-    // Add optional pills only if they exist
-    const optionalDocs = ['adr_certificate', 'chip_card', 'code95'];
+    // Optional pills (always shown — gray dashed when missing)
     optionalDocs.forEach(docType => {
-      if (docMap.has(docType)) {
-        const config = documentConfig[docType];
-        pills.push({
-          type: docType,
-          abbr: config.abbr,
-          status: docMap.get(docType),
-          isRequired: false
-        });
-      }
+      pills.push({
+        type: docType,
+        abbr: documentConfig[docType].abbr,
+        status: docMap.get(docType) || 'missing',
+        isRequired: false,
+      });
     });
 
     return pills;
   }, [driver.nationality_group, documents]);
 
-  const drvId = driver.id.length > 4 ? driver.id.slice(-4) : driver.id;
+  const drvId = driver.internal_number
+    ? String(driver.internal_number).padStart(3, '0')
+    : driver.id.slice(-4);
 
   return (
     <button
@@ -154,9 +151,12 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
 
         {/* Main content */}
         <div className="flex-1 min-w-0">
-          {/* Line 1: Name, DRV-ID, Nationality badge */}
+          {/* Line 1: Name, incomplete warning, DRV-ID, Nationality badge */}
           <div className="flex items-center gap-2 mb-1">
             <p className="font-semibold text-gray-900">{formatDriverName(driver.name)}</p>
+            {hasIncomplete && (
+              <span title="Неполные данные" className="text-amber-400 text-xs leading-none">⚠</span>
+            )}
             <span className="text-xs text-muted-foreground">DRV-{drvId}</span>
             <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
               driver.nationality_group === 'EU'
@@ -172,9 +172,7 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
             {documentPills.map(pill => (
               <div
                 key={pill.type}
-                className={`h-5 px-1.5 rounded-sm border flex items-center justify-center text-[10px] font-medium ${getStatusPillClass(
-                  pill.status
-                )}`}
+                className={`h-5 px-1.5 rounded-sm flex items-center justify-center text-[10px] font-medium ${getPillClass(pill.status, pill.isRequired)}`}
               >
                 {pill.abbr}
               </div>
