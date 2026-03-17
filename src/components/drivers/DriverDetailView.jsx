@@ -75,56 +75,7 @@ const getInitials = (name) => {
 
 
 
-const visaTypeMap = {
-  'povoleni_k_pobytu': 'Povolení k pobytu',
-  'vizum': 'Vízum',
-  'docasna_ochrana': 'Dočasná ochrana',
-  'trvaly_pobyt': 'Trvalý pobyt',
-  'vizum_strpeni': 'Vízum strpění',
-};
 
-const mistoVykonuPraceMap = {
-  'praha': 'Прага',
-  'kladno': 'Кладно',
-};
-
-const documentStatusIcons = {
-  valid: <CheckCircle2 className="w-4 h-4 text-green-500" />,
-  expiring: <AlertCircle className="w-4 h-4 text-orange-500" />,
-  expired: <XCircle className="w-4 h-4 text-red-500" />,
-  missing: <MinusCircle className="w-4 h-4 text-gray-400" />,
-  pending_renewal: <Clock className="w-4 h-4 text-blue-500" />,
-};
-
-const requiredNonEU = [
-  'work_contract', 'transport_licence', 'a1_certificate', 'declaration',
-  'insurance', 'travel_insurance', 'visa', 'passport', 'driver_license',
-  'medical_certificate', 'psihotest'
-];
-
-const requiredEU = [
-  'work_contract', 'a1_certificate', 'declaration', 'insurance',
-  'passport', 'driver_license', 'medical_certificate', 'psihotest'
-];
-
-const optional = ['adr_certificate', 'chip_card', 'code95'];
-
-const documentAbbreviations = {
-  work_contract: 'CON',
-  transport_licence: 'LIC',
-  a1_certificate: 'A1',
-  declaration: 'DEC',
-  insurance: 'INS',
-  travel_insurance: 'TIN',
-  visa: 'VISA',
-  passport: 'PAS',
-  driver_license: 'DL',
-  medical_certificate: 'MED',
-  psihotest: 'PSI',
-  adr_certificate: 'ADR',
-  chip_card: 'CHIP',
-  code95: 'C95'
-};
 
 const getStatusColor = (status) => {
   switch (status) {
