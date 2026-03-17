@@ -74,14 +74,34 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
           <p className="text-gray-500 text-sm">Нет истекающих документов</p>
         ) : (
           expiringDocs.map(doc => {
-            const daysLeft = doc.expiry_date ? differenceInDays(new Date(doc.expiry_date), new Date()) : null;
+            const daysLeft = doc.daysLeft;
+            let bgColor = 'bg-yellow-50';
+            let borderColor = 'border-l-yellow-500';
+            let textColor = 'text-amber-600';
+            let isBold = false;
+
+            if (daysLeft <= 3) {
+              bgColor = 'bg-red-50';
+              borderColor = 'border-l-red-500';
+              textColor = 'text-red-600';
+              isBold = true;
+            } else if (daysLeft <= 7) {
+              bgColor = 'bg-orange-50';
+              borderColor = 'border-l-orange-500';
+              textColor = 'text-orange-600';
+            }
+
             return (
-              <div key={doc.id} className="flex justify-between items-center p-2 bg-orange-50 rounded border border-orange-200">
+              <div
+                key={doc.id}
+                onClick={() => navigate(`/Drivers?select=${doc.driver_id}&tab=documents`)}
+                className={`flex justify-between items-center p-2 ${bgColor} rounded border-l-4 ${borderColor} cursor-pointer hover:bg-gray-50 transition-colors`}
+              >
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 text-sm">{doc.driverName}</p>
                   <p className="text-xs text-gray-600">{docTypeLabels[doc.document_type]}</p>
                 </div>
-                <p className="text-xs font-medium text-amber-600 ml-2 flex-shrink-0">
+                <p className={`text-xs ml-2 flex-shrink-0 ${textColor} ${isBold ? 'font-bold' : 'font-medium'}`}>
                   {daysLeft !== null ? `в ${daysLeft} дн.` : 'N/A'}
                 </p>
               </div>
