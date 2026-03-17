@@ -302,6 +302,73 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
           </div>
         )
       ))}
+
+      {!isEditing && (
+        <div className="mt-4 border-t border-gray-200 pt-4">
+          {showAddForm ? (
+            <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+              <p className="text-sm font-semibold text-gray-700">Новый документ</p>
+              <div>
+                <p className="text-[10px] text-gray-400 mb-0.5">Тип документа</p>
+                <Select value={newDoc.document_type} onValueChange={(val) => setNewDoc(prev => ({ ...prev, document_type: val }))}>
+                  <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Выберите тип..." /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(DOCUMENT_TYPES).map(([key, config]) => {
+                      const exists = documents.find(d => d.document_type === key);
+                      if (config.nonEUOnly && driver?.nationality_group === 'EU') return null;
+                      return (
+                        <SelectItem key={key} value={key} disabled={!!exists}>
+                          {config.name} ({config.abbr}) {exists ? '— уже есть' : ''}
+                        </SelectItem>
+                      );
+                    })}
+                    <SelectItem value="other">Другой</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {newDoc.document_type === 'other' && (
+                <div>
+                  <p className="text-[10px] text-gray-400 mb-0.5">Название документа</p>
+                  <Input value={newDoc.custom_name} onChange={(e) => setNewDoc(prev => ({ ...prev, custom_name: e.target.value }))} className="h-8 text-sm" placeholder="Введите название..." />
+                </div>
+              )}
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <p className="text-[10px] text-gray-400 mb-0.5">Номер</p>
+                  <Input value={newDoc.document_number} onChange={(e) => setNewDoc(prev => ({ ...prev, document_number: e.target.value }))} className="h-8 text-sm" placeholder="—" />
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 mb-0.5">От</p>
+                  <DateInput value={newDoc.issue_date} onChange={(val) => setNewDoc(prev => ({ ...prev, issue_date: val }))} />
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 mb-0.5">До</p>
+                  <DateInput value={newDoc.expiry_date} onChange={(val) => setNewDoc(prev => ({ ...prev, expiry_date: val }))} />
+                </div>
+              </div>
+              {newDoc.document_type === 'visa' && (
+                <div>
+                  <p className="text-[10px] text-gray-400 mb-0.5">Тип визы</p>
+                  <Select value={newDoc.visa_type || ''} onValueChange={(val) => setNewDoc(prev => ({ ...prev, visa_type: val }))}>
+                    <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Выберите тип" /></SelectTrigger>
+                    <SelectContent>
+                      {VISA_TYPES.map(vt => <SelectItem key={vt.value} value={vt.value}>{vt.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              <div className="flex justify-end gap-2 pt-1">
+                <button onClick={() => { setShowAddForm(false); setNewDoc({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' }); }} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1">Отмена</button>
+                <button onClick={handleAddDocument} className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700" disabled={!newDoc.document_type}>Добавить</button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setShowAddForm(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
+              + Добавить документ
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
