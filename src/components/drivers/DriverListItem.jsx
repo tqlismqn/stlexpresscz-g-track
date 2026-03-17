@@ -3,6 +3,13 @@ import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { getCountryByCode } from '@/lib/countries';
 import { formatDriverId } from '@/lib/driverUtils';
 
+const statusConfig = {
+  active:     { bg: 'bg-green-100 text-green-700', label: 'Активный' },
+  inactive:   { bg: 'bg-amber-100 text-amber-700', label: 'Неактивный' },
+  on_leave:   { bg: 'bg-blue-100 text-blue-700',   label: 'В отпуске' },
+  terminated: { bg: 'bg-gray-100 text-gray-500',   label: 'Уволен' }
+};
+
 const avatarColors = [
   'bg-blue-500',
   'bg-green-500',
