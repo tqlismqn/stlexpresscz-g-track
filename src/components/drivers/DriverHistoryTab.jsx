@@ -12,7 +12,7 @@ const actionConfig = {
   comment_deleted: { icon: '🗑️', color: 'text-red-600', label: 'comment_deleted' }
 };
 
-export default function DriverHistoryTab({ driver }) {
+export default function DriverHistoryTab({ driver, currentUserRole = 'viewer' }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 

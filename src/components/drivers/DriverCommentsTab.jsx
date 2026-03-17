@@ -4,12 +4,14 @@ import { base44 } from '@/api/base44Client';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
-export default function DriverCommentsTab({ driver, isTerminated }) {
+export default function DriverCommentsTab({ driver, isTerminated, currentUserRole = 'viewer', currentUserName = 'Неизвестный пользователь' }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
+  const canAddComment = currentUserRole === 'admin' || currentUserRole === 'hr';
+  const canDeleteComment = currentUserRole === 'admin';
 
   useEffect(() => {
     if (!driver?.id) return;
@@ -35,7 +37,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
       await base44.entities.DriverComment.create({
         driver_id: driver.id,
         text: newComment,
-        author: 'Admin'
+        author: currentUserName
       });
 
       // Create history record
@@ -45,7 +47,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
         action: 'comment_added',
         description: 'Комментарий добавлен',
         new_value: truncated,
-        changed_by: 'Admin'
+        changed_by: currentUserName
       });
 
       setNewComment('');
@@ -71,7 +73,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
         action: 'comment_deleted',
         description: 'Комментарий удалён',
         old_value: truncated,
-        changed_by: 'Admin'
+        changed_by: currentUserName
       });
 
       setDeleteModalOpen(false);
@@ -90,7 +92,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
   return (
     <div className="space-y-4">
       {/* Add comment form */}
-      {!isTerminated && (
+      {!isTerminated && canAddComment && (
         <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
           <textarea
             value={newComment}
@@ -125,7 +127,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
                   <span>·</span>
                   <span>{format(new Date(comment.created_date), 'dd.MM.yyyy HH:mm')}</span>
                 </div>
-                {!isTerminated && (
+                {!isTerminated && canDeleteComment && (
                   <button
                     onClick={() => { setCommentToDelete(comment); setDeleteModalOpen(true); }}
                     className="p-1 text-gray-400 hover:text-red-600 transition-colors"
