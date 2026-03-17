@@ -431,6 +431,21 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
           )}
         </div>
       )}
+
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Удалить документ</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Удалить документ "{DOCUMENT_TYPES[deleteConfirm.docType]?.name || deleteConfirm.docType}"? Это действие нельзя отменить.
+            </p>
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setDeleteConfirm(null)} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5">Отмена</button>
+              <button onClick={confirmDelete} className="text-sm bg-red-600 text-white px-4 py-1.5 rounded-md hover:bg-red-700">Удалить</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
