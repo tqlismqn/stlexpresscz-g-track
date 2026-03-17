@@ -107,11 +107,17 @@ const getStatusColor = (status) => {
   }
 };
 
-export default function DriverDetailView({ driver, documents = [], onEditModeChange }) {
+export default function DriverDetailView({ driver, documents = [], onSave }) {
   const [expandedSections, setExpandedSections] = useState({
     bankDetails: false,
     additionalData: false
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (driver) setFormData({ ...driver });
+  }, [driver]);
 
   const readinessPct = driver?.trip_readiness_pct || 0;
   const isNonEU = driver?.nationality_group === 'non-EU';
