@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, ChevronsUpDown, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import DriverDocumentsTabContent from './DriverDocumentsTabContent';
@@ -80,7 +80,7 @@ const getInitials = (name) => {
 function CountryCombobox({ value, onChange }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const { pinned, rest } = useMemo(() => getSortedCountries(), []);
+  const { pinned, rest } = getSortedCountries();
 
   const filterFn = (c) =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -190,9 +190,6 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       const dataToSave = { ...restData, name: reverseFormatDriverName(restData.name) };
 
       if (isCreating && !driver) {
-        const allDrivers = await Driver.list();
-        const maxNum = Math.max(0, ...allDrivers.map(d => d.internal_number || 0));
-        dataToSave.internal_number = maxNum + 1;
         const newDriver = await Driver.create(dataToSave);
         toast.success('✓ Водитель создан');
         if (onSave) onSave(newDriver);
@@ -286,7 +283,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               {!isCreateMode && (
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                   <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
-                  {driver?.status === 'terminated' || isEditing ? (
+                  {driver?.status === 'terminated' ? (
                     <button
                       onClick={() => setShowRestoreModal(true)}
                       title="Восстановить водителя"
@@ -295,7 +292,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                       Восстановить
                     </button>
                   ) : (
-                    {!isEditing && <button
+                    <button
                       onClick={() => setShowArchiveModal(true)}
                       title="Архивировать водителя"
                       className="p-1 text-gray-400 hover:text-red-500 transition-colors"
