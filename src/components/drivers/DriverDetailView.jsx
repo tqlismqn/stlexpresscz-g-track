@@ -146,6 +146,49 @@ const getStatusColor = (status) => {
   }
 };
 
+function CountryCombobox({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const filtered = countries.filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase()) ||
+    c.code.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const selected = getCountryByCode(value);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="w-full h-8 justify-between text-sm font-normal">
+          {selected ? `${selected.name} (${selected.code})` : "Выберите страну..."}
+          <ChevronsUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Поиск страны..." value={search} onValueChange={setSearch} />
+          <CommandList>
+            <CommandEmpty>Страна не найдена</CommandEmpty>
+            <CommandGroup>
+              {filtered.map((c) => (
+                <CommandItem
+                  key={c.code}
+                  value={`${c.name} (${c.code})`}
+                  onSelect={() => { onChange(c.code); setOpen(false); setSearch(''); }}
+                >
+                  <Check className={cn("mr-2 h-4 w-4", value === c.code ? "opacity-100" : "opacity-0")} />
+                  {c.name} ({c.code}) {c.isEU ? '🇪🇺' : ''}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export default function DriverDetailView({ driver, documents = [], onSave }) {
   const [expandedSections, setExpandedSections] = useState({
     bankDetails: false,
