@@ -175,7 +175,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <h3 className="text-xl font-bold text-gray-900">{formatDriverName(driver?.name)}</h3>
-              <span className="text-xs text-gray-500">DRV-{driver?.id?.slice(-4)}</span>
+              <span className="text-xs text-gray-500">DRV-{driver?.internal_number ? String(driver.internal_number).padStart(3, '0') : driver?.id?.slice(-4)}</span>
               <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
                 driver?.nationality_group === 'EU'
                   ? 'bg-blue-100 text-blue-700'
@@ -239,6 +239,11 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
         <div className="flex-1 min-h-0 overflow-y-auto pb-6">
           {/* TAB 1: Обзор (Overview) */}
           <TabsContent value="overview" className="p-0">
+            {incompleteFields.length > 0 && (
+              <div className="mx-4 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
+                ⚠ Неполные данные: {incompleteFields.map(f => f.label).join(', ')}
+              </div>
+            )}
             <div className="flex justify-end px-4 pt-3 mb-1">
               {isEditing ? (
                 <div className="flex gap-2">
