@@ -17,14 +17,14 @@ const documentConfig = {
   a1_certificate: { abbr: 'A1', isRequired: true },
   declaration: { abbr: 'DEC', isRequired: true },
   insurance: { abbr: 'INS', isRequired: true },
-  travel_insurance: { abbr: 'TIN', isRequired: true },
-  visa: { abbr: 'VISA', isRequired: true },
+  travel_insurance: { abbr: 'TIS', isRequired: true },
+  visa: { abbr: 'VIS', isRequired: true },
   passport: { abbr: 'PAS', isRequired: true },
   driver_license: { abbr: 'DL', isRequired: true },
   medical_certificate: { abbr: 'MED', isRequired: true },
   psihotest: { abbr: 'PSI', isRequired: true },
   adr_certificate: { abbr: 'ADR', isRequired: false },
-  chip_card: { abbr: 'CHIP', isRequired: false },
+  chip_card: { abbr: 'TCH', isRequired: false },
   code95: { abbr: 'C95', isRequired: false }
 };
 
