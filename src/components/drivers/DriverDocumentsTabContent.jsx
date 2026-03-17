@@ -193,8 +193,9 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
 
   const handleSave = async () => {
     setIsSaving(true);
+    console.log('handleSave called');
+    console.log('editDocs:', JSON.stringify(editDocs));
     try {
-      const promises = [];
       for (const [docType, docData] of Object.entries(editDocs)) {
         const existingDoc = documents.find(d => d.document_type === docType);
         if (existingDoc) {
@@ -204,27 +205,35 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
             expiry_date: docData.expiry_date || null,
           };
           if (docData.visa_type) updatePayload.visa_type = docData.visa_type;
-          promises.push(DriverDocument.update(existingDoc.id, updatePayload));
+          console.log('Updating', docType, 'id:', existingDoc.id, 'payload:', updatePayload);
+          await DriverDocument.update(existingDoc.id, updatePayload);
+          console.log('Updated', docType, 'OK');
         } else {
           const hasData = docData.document_number || docData.issue_date || docData.expiry_date;
           if (hasData) {
-            promises.push(DriverDocument.create({
+            const createPayload = {
               driver_id: driver.id,
               document_type: docType,
               document_number: docData.document_number || '',
               issue_date: docData.issue_date || null,
               expiry_date: docData.expiry_date || null,
               status: 'valid',
-            }));
+            };
+            console.log('Creating', docType, 'payload:', createPayload);
+            await DriverDocument.create(createPayload);
+            console.log('Created', docType, 'OK');
+          } else {
+            console.log('Skipping', docType, '- no data');
           }
         }
       }
-      await Promise.all(promises);
+      console.log('All saves completed');
       setIsEditing(false);
       if (onEditingChange) onEditingChange(false);
       if (onDocumentsChange) onDocumentsChange();
     } catch (error) {
       console.error('Document save failed:', error);
+      console.error('Error details:', JSON.stringify(error));
     } finally {
       setIsSaving(false);
     }
