@@ -2,7 +2,7 @@ import React from 'react';
 import { Plus } from 'lucide-react';
 import DriverDetailView from './DriverDetailView';
 
-export default function DriverDetail({ driver, onSave, documents, isCreating, onCreateDriver }) {
+export default function DriverDetail({ driver, onSave, documents, isCreating, onCreateDriver, initialTab = 'overview' }) {
   if (!driver && !isCreating) {
     return (
       <div className="bg-white rounded-lg shadow p-6 h-full flex flex-col items-center justify-center overflow-y-auto">
@@ -20,7 +20,7 @@ export default function DriverDetail({ driver, onSave, documents, isCreating, on
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden h-full flex flex-col">
-      <DriverDetailView driver={driver} documents={documents} onSave={onSave} isCreating={isCreating} />
+      <DriverDetailView driver={driver} documents={documents} onSave={onSave} isCreating={isCreating} initialTab={initialTab} />
     </div>
   );
 }
