@@ -182,11 +182,13 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
   const cancelEditing = () => {
     setEditDocs({});
     setIsEditing(false);
+    if (onEditingChange) onEditingChange(false);
   };
 
   const handleSave = () => {
     // API calls will be added in Step 2b
     setIsEditing(false);
+    if (onEditingChange) onEditingChange(false);
   };
 
   const handleDocFieldChange = (docType, field, value) => {
