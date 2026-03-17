@@ -21,7 +21,7 @@ const docTypeLabels = {
   code95: 'Код 95'
 };
 
-export default function ExpiringDocumentsWidget() {
+export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
   const [expiringDocs, setExpiringDocs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,11 +29,12 @@ export default function ExpiringDocumentsWidget() {
     const loadData = async () => {
       try {
         const docs = await base44.entities.DriverDocument.list();
-        const drivers = await base44.entities.Driver.list();
+        const drivers = activeDrivers.length > 0 ? activeDrivers : await base44.entities.Driver.list();
         const driverMap = new Map(drivers.map(d => [d.id, d]));
+        const activeDriverIds = new Set(drivers.filter(d => d.status === 'active').map(d => d.id));
 
         const expiring = docs
-          .filter(d => d.status === 'expiring')
+          .filter(d => d.status === 'expiring' && activeDriverIds.has(d.driver_id))
           .map(d => ({
             ...d,
             driverName: driverMap.get(d.driver_id)?.name || 'Unknown'
@@ -50,7 +51,7 @@ export default function ExpiringDocumentsWidget() {
     };
 
     loadData();
-  }, []);
+  }, [activeDrivers]);
 
   if (loading) {
     return <div className="bg-white rounded-lg shadow p-6">Загрузка...</div>;
