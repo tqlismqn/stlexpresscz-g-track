@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -8,6 +9,7 @@ import DriverFilters from '@/components/drivers/DriverFilters';
 import { formatDriverId } from '@/lib/driverUtils';
 
 export default function Drivers() {
+  const location = useLocation();
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({
@@ -16,6 +18,14 @@ export default function Drivers() {
     search: '',
     sortBy: 'name'
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const filterParam = params.get('filter');
+    if (filterParam && ['ready', 'expiring', 'expired'].includes(filterParam)) {
+      setFilters(prev => ({ ...prev, statusFilter: filterParam }));
+    }
+  }, [location.search]);
 
   const { data: drivers = [], isLoading, refetch } = useQuery({
     queryKey: ['drivers'],
