@@ -19,13 +19,30 @@ export default function Drivers() {
     sortBy: 'name'
   });
 
+  const [selectedTab, setSelectedTab] = useState('overview');
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const filterParam = params.get('filter');
+    const selectParam = params.get('select');
+    const tabParam = params.get('tab');
+
     if (filterParam && ['ready', 'expiring', 'expired'].includes(filterParam)) {
       setFilters(prev => ({ ...prev, statusFilter: filterParam }));
     }
-  }, [location.search]);
+
+    if (selectParam) {
+      const driverToSelect = drivers.find(d => d.id === selectParam);
+      if (driverToSelect) {
+        setSelectedDriver(driverToSelect);
+        setIsCreating(false);
+      }
+    }
+
+    if (tabParam) {
+      setSelectedTab(tabParam);
+    }
+  }, [location.search, drivers]);
 
   const { data: drivers = [], isLoading, refetch } = useQuery({
     queryKey: ['drivers'],
