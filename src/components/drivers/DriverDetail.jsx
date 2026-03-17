@@ -3,10 +3,10 @@ import { base44 } from '@/api/base44Client';
 import { Plus } from 'lucide-react';
 import DriverDetailView from './DriverDetailView';
 
-export default function DriverDetail({ driver, onSave, documents }) {
+export default function DriverDetail({ driver, onSave, documents, isCreating }) {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  if (!driver && !showCreateForm) {
+  if (!driver && !showCreateForm && !isCreating) {
     return (
       <div className="bg-white rounded-lg shadow p-6 h-full flex flex-col items-center justify-center overflow-y-auto">
         <p className="text-gray-500">Выберите водителя или создайте нового</p>
