@@ -41,8 +41,11 @@ const getAvatarColor = (name) => {
 
 const getInitials = (name) => {
   if (!name) return '??';
-  const parts = name.split(' ');
-  return (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
+  const formatted = formatDriverName(name);
+  const parts = formatted.split(' ');
+  let initials = parts[0]?.[0] || '';
+  if (parts.length > 1) initials += parts[parts.length - 1]?.[0] || '';
+  return initials.toUpperCase();
 };
 
 const docTypeLabels = {
@@ -160,9 +163,13 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
   };
 
   const handleSave = async () => {
-    await Driver.update(formData.id, formData);
-    setIsEditing(false);
-    if (onSave) onSave();
+    try {
+      await Driver.update(formData.id, formData);
+      setIsEditing(false);
+      if (onSave) onSave(formData);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
   };
 
   const categorizedDocuments = useMemo(() => {
@@ -201,7 +208,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
           {/* Name, DRV-ID, Nationality, Edit Button */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-xl font-bold text-gray-900">{driver?.name}</h3>
+              <h3 className="text-xl font-bold text-gray-900">{formatDriverName(driver?.name)}</h3>
               <span className="text-xs text-gray-500">DRV-{driver?.id?.slice(-4)}</span>
               <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
                 driver?.nationality_group === 'EU'
