@@ -230,13 +230,18 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
         <div className="flex-1 min-h-0 overflow-y-auto pb-6">
           {/* TAB 1: Обзор (Overview) */}
           <TabsContent value="overview" className="p-0">
-            {!isEditing && (
-              <div className="flex justify-end px-4 pt-3">
+            <div className="flex justify-end px-4 pt-3 mb-1">
+              {isEditing ? (
+                <div className="flex gap-2">
+                  <button onClick={() => { setFormData({ ...driver }); setIsEditing(false); }} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1">Отмена</button>
+                  <button onClick={handleSave} className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700">Сохранить</button>
+                </div>
+              ) : (
                 <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
                   <Pencil className="w-3.5 h-3.5" /> Изменить
                 </button>
-              </div>
-            )}
+              )}
+            </div>
             <div className="divide-y divide-gray-100">
 
               {/* SECTION 1: Личные данные */}
