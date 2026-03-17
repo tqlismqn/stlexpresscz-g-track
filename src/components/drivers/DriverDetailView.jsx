@@ -409,6 +409,37 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
           </TabsContent>
         </div>
       </Tabs>
+    {showUnsavedModal && (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Несохранённые изменения</h3>
+          <p className="text-sm text-gray-600 mb-4">У вас есть несохранённые изменения. Сохранить перед переключением?</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => {
+                setIsEditing(false);
+                setDocumentsEditing(false);
+                setActiveTab(pendingTab);
+                setShowUnsavedModal(false);
+                setPendingTab(null);
+              }}
+              className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5"
+            >
+              Не сохранять
+            </button>
+            <button
+              onClick={() => {
+                setShowUnsavedModal(false);
+                setPendingTab(null);
+              }}
+              className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700"
+            >
+              Остаться
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     </div>
   );
 }
