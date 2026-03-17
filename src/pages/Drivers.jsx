@@ -93,8 +93,6 @@ export default function Drivers() {
         <div className="w-[40%] min-w-0 flex flex-col min-h-0">
           <DriverDetail
             driver={selectedDriver}
-            editMode={editMode}
-            onEditModeChange={setEditMode}
             onSave={handleSaveDriver}
             documents={documents.filter(d => d.driver_id === selectedDriver?.id)}
           />
