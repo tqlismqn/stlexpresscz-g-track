@@ -389,7 +389,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
 
           {/* TAB 2: Документы (Documents) */}
           <TabsContent value="documents" className="p-0">
-            <DriverDocumentsTabContent driver={driver} documents={documents} onDocumentsChange={onSave} />
+            <DriverDocumentsTabContent driver={driver} documents={documents} onDocumentsChange={onSave} onEditingChange={setDocumentsEditing} />
           </TabsContent>
 
           {/* TAB 3: Комментарии (Comments) */}
