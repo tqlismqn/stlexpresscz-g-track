@@ -138,6 +138,16 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
     return days < 0 ? `Просрочено на ${Math.abs(days)} дн.` : `Осталось ${days} дн.`;
   };
 
+  const handleFieldChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = async () => {
+    await Driver.update(formData.id, formData);
+    setIsEditing(false);
+    if (onSave) onSave();
+  };
+
   const categorizedDocuments = useMemo(() => {
     const requiredDocs = isNonEU ? requiredNonEU : requiredEU;
     const docsMap = new Map(documents.map(d => [d.document_type, d]));
