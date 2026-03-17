@@ -21,6 +21,16 @@ export default function Drivers() {
 
   const [selectedTab, setSelectedTab] = useState('overview');
 
+  const { data: drivers = [], isLoading, refetch } = useQuery({
+    queryKey: ['drivers'],
+    queryFn: () => base44.entities.Driver.list()
+  });
+
+  const { data: documents = [], refetch: refetchDocuments } = useQuery({
+    queryKey: ['documents'],
+    queryFn: () => base44.entities.DriverDocument.list()
+  });
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const filterParam = params.get('filter');
@@ -43,16 +53,6 @@ export default function Drivers() {
       setSelectedTab(tabParam);
     }
   }, [location.search, drivers]);
-
-  const { data: drivers = [], isLoading, refetch } = useQuery({
-    queryKey: ['drivers'],
-    queryFn: () => base44.entities.Driver.list()
-  });
-
-  const { data: documents = [], refetch: refetchDocuments } = useQuery({
-    queryKey: ['documents'],
-    queryFn: () => base44.entities.DriverDocument.list()
-  });
 
   const counts = useMemo(() => {
     if (!drivers.length) return { all: 0, ready: 0, incomplete: 0, expiring: 0, expired: 0, inactive: 0, archive: 0 };
