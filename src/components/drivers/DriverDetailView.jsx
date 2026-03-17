@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight, Edit2, Check, ChevronsUpDown } from 'lucide-react';
+import { Edit2, Check, ChevronsUpDown } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
