@@ -179,6 +179,8 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const canEdit = userRole === 'admin' || userRole === 'hr';
   const canArchive = userRole === 'admin';
   
+  console.log('--- Debug RBAC ---', { role: currentUser?.role, userRole, canEdit, canArchive, userName });
+  
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab);

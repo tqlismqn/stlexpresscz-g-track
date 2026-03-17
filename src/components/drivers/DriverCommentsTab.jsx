@@ -10,8 +10,8 @@ export default function DriverCommentsTab({ driver, isTerminated, currentUserRol
   const [loading, setLoading] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
-  const canAddComment = currentUserRole === 'admin' || currentUserRole === 'hr';
-  const canDeleteComment = currentUserRole === 'admin';
+  const canAddComment = currentUserRole?.toLowerCase() === 'admin' || currentUserRole?.toLowerCase() === 'hr';
+  const canDeleteComment = currentUserRole?.toLowerCase() === 'admin';
 
   useEffect(() => {
     if (!driver?.id) return;
