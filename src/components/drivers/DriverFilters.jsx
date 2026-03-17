@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, X } from 'lucide-react';
 
 const STATUS_PILLS = [
   { key: 'all',      label: 'Все',         countKey: 'all' },
