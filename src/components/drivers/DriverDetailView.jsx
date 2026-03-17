@@ -146,10 +146,10 @@ const EMPTY_FORM = {
   _dob_display: ''
 };
 
-export default function DriverDetailView({ driver, documents = [], onSave, isCreating }) {
+export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [documentsEditing, setDocumentsEditing] = useState(false);
   const [pendingTab, setPendingTab] = useState(null);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
