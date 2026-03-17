@@ -75,7 +75,7 @@ function DocumentRowRead({ docType, config, doc }) {
             <span className="italic text-gray-400">Нет данных</span>
           ) : (
             <>
-              {doc.document_number && <span>№{doc.document_number} · </span>}
+              {doc.document_number && <span>{doc.document_number} · </span>}
               {hasDateInfo ? (
                 <span>{formatDate(doc?.issue_date)} → {toDisplay}</span>
               ) : (
@@ -258,6 +258,19 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       if (onDocumentsChange) onDocumentsChange();
     } catch (error) {
       console.error('Add document failed:', error);
+    }
+  };
+
+  const handleDeleteDocument = async (docId, docType) => {
+    if (!docId) return;
+    const config = DOCUMENT_TYPES[docType];
+    const confirmMsg = `Удалить документ "${config?.name || docType}"? Это действие нельзя отменить.`;
+    if (!window.confirm(confirmMsg)) return;
+    try {
+      await DriverDocument.delete(docId);
+      if (onDocumentsChange) onDocumentsChange();
+    } catch (error) {
+      console.error('Delete document failed:', error);
     }
   };
 
