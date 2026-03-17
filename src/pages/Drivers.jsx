@@ -66,7 +66,7 @@ export default function Drivers() {
     if (updatedDriver) {
       setSelectedDriver(updatedDriver);
     }
-    await refetch();
+    await Promise.all([refetch(), refetchDocuments()]);
   };
 
   return (
