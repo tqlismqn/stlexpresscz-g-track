@@ -216,7 +216,7 @@ export default function DriverDetailView({ driver, documents = [], onEditModeCha
       </div>
 
       {/* TABS */}
-      <Tabs defaultValue="overview" className="h-full flex flex-col">
+      <Tabs defaultValue="overview" className="flex-1 flex flex-col">
         <TabsList className="flex-shrink-0 w-full justify-start border-b bg-transparent p-0 rounded-none h-auto">
             <TabsTrigger value="overview" className="rounded-none">Обзор</TabsTrigger>
             <TabsTrigger value="documents" className="rounded-none">Документы</TabsTrigger>
