@@ -78,11 +78,14 @@ const getInitials = (name) => {
 function CountryCombobox({ value, onChange }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const { pinned, rest } = getSortedCountries();
 
-  const filtered = countries.filter(c =>
+  const filterFn = (c) =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.code.toLowerCase().includes(search.toLowerCase())
-  );
+    c.code.toLowerCase().includes(search.toLowerCase());
+
+  const filteredPinned = pinned.filter(filterFn);
+  const filteredRest = rest.filter(filterFn);
 
   const selected = getCountryByCode(value);
 
@@ -90,7 +93,7 @@ function CountryCombobox({ value, onChange }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="w-full h-8 justify-between text-sm font-normal">
-          {selected ? `${selected.name} (${selected.code})` : "Выберите страну..."}
+          {selected ? `${selected.flag} ${selected.name}` : "Выберите страну..."}
           <ChevronsUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -99,18 +102,34 @@ function CountryCombobox({ value, onChange }) {
           <CommandInput placeholder="Поиск страны..." value={search} onValueChange={setSearch} />
           <CommandList>
             <CommandEmpty>Страна не найдена</CommandEmpty>
-            <CommandGroup>
-              {filtered.map((c) => (
-                <CommandItem
-                  key={c.code}
-                  value={`${c.name} (${c.code})`}
-                  onSelect={() => { onChange(c.code); setOpen(false); setSearch(''); }}
-                >
-                  <Check className={cn("mr-2 h-4 w-4", value === c.code ? "opacity-100" : "opacity-0")} />
-                  {c.name} ({c.code}) {c.isEU ? '🇪🇺' : ''}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            {filteredPinned.length > 0 && (
+              <CommandGroup heading="Основные">
+                {filteredPinned.map((c) => (
+                  <CommandItem
+                    key={c.code}
+                    value={`${c.name} ${c.code}`}
+                    onSelect={() => { onChange(c.code); setOpen(false); setSearch(''); }}
+                  >
+                    <Check className={cn("mr-2 h-4 w-4", value === c.code ? "opacity-100" : "opacity-0")} />
+                    {c.flag} {c.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+            {filteredRest.length > 0 && (
+              <CommandGroup heading="Все страны">
+                {filteredRest.map((c) => (
+                  <CommandItem
+                    key={c.code}
+                    value={`${c.name} ${c.code}`}
+                    onSelect={() => { onChange(c.code); setOpen(false); setSearch(''); }}
+                  >
+                    <Check className={cn("mr-2 h-4 w-4", value === c.code ? "opacity-100" : "opacity-0")} />
+                    {c.flag} {c.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>
@@ -304,7 +323,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
 
                   {/* Row 2: Национальность | Rodné číslo */}
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Национальность</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Гражданство</p>
                     {isEditing ? (
                       <CountryCombobox
                         value={formData.country_code || ''}
@@ -315,7 +334,11 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                       />
                     ) : (
                       <p className="font-medium text-gray-900">
-                        {getCountryByCode(driver?.country_code)?.name || driver?.nationality_group || '—'}
+                        {(() => {
+                          const c = getCountryByCode(driver?.country_code);
+                          if (c) return `${c.flag} ${c.name}`;
+                          return <span className="text-gray-400">Не указано</span>;
+                        })()}
                       </p>
                     )}
                   </div>
