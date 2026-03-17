@@ -517,30 +517,6 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                     )}
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Номер паспорта</p>
-                    {isEditing ? (
-                      <Input value={formData.passport_number || ''} onChange={(e) => handleFieldChange('passport_number', e.target.value)} className="h-8 text-sm" />
-                    ) : (
-                      <p className="font-medium text-gray-900">{driver?.passport_number || '—'}</p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Номер ВУ</p>
-                    {isEditing ? (
-                      <Input value={formData.driving_license_number || ''} onChange={(e) => handleFieldChange('driving_license_number', e.target.value)} className="h-8 text-sm" />
-                    ) : (
-                      <p className="font-medium text-gray-900">{driver?.driving_license_number || '—'}</p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
-                    {isEditing ? (
-                      <Input value={formData.address || ''} onChange={(e) => handleFieldChange('address', e.target.value)} className="h-8 text-sm" />
-                    ) : (
-                      <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
-                    )}
-                  </div>
-                  <div>
                     <p className="text-xs text-gray-600 mb-0.5">Банк</p>
                     {isEditing ? (
                       <Input value={formData.bank_name || ''} onChange={(e) => handleFieldChange('bank_name', e.target.value)} className="h-8 text-sm" />
