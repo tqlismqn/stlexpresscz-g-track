@@ -64,7 +64,6 @@ export default function Drivers() {
 
   const handleSaveDriver = async () => {
     await refetch();
-    setEditMode(false);
   };
 
   return (
