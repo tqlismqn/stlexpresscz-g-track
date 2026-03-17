@@ -73,22 +73,7 @@ const getInitials = (name) => {
   return initials.toUpperCase();
 };
 
-const docTypeLabels = {
-  work_contract: 'Трудовой договор',
-  transport_licence: 'Лицензия на транспорт',
-  a1_certificate: 'Сертификат A1',
-  declaration: 'Декларация',
-  insurance: 'Страховка',
-  travel_insurance: 'Путешественническая страховка',
-  visa: 'Виза',
-  passport: 'Паспорт',
-  driver_license: 'Водительское удостоверение',
-  medical_certificate: 'Медицинское свидетельство',
-  psihotest: 'Психотест',
-  adr_certificate: 'Сертификат ADR',
-  chip_card: 'Чип-карта',
-  code95: 'Код 95'
-};
+
 
 const visaTypeMap = {
   'povoleni_k_pobytu': 'Povolení k pobytu',
