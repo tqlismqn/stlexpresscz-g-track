@@ -3,6 +3,12 @@ import { format, differenceInDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight, Edit2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { base44 } from '@/api/base44Client';
+
+const Driver = base44.entities.Driver;
 
 const avatarColors = [
   'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-amber-500',
