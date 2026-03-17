@@ -159,13 +159,19 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
               <span title="Неполные данные" className="text-amber-400 text-xs leading-none">⚠</span>
             )}
             <span className="text-xs text-muted-foreground">DRV-{drvId}</span>
-            <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
-              driver.nationality_group === 'EU'
-                ? 'bg-blue-100 text-blue-700'
-                : 'bg-amber-100 text-amber-700'
-            }`}>
-              {driver.nationality_group === 'EU' ? 'EU' : 'non-EU'}
-            </span>
+            {getCountryByCode(driver.country_code)?.flag ? (
+              <span className="text-sm leading-none" title={getCountryByCode(driver.country_code)?.name}>
+                {getCountryByCode(driver.country_code).flag}
+              </span>
+            ) : (
+              <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
+                driver.nationality_group === 'EU'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-amber-100 text-amber-700'
+              }`}>
+                {driver.nationality_group === 'EU' ? 'EU' : 'non-EU'}
+              </span>
+            )}
           </div>
 
           {/* Line 2: Document pills */}
