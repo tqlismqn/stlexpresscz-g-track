@@ -351,6 +351,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                     docType={docType}
                     config={config}
                     doc={docsMap.get(docType) || null}
+                    onDelete={handleDeleteDocument}
                   />
                 )
               )}
