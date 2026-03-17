@@ -176,6 +176,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     });
     setEditDocs(map);
     setIsEditing(true);
+    if (onEditingChange) onEditingChange(true);
   };
 
   const cancelEditing = () => {
