@@ -16,6 +16,7 @@ import { format as formatDateFns } from "date-fns";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { getCountryByCode, isEUCountry, getSortedCountries } from "@/lib/countries";
 import { getIncompleteFields } from '@/lib/dataCompleteness';
+import { formatDriverId } from '@/lib/driverUtils';
 
 const Driver = base44.entities.Driver;
 
