@@ -216,6 +216,28 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     }
   };
 
+  const handleAddDocument = async () => {
+    if (!newDoc.document_type) return;
+    try {
+      const createPayload = {
+        driver_id: driver.id,
+        document_type: newDoc.document_type === 'other' ? 'other' : newDoc.document_type,
+        document_number: newDoc.document_number || '',
+        issue_date: newDoc.issue_date || null,
+        expiry_date: newDoc.expiry_date || null,
+        status: 'valid',
+      };
+      if (newDoc.custom_name) createPayload.notes = newDoc.custom_name;
+      if (newDoc.visa_type) createPayload.visa_type = newDoc.visa_type;
+      await DriverDocument.create(createPayload);
+      setShowAddForm(false);
+      setNewDoc({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' });
+      if (onDocumentsChange) onDocumentsChange();
+    } catch (error) {
+      console.error('Add document failed:', error);
+    }
+  };
+
   const handleDocFieldChange = (docType, field, value) => {
     setEditDocs(prev => ({
       ...prev,
