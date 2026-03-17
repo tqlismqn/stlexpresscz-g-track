@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
 import { LayoutDashboard, Users, Truck, FileText, Settings, LogOut, Menu } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 
 const navigation = [
   { label: 'Дашборд', icon: LayoutDashboard, path: '/Dashboard', section: 'main' },
