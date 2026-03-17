@@ -118,6 +118,7 @@ function CountryCombobox({ value, onChange }) {
 
 export default function DriverDetailView({ driver, documents = [], onSave }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
