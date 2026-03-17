@@ -243,9 +243,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       setIsEditing(false);
       if (onEditingChange) onEditingChange(false);
       if (onDocumentsChange) onDocumentsChange();
+      toast.success('✓ Документы сохранены');
     } catch (error) {
       console.error('Document save failed:', error);
-      console.error('Error details:', JSON.stringify(error));
+      toast.error('✗ Ошибка сохранения документов');
     } finally {
       setIsSaving(false);
     }
@@ -268,8 +269,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       setShowAddForm(false);
       setNewDoc({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' });
       if (onDocumentsChange) onDocumentsChange();
+      toast.success('✓ Документ добавлен');
     } catch (error) {
       console.error('Add document failed:', error);
+      toast.error('✗ Ошибка добавления документа');
     }
   };
 
@@ -284,8 +287,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       await DriverDocument.delete(deleteConfirm.docId);
       setDeleteConfirm(null);
       if (onDocumentsChange) onDocumentsChange();
+      toast.success('✓ Документ удалён');
     } catch (error) {
       console.error('Delete document failed:', error);
+      toast.error('✗ Ошибка удаления документа');
     }
   };
 
