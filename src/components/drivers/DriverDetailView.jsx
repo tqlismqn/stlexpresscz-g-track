@@ -210,7 +210,7 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                     Отмена
                   </button>
                   <button
-                    onClick={() => setIsEditing(false)}
+                    onClick={handleSave}
                     className="flex items-center gap-1 px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
                   >
                     Сохранить
