@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight, Edit2 } from 'lucide-react';
+import { CheckCircle2, AlertCircle, XCircle, MinusCircle, Clock, FileText, ChevronRight, Edit2, Check, ChevronsUpDown } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format as formatDateFns } from "date-fns";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { countries, getCountryByCode, isEUCountry } from "@/lib/countries";
 
 const Driver = base44.entities.Driver;
 
