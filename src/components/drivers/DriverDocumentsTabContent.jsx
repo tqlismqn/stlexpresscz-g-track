@@ -192,28 +192,41 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
+      const promises = [];
       for (const [docType, docData] of Object.entries(editDocs)) {
         const existingDoc = documents.find(d => d.document_type === docType);
         if (existingDoc) {
-          const { id, ...updateData } = docData;
-          await DriverDocument.update(existingDoc.id, updateData);
+          const updatePayload = {
+            document_number: docData.document_number || '',
+            issue_date: docData.issue_date || null,
+            expiry_date: docData.expiry_date || null,
+          };
+          if (docData.visa_type) updatePayload.visa_type = docData.visa_type;
+          promises.push(DriverDocument.update(existingDoc.id, updatePayload));
         } else {
           const hasData = docData.document_number || docData.issue_date || docData.expiry_date;
           if (hasData) {
-            await DriverDocument.create({
-              ...docData,
-              document_type: docType,
+            promises.push(DriverDocument.create({
               driver_id: driver.id,
-            });
+              document_type: docType,
+              document_number: docData.document_number || '',
+              issue_date: docData.issue_date || null,
+              expiry_date: docData.expiry_date || null,
+              status: 'valid',
+            }));
           }
         }
       }
+      await Promise.all(promises);
       setIsEditing(false);
       if (onEditingChange) onEditingChange(false);
       if (onDocumentsChange) onDocumentsChange();
     } catch (error) {
       console.error('Document save failed:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -264,8 +277,19 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       <div className="flex justify-end">
         {isEditing ? (
           <div className="flex gap-2">
-            <button onClick={cancelEditing} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1">Отмена</button>
-            <button onClick={handleSave} className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700">Сохранить</button>
+            <button onClick={cancelEditing} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">Отмена</button>
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+            >
+              {isSaving ? (
+                <>
+                  <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                  Сохранение...
+                </>
+              ) : 'Сохранить'}
+            </button>
           </div>
         ) : (
           <button onClick={startEditing} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
