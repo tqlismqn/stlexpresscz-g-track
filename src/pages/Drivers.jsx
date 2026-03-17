@@ -19,7 +19,7 @@ export default function Drivers() {
     queryFn: () => base44.entities.Driver.list()
   });
 
-  const { data: documents = [] } = useQuery({
+  const { data: documents = [], refetch: refetchDocuments } = useQuery({
     queryKey: ['documents'],
     queryFn: () => base44.entities.DriverDocument.list()
   });
