@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Edit2, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import DriverDetailView from './DriverDetailView';
-import DriverDetailEdit from './DriverDetailEdit';
 
 export default function DriverDetail({ driver, editMode, onEditModeChange, onSave, documents }) {
   const [showCreateForm, setShowCreateForm] = useState(false);
