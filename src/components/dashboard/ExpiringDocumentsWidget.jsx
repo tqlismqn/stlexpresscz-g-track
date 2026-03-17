@@ -23,6 +23,7 @@ const docTypeLabels = {
 };
 
 export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
+  const navigate = useNavigate();
   const [expiringDocs, setExpiringDocs] = useState([]);
   const [loading, setLoading] = useState(true);
 
