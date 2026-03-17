@@ -174,7 +174,7 @@ const buildDescription = (field, oldVal, newVal) => {
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const { currentUser } = useAuth();
-  const userRole = currentUser?.role || 'viewer';
+  const userRole = currentUser?.role?.toLowerCase() || 'viewer';
   const userName = currentUser?.full_name || 'Неизвестный пользователь';
   const canEdit = userRole === 'admin' || userRole === 'hr';
   const canArchive = userRole === 'admin';
