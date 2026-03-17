@@ -119,6 +119,7 @@ function CountryCombobox({ value, onChange }) {
 
 export default function DriverDetailView({ driver, documents = [], onSave }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [documentsEditing, setDocumentsEditing] = useState(false);
   const [pendingTab, setPendingTab] = useState(null);
@@ -140,14 +141,19 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
       const { _dob_display, ...restData } = formData;
       const dataToSave = { ...restData, name: reverseFormatDriverName(restData.name) };
       await Driver.update(dataToSave.id, dataToSave);
       setIsEditing(false);
       if (onSave) onSave(dataToSave);
+      toast.success('✓ Изменения сохранены');
     } catch (error) {
       console.error('Save failed:', error);
+      toast.error('✗ Ошибка сохранения. Попробуйте ещё раз.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -234,8 +240,10 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
             <div className="flex justify-end px-4 pt-3 mb-1">
               {isEditing ? (
                 <div className="flex gap-2">
-                  <button onClick={() => { setFormData({ ...driver }); setIsEditing(false); }} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1">Отмена</button>
-                  <button onClick={handleSave} className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700">Сохранить</button>
+                  <button onClick={() => { setFormData({ ...driver }); setIsEditing(false); }} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">Отмена</button>
+                  <button onClick={handleSave} disabled={isSaving} className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5">
+                    {isSaving ? (<><svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>Сохранение...</>) : 'Сохранить'}
+                  </button>
                 </div>
               ) : (
                 <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
