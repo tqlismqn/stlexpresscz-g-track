@@ -55,7 +55,7 @@ const DateInput = ({ value, onChange }) => {
   );
 };
 
-function DocumentRowRead({ docType, config, doc, onDelete }) {
+function DocumentRowRead({ docType, config, doc }) {
   const status = doc?.status || 'missing';
   const dotColor = STATUS_COLORS[status] || 'bg-gray-300';
   const isIndefinite = config.indefiniteByDefault && !doc?.expiry_date;
@@ -85,28 +85,29 @@ function DocumentRowRead({ docType, config, doc, onDelete }) {
           )}
         </div>
       </div>
-      <div className="text-xs text-right flex-shrink-0 flex items-center gap-1">
+      <div className="text-xs text-right flex-shrink-0">
         {doc?.expiry_date && !isIndefinite && <RemainingDays expiryDate={doc.expiry_date} />}
-        {doc && onDelete && (
-          <button
-            onClick={() => onDelete(doc.id, docType)}
-            className="text-gray-300 hover:text-red-500 transition-colors flex-shrink-0 ml-2"
-            title="Удалить документ"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
       </div>
     </div>
   );
 }
 
-function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange }) {
+function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete }) {
+  const existingDoc = editDocs[docType];
   return (
     <div className="py-2">
       <div className="flex items-baseline gap-2 mb-1.5">
         <span className="text-sm font-medium text-gray-900">{config.name}</span>
         <span className="text-xs text-gray-400">({config.abbr})</span>
+        {existingDoc?.id && (
+          <button
+            onClick={() => onDelete(existingDoc.id, docType)}
+            className="text-gray-300 hover:text-red-500 transition-colors ml-auto"
+            title="Удалить документ"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
       <div className="grid grid-cols-3 gap-2">
         {config.hasNumber && (
@@ -172,6 +173,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
   const [isSaving, setIsSaving] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newDoc, setNewDoc] = useState({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const isNonEU = driver?.nationality_group === 'non-EU';
   const docsMap = new Map(documents.map(d => [d.document_type, d]));
@@ -270,13 +272,16 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     }
   };
 
-  const handleDeleteDocument = async (docId, docType) => {
+  const handleDeleteDocument = (docId, docType) => {
     if (!docId) return;
-    const config = DOCUMENT_TYPES[docType];
-    const confirmMsg = `Удалить документ "${config?.name || docType}"? Это действие нельзя отменить.`;
-    if (!window.confirm(confirmMsg)) return;
+    setDeleteConfirm({ docId, docType });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return;
     try {
-      await DriverDocument.delete(docId);
+      await DriverDocument.delete(deleteConfirm.docId);
+      setDeleteConfirm(null);
       if (onDocumentsChange) onDocumentsChange();
     } catch (error) {
       console.error('Delete document failed:', error);
@@ -344,6 +349,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                     config={config}
                     editDocs={editDocs}
                     handleDocFieldChange={handleDocFieldChange}
+                    onDelete={handleDeleteDocument}
                   />
                 ) : (
                   <DocumentRowRead
@@ -351,7 +357,6 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                     docType={docType}
                     config={config}
                     doc={docsMap.get(docType) || null}
-                    onDelete={handleDeleteDocument}
                   />
                 )
               )}
