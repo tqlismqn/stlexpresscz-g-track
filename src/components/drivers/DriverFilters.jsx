@@ -56,6 +56,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
           />
           {filters.search && (
             <button
+              type="button"
               onClick={() => setFilters({ ...filters, search: '' })}
               className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
             >

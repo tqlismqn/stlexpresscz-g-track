@@ -282,10 +282,10 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 )}
               </div>
               {/* Top-right action area */}
-              {!isCreateMode && (
+              {!isCreateMode && !isEditing && (
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                  <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
-                  {driver?.status === 'terminated' ? (
+                   <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
+                   {driver?.status === 'terminated' ? (
                     <button
                       onClick={() => setShowRestoreModal(true)}
                       title="Восстановить водителя"

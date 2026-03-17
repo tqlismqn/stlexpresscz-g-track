@@ -61,6 +61,11 @@ export default function Drivers() {
     };
   }, [drivers, documents, filters.nationalityFilter]);
 
+  const selectedDocuments = useMemo(
+    () => documents.filter(d => d.driver_id === selectedDriver?.id),
+    [documents, selectedDriver?.id]
+  );
+
   const filteredDrivers = useMemo(() => {
     if (!drivers.length) return [];
     let result = [...drivers];
@@ -175,7 +180,7 @@ export default function Drivers() {
           <DriverDetail
             driver={isCreating ? null : selectedDriver}
             onSave={handleSaveDriver}
-            documents={documents.filter(d => d.driver_id === selectedDriver?.id)}
+            documents={selectedDocuments}
             isCreating={isCreating}
             onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
           />
