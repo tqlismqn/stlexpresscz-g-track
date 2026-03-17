@@ -13,20 +13,23 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const companies = await base44.asServiceRole.entities.Company.list();
-    
-    let company = companies.find(c => c.slug === 'stl-express');
-    
-    if (!company) {
-      company = await base44.asServiceRole.entities.Company.create({
-        name: 'STL Express',
-        slug: 'stl-express',
-        settings: {
-          currency: 'CZK',
-          date_format: 'DD.MM.YYYY'
-        }
+    const existing = await base44.asServiceRole.entities.Company.filter({ name: 'STL Express' });
+    if (existing && existing.length > 0) {
+      return Response.json({ 
+        success: true, 
+        company: existing[0],
+        message: 'Company initialized'
       });
     }
+
+    const company = await base44.asServiceRole.entities.Company.create({
+      name: 'STL Express',
+      slug: 'stl-express',
+      settings: {
+        currency: 'CZK',
+        date_format: 'DD.MM.YYYY'
+      }
+    });
 
     return Response.json({ 
       success: true, 
