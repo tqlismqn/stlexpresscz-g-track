@@ -352,7 +352,17 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Дата рождения</p>
                     {isEditing ? (
-                      <Input type="date" value={formData.date_of_birth || ''} onChange={(e) => handleFieldChange('date_of_birth', e.target.value)} className="h-8 text-sm" />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className={cn("w-full h-8 justify-start text-left text-sm font-normal", !formData.date_of_birth && "text-muted-foreground")}>
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                            {formData.date_of_birth ? formatDateFns(new Date(formData.date_of_birth), "dd.MM.yyyy") : "Выберите дату"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar mode="single" selected={formData.date_of_birth ? new Date(formData.date_of_birth) : undefined} onSelect={(date) => handleFieldChange('date_of_birth', date ? formatDateFns(date, "yyyy-MM-dd") : '')} initialFocus />
+                        </PopoverContent>
+                      </Popover>
                     ) : (
                       <p className="font-medium text-gray-900">{driver?.date_of_birth || '—'}</p>
                     )}
@@ -469,7 +479,17 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                       <div>
                         <p className="text-xs text-gray-600 mb-0.5">Дата увольнения</p>
                         {isEditing ? (
-                          <Input type="date" value={formData.fired_date || ''} onChange={(e) => handleFieldChange('fired_date', e.target.value)} className="h-8 text-sm" />
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="outline" className={cn("w-full h-8 justify-start text-left text-sm font-normal", !formData.fired_date && "text-muted-foreground")}>
+                                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                                {formData.fired_date ? formatDateFns(new Date(formData.fired_date), "dd.MM.yyyy") : "Выберите дату"}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar mode="single" selected={formData.fired_date ? new Date(formData.fired_date) : undefined} onSelect={(date) => handleFieldChange('fired_date', date ? formatDateFns(date, "yyyy-MM-dd") : '')} initialFocus />
+                            </PopoverContent>
+                          </Popover>
                         ) : (
                           <p className="font-medium text-gray-900">{driver?.fired_date || '—'}</p>
                         )}
