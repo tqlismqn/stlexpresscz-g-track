@@ -480,6 +480,14 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                       <p className="font-medium text-gray-900">{driver?.pas_souhlas ? 'Да' : 'Нет'}</p>
                     )}
                   </div>
+                  <div className="col-span-2">
+                    <p className="text-xs text-gray-600 mb-0.5">Адрес / Прописка</p>
+                    {isEditing ? (
+                      <Input value={formData.address || ''} onChange={(e) => handleFieldChange('address', e.target.value)} className="h-8 text-sm" />
+                    ) : (
+                      <p className="font-medium text-gray-900">{driver?.address || '—'}</p>
+                    )}
+                  </div>
                 </div>
               </div>
 
