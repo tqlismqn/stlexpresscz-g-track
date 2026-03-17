@@ -1,5 +1,5 @@
 export const COMPLETENESS_FIELDS = [
-  { field: 'country_code',           label: 'Страна' },
+  { field: 'country_code',           label: 'Гражданство' },
   { field: 'date_of_birth',          label: 'Дата рождения' },
   { field: 'phone',                  label: 'Телефон' },
   { field: 'passport_number',        label: 'Номер паспорта' },
