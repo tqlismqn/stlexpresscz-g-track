@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Check, ChevronsUpDown, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import DriverDocumentsTabContent from './DriverDocumentsTabContent';
+import DriverCommentsTab from './DriverCommentsTab';
+import DriverHistoryTab from './DriverHistoryTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -146,6 +148,29 @@ const EMPTY_FORM = {
   _dob_display: ''
 };
 
+const TRACKED_FIELDS = ['name', 'phone', 'email', 'date_of_birth', 'nationality_group', 'country_code', 'address', 'passport_number', 'driving_license_number', 'status', 'rodne_cislo'];
+
+const fieldLabels = {
+  name: 'Имя',
+  phone: 'Телефон',
+  email: 'Email',
+  date_of_birth: 'Дата рождения',
+  nationality_group: 'Национальность',
+  country_code: 'Гражданство',
+  address: 'Адрес',
+  passport_number: 'Номер паспорта',
+  driving_license_number: 'Вод. удостоверение',
+  status: 'Статус',
+  rodne_cislo: 'Rodné číslo'
+};
+
+const buildDescription = (field, oldVal, newVal) => {
+  if (field === 'status') {
+    return `Статус изменён: ${oldVal} → ${newVal}`;
+  }
+  return `${fieldLabels[field] || field} обновлён`;
+};
+
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -193,10 +218,43 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         const allDrivers = await Driver.list();
         const maxNum = Math.max(0, ...allDrivers.map(d => d.internal_number || 0));
         const newDriver = await Driver.create({ ...dataToSave, internal_number: maxNum + 1 });
+        
+        // Create history for new driver
+        await base44.entities.DriverHistory.create({
+          driver_id: newDriver.id,
+          action: 'created',
+          description: `Водитель создан: DRV-${String(newDriver.internal_number).padStart(5, '0')}`,
+          changed_by: 'Admin'
+        });
+        
         toast.success('✓ Водитель создан');
         if (onSave) onSave(newDriver);
       } else {
+        // Compare and log changes
+        const historyRecords = [];
+        TRACKED_FIELDS.forEach(field => {
+          const oldVal = driver?.[field];
+          const newVal = dataToSave[field];
+          if (String(oldVal || '') !== String(newVal || '')) {
+            historyRecords.push({
+              driver_id: dataToSave.id,
+              action: field === 'status' ? 'status_changed' : 'updated',
+              field_name: field,
+              old_value: String(oldVal || ''),
+              new_value: String(newVal || ''),
+              description: buildDescription(field, oldVal, newVal),
+              changed_by: 'Admin'
+            });
+          }
+        });
+
         await Driver.update(dataToSave.id, dataToSave);
+        
+        // Bulk create history records
+        if (historyRecords.length > 0) {
+          await base44.entities.DriverHistory.bulkCreate(historyRecords);
+        }
+
         setIsEditing(false);
         if (onSave) onSave(dataToSave);
         toast.success('✓ Изменения сохранены');
@@ -226,6 +284,18 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
     setIsArchiving(true);
     try {
       await Driver.update(driver.id, { ...driver, status: 'terminated' });
+      
+      // Create history
+      await base44.entities.DriverHistory.create({
+        driver_id: driver.id,
+        action: 'archived',
+        field_name: 'status',
+        old_value: driver.status,
+        new_value: 'terminated',
+        description: 'Водитель архивирован',
+        changed_by: 'Admin'
+      });
+      
       toast.success('✓ Водитель архивирован');
       setShowArchiveModal(false);
       if (onSave) onSave({ ...driver, status: 'terminated' });
@@ -240,6 +310,18 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
     setIsRestoring(true);
     try {
       await Driver.update(driver.id, { ...driver, status: 'inactive', fired_date: null });
+      
+      // Create history
+      await base44.entities.DriverHistory.create({
+        driver_id: driver.id,
+        action: 'restored',
+        field_name: 'status',
+        old_value: 'terminated',
+        new_value: 'inactive',
+        description: 'Водитель восстановлен',
+        changed_by: 'Admin'
+      });
+      
       toast.success(`✓ Водитель ${formatDriverName(driver.name)} восстановлен`);
       setShowRestoreModal(false);
       if (onSave) onSave({ ...driver, status: 'inactive', fired_date: null });
@@ -552,14 +634,12 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
           {/* COMMENTS TAB */}
           <TabsContent value="comments" className="p-4">
-            <h4 className="font-semibold text-gray-900 mb-2">Комментарии и заметки</h4>
-            <p className="text-sm text-gray-500">Пока нет записей.</p>
+            <DriverCommentsTab driver={driver} isTerminated={isTerminated} />
           </TabsContent>
 
           {/* HISTORY TAB */}
           <TabsContent value="history" className="p-4">
-            <h4 className="font-semibold text-gray-900 mb-2">История изменений</h4>
-            <p className="text-sm text-gray-500">Пока нет записей.</p>
+            <DriverHistoryTab driver={driver} />
           </TabsContent>
         </div>
       </Tabs>
