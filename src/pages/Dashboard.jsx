@@ -78,33 +78,38 @@ export default function Dashboard() {
             value={stats.activeDrivers}
             icon={Users}
             color="blue"
+            breakdown={stats.breakdown}
+            onClick={() => navigate('/Drivers')}
           />
           <StatCard
             title="Готовы к рейсу"
             value={stats.readyDrivers}
             icon={AlertCircle}
             color="green"
+            onClick={() => navigate('/Drivers?filter=ready')}
           />
           <StatCard
             title="Истекающие документы"
             value={stats.expiringDocs}
             icon={Clock}
             color="orange"
+            onClick={() => navigate('/Drivers?filter=expiring')}
           />
           <StatCard
             title="Просроченные"
             value={stats.expiredDocs}
             icon={XCircle}
             color="red"
+            onClick={() => navigate('/Drivers?filter=expired')}
           />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2">
-            <ExpiringDocumentsWidget />
+            <ExpiringDocumentsWidget activeDrivers={activeDrivers} />
           </div>
           <div>
-            <ReadinessChart drivers={drivers} />
+            <ReadinessChart drivers={activeDrivers} />
           </div>
         </div>
       </div>
