@@ -28,7 +28,7 @@ export default function Drivers() {
   });
 
   const counts = useMemo(() => {
-    if (!drivers.length) return { all: 0, ready: 0, expiring: 0, expired: 0, inactive: 0, archive: 0 };
+    if (!drivers.length) return { all: 0, ready: 0, incomplete: 0, expiring: 0, expired: 0, inactive: 0, archive: 0 };
 
     let src = drivers;
     if (filters.nationalityFilter !== 'all') {

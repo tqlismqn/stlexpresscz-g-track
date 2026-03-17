@@ -3,8 +3,9 @@ import { Search, Plus } from 'lucide-react';
 
 const STATUS_PILLS = [
   { key: 'all',      label: 'Все',         countKey: 'all' },
-  { key: 'ready',    label: 'Готовы',      countKey: 'ready' },
-  { key: 'expiring', label: 'Истекают',    countKey: 'expiring' },
+  { key: 'ready',      label: 'Готовы',    countKey: 'ready' },
+  { key: 'incomplete', label: 'Неполные', countKey: 'incomplete' },
+  { key: 'expiring',   label: 'Истекают', countKey: 'expiring' },
   { key: 'expired',  label: 'Просрочены',  countKey: 'expired' },
   { key: 'inactive', label: 'Неактивные',  countKey: 'inactive' },
   { key: 'archive',  label: 'Архив',       countKey: 'archive' },
