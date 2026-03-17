@@ -4,7 +4,7 @@ import { LayoutDashboard, Users, Truck, FileText, Settings, LogOut, Menu } from 
 import { base44 } from '@/api/base44Client';
 
 const navigation = [
-  { label: 'Панель', icon: LayoutDashboard, path: '/Dashboard', section: 'main' },
+  { label: 'Дашборд', icon: LayoutDashboard, path: '/Dashboard', section: 'main' },
   { label: 'Водители', icon: Users, path: '/Drivers', section: 'main' },
   { label: 'Транспорт', icon: Truck, path: '#', disabled: true, badge: 'Soon', section: 'main' },
   { label: 'Документы', icon: FileText, path: '#', disabled: true, badge: 'Soon', section: 'main' },

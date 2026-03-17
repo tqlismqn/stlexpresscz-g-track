@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Clock } from 'lucide-react';
-import { format, differenceInDays } from 'date-fns';
+import { format, differenceInDays, isAfter } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 const docTypeLabels = {
@@ -102,7 +102,13 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
                   <p className="text-xs text-gray-600">{docTypeLabels[doc.document_type]}</p>
                 </div>
                 <p className={`text-xs ml-2 flex-shrink-0 ${textColor} ${isBold ? 'font-bold' : 'font-medium'}`}>
-                  {daysLeft !== null ? `в ${daysLeft} дн.` : 'N/A'}
+                  {daysLeft !== null ? (
+                    daysLeft < 0 ? (
+                      <span className="text-red-600 font-bold">{format(new Date(doc.expiry_date), 'dd.MM.yyyy')} (просрочен)</span>
+                    ) : (
+                      `${format(new Date(doc.expiry_date), 'dd.MM.yyyy')} (${daysLeft} дн.)`
+                    )
+                  ) : 'N/A'}
                 </p>
               </div>
             );

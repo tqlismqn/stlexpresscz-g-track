@@ -5,6 +5,8 @@ import StatCard from '@/components/dashboard/StatCard';
 import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWidget';
 import ReadinessChart from '@/components/dashboard/ReadinessChart';
 import { Users, AlertCircle, Clock, XCircle } from 'lucide-react';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ export default function Dashboard() {
   const [drivers, setDrivers] = useState([]);
   const [activeDrivers, setActiveDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -53,6 +56,7 @@ export default function Dashboard() {
           expiredDocs: expiredCount,
           breakdown: breakdownParts.join(' · ')
         });
+        setLastUpdated(new Date());
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -70,7 +74,12 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="w-full px-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Панель</h1>
+        <div className="flex items-baseline justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Дашборд</h1>
+          <p className="text-sm text-gray-500">
+            {format(new Date(), "EEEE', 'dd MMMM yyyy", { locale: ru })}
+          </p>
+        </div></h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <StatCard
@@ -103,6 +112,12 @@ export default function Dashboard() {
             onClick={() => navigate('/Drivers?filter=expired')}
           />
         </div>
+
+        {lastUpdated && (
+          <p className="text-xs text-gray-400 text-right mb-4">
+            Обновлено: {format(lastUpdated, 'HH:mm')}
+          </p>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2">
