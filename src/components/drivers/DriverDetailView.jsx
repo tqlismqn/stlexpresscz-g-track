@@ -181,7 +181,8 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
 
   const handleSave = async () => {
     try {
-      const { _dob_display, ...dataToSave } = formData;
+      const { _dob_display, ...restData } = formData;
+      const dataToSave = { ...restData, name: reverseFormatDriverName(restData.name) };
       await Driver.update(dataToSave.id, dataToSave);
       setIsEditing(false);
       if (onSave) onSave(dataToSave);
