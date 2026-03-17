@@ -14,6 +14,7 @@ const navigation = [
 
 export default function Layout() {
   const location = useLocation();
+  const { currentUser } = useAuth();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
   const handleLogout = () => {
