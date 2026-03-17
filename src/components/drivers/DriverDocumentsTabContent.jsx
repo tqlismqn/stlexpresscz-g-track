@@ -160,6 +160,7 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange }) {
 export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange, onEditingChange }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editDocs, setEditDocs] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newDoc, setNewDoc] = useState({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' });
 
