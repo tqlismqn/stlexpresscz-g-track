@@ -80,7 +80,7 @@ const getInitials = (name) => {
 function CountryCombobox({ value, onChange }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const { pinned, rest } = getSortedCountries();
+  const { pinned, rest } = useMemo(() => getSortedCountries(), []);
 
   const filterFn = (c) =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
