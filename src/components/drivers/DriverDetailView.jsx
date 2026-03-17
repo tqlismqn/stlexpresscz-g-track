@@ -142,7 +142,10 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    if (driver) setFormData({ ...driver });
+    if (driver) setFormData({
+      ...driver,
+      _dob_display: driver.date_of_birth ? formatDateFns(new Date(driver.date_of_birth), "dd.MM.yyyy") : ''
+    });
   }, [driver]);
 
   const readinessPct = driver?.trip_readiness_pct || 0;
@@ -164,9 +167,10 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
 
   const handleSave = async () => {
     try {
-      await Driver.update(formData.id, formData);
+      const { _dob_display, ...dataToSave } = formData;
+      await Driver.update(dataToSave.id, dataToSave);
       setIsEditing(false);
-      if (onSave) onSave(formData);
+      if (onSave) onSave(dataToSave);
     } catch (error) {
       console.error('Save failed:', error);
     }
@@ -352,17 +356,27 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
                   <div>
                     <p className="text-xs text-gray-600 mb-0.5">Дата рождения</p>
                     {isEditing ? (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline" className={cn("w-full h-8 justify-start text-left text-sm font-normal", !formData.date_of_birth && "text-muted-foreground")}>
-                            <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-                            {formData.date_of_birth ? formatDateFns(new Date(formData.date_of_birth), "dd.MM.yyyy") : "Выберите дату"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar mode="single" selected={formData.date_of_birth ? new Date(formData.date_of_birth) : undefined} onSelect={(date) => handleFieldChange('date_of_birth', date ? formatDateFns(date, "yyyy-MM-dd") : '')} initialFocus />
-                        </PopoverContent>
-                      </Popover>
+                      <Input
+                        type="text"
+                        placeholder="ДД.ММ.ГГГГ"
+                        value={formData._dob_display || ''}
+                        onChange={(e) => {
+                          let val = e.target.value.replace(/[^\d.]/g, '');
+                          if (val.length === 2 && !val.includes('.')) val += '.';
+                          if (val.length === 5 && val.split('.').length === 2) val += '.';
+                          if (val.length > 10) val = val.slice(0, 10);
+                          handleFieldChange('_dob_display', val);
+                          const match = val.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+                          if (match) {
+                            const [, dd, mm, yyyy] = match;
+                            const day = parseInt(dd), month = parseInt(mm), year = parseInt(yyyy);
+                            if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1940 && year <= 2010) {
+                              handleFieldChange('date_of_birth', `${yyyy}-${mm}-${dd}`);
+                            }
+                          }
+                        }}
+                        className="h-8 text-sm"
+                      />
                     ) : (
                       <p className="font-medium text-gray-900">{driver?.date_of_birth || '—'}</p>
                     )}
