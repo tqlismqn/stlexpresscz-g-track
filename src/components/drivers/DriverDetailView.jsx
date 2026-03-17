@@ -215,11 +215,11 @@ export default function DriverDetailView({ driver, documents = [], onSave }) {
 
             {/* Status + Readiness */}
             <div className="flex items-center gap-3">
-              <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                driver?.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-              }`}>
-                {driver?.status === 'active' ? 'Активный' : 'Неактивный'}
+              {(() => { const sc = statusConfig[driver?.status] || statusConfig.active; return (
+              <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${sc.bg}`}>
+                {sc.label}
               </span>
+              ); })()}
 
               {/* Circular readiness indicator */}
               <div className="relative w-12 h-12">

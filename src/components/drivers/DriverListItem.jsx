@@ -148,7 +148,7 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
       onClick={() => onSelect(driver)}
       className={`w-full text-left p-4 transition-colors ${
         isSelected ? 'bg-blue-50 border-l-4 border-blue-600' : 'hover:bg-gray-50'
-      } ${driver.status === 'inactive' ? 'opacity-50' : ''}`}
+      } ${driver.status === 'inactive' || driver.status === 'on_leave' || driver.status === 'terminated' ? 'opacity-50' : ''}`}
     >
       <div className="flex items-start gap-3">
         {/* Avatar */}
