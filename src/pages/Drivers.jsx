@@ -46,7 +46,7 @@ export default function Drivers() {
 
     return {
       all:      nonArchive.length,
-      ready:    active.filter(d => !hasDocs(d, ['expired', 'expiring', 'missing'])).length,
+      ready:    active.filter(d => d.trip_readiness_pct === 100).length,
       expiring: [...active, ...inactive].filter(d => hasDocs(d, ['expiring'])).length,
       expired:  [...active, ...inactive].filter(d => hasDocs(d, ['expired'])).length,
       inactive: inactive.length,
@@ -64,11 +64,7 @@ export default function Drivers() {
         result = result.filter(d => d.status !== 'terminated');
         break;
       case 'ready':
-        result = result.filter(d => {
-          if (d.status !== 'active') return false;
-          const docs = documents.filter(doc => doc.driver_id === d.id);
-          return !docs.some(doc => ['expired', 'expiring', 'missing'].includes(doc.status));
-        });
+        result = result.filter(d => d.status === 'active' && d.trip_readiness_pct === 100);
         break;
       case 'expiring':
         result = result.filter(d => {
