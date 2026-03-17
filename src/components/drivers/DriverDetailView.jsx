@@ -190,7 +190,9 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       const dataToSave = { ...restData, name: reverseFormatDriverName(restData.name) };
 
       if (isCreating && !driver) {
-        const newDriver = await Driver.create(dataToSave);
+        const allDrivers = await Driver.list();
+        const maxNum = Math.max(0, ...allDrivers.map(d => d.internal_number || 0));
+        const newDriver = await Driver.create({ ...dataToSave, internal_number: maxNum + 1 });
         toast.success('✓ Водитель создан');
         if (onSave) onSave(newDriver);
       } else {
