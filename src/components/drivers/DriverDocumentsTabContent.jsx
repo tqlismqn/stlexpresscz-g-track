@@ -295,13 +295,27 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
   };
 
   const handleDocFieldChange = (docType, field, value) => {
-    setEditDocs(prev => ({
-      ...prev,
-      [docType]: {
-        ...(prev[docType] || { document_type: docType }),
-        [field]: value,
+    setEditDocs(prev => {
+      const updated = {
+        ...prev,
+        [docType]: {
+          ...(prev[docType] || { document_type: docType }),
+          [field]: value,
+        }
+      };
+      if (field === 'issue_date' && value) {
+        const docConfig = DOCUMENT_TYPES[docType];
+        if (docConfig?.autoFillTo?.years) {
+          const autoExpiry = new Date(value);
+          autoExpiry.setFullYear(autoExpiry.getFullYear() + docConfig.autoFillTo.years);
+          const yyyy = autoExpiry.getFullYear();
+          const mm = String(autoExpiry.getMonth() + 1).padStart(2, '0');
+          const dd = String(autoExpiry.getDate()).padStart(2, '0');
+          updated[docType].expiry_date = `${yyyy}-${mm}-${dd}`;
+        }
       }
-    }));
+      return updated;
+    });
   };
 
   const sections = [1, 2, 3].map(sectionNum => {
@@ -406,9 +420,21 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                   <Input value={newDoc.document_number} onChange={(e) => setNewDoc(prev => ({ ...prev, document_number: e.target.value }))} className="h-8 text-sm" placeholder="—" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 mb-0.5">От</p>
-                  <DateInput value={newDoc.issue_date} onChange={(val) => setNewDoc(prev => ({ ...prev, issue_date: val }))} />
-                </div>
+                   <p className="text-[10px] text-gray-400 mb-0.5">От</p>
+                   <DateInput value={newDoc.issue_date} onChange={(val) => {
+                     const docConfig = DOCUMENT_TYPES[newDoc.document_type];
+                     if (docConfig?.autoFillTo?.years && val) {
+                       const autoExpiry = new Date(val);
+                       autoExpiry.setFullYear(autoExpiry.getFullYear() + docConfig.autoFillTo.years);
+                       const yyyy = autoExpiry.getFullYear();
+                       const mm = String(autoExpiry.getMonth() + 1).padStart(2, '0');
+                       const dd = String(autoExpiry.getDate()).padStart(2, '0');
+                       setNewDoc(prev => ({ ...prev, issue_date: val, expiry_date: `${yyyy}-${mm}-${dd}` }));
+                     } else {
+                       setNewDoc(prev => ({ ...prev, issue_date: val }));
+                     }
+                   }} />
+                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 mb-0.5">До</p>
                   <DateInput value={newDoc.expiry_date} onChange={(val) => setNewDoc(prev => ({ ...prev, expiry_date: val }))} />
