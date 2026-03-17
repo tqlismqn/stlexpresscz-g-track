@@ -37,10 +37,14 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
 
         const expiring = docs
           .filter(d => d.status === 'expiring' && activeDriverIds.has(d.driver_id))
-          .map(d => ({
-            ...d,
-            driverName: driverMap.get(d.driver_id)?.name || 'Unknown'
-          }))
+          .map(d => {
+            const daysLeft = differenceInDays(new Date(d.expiry_date), new Date());
+            return {
+              ...d,
+              driverName: driverMap.get(d.driver_id)?.name || 'Unknown',
+              daysLeft
+            };
+          })
           .sort((a, b) => new Date(a.expiry_date) - new Date(b.expiry_date))
           .slice(0, 10);
 
