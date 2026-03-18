@@ -43,6 +43,10 @@ export function getPillClass(status, isRequired) {
 export default function DriverDocumentBadges({ driver, documents, size = 'sm' }) {
   const pillHeight = size === 'md' ? 'h-6 px-2 text-xs' : 'h-5 px-1.5 text-[10px]';
 
+  const hasPendingReturn = useMemo(() =>
+    documents.some(d => ['transport_licence', 'licence'].includes(d.document_type) && d.return_status === 'pending_return'),
+    [documents]);
+
   const documentPills = useMemo(() => {
     const isEU = driver.nationality_group === 'EU';
     const requiredDocTypes = isEU ? euRequiredDocs : nonEuRequiredDocs;
