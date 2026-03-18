@@ -136,8 +136,10 @@ function PreviousLicenceRow({ doc, onMarkAsReturned, t }) {
   );
 }
 
-function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete, t }) {
+function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete, onRenewLicence, t }) {
   const existingDoc = editDocs[docType];
+  const isLicenceType = docType === 'transport_licence' || docType === 'licence';
+  const showRenewButton = isLicenceType && existingDoc?.expiry_date && existingDoc?.return_status !== 'pending_return';
   return (
     <div className="py-2">
       <div className="flex items-baseline gap-2 mb-1.5">
