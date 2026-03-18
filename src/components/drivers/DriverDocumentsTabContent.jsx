@@ -181,6 +181,23 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     4: t('documents.sections.specific'),
   };
 
+  const DOCUMENT_TYPES = {
+    work_contract:       { name: t('doc_types.work_contract'),        abbr: 'CON', section: 1, hasNumber: true,  hasFrom: true, hasTo: true, indefiniteByDefault: true },
+    transport_licence:   { name: t('doc_types.transport_licence'),    abbr: 'LIC', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+    a1_certificate:      { name: t('doc_types.a1_certificate'),       abbr: 'A1',  section: 1, hasNumber: true,  hasFrom: true, hasTo: true, hasA1CHCheckbox: true },
+    declaration:         { name: t('doc_types.declaration'),          abbr: 'DEC', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+    insurance:           { name: t('doc_types.insurance'),            abbr: 'INS', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+    visa:                { name: t('doc_types.visa'),                 abbr: 'VIS', section: 1, hasNumber: true,  hasFrom: true, hasTo: true, nonEUOnly: true, hasVisaType: true },
+    passport:            { name: t('doc_types.passport'),             abbr: 'PAS', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+    driver_license:      { name: t('doc_types.driver_license'),       abbr: 'DL',  section: 2, hasNumber: true,  hasFrom: true, hasTo: true },
+    adr_certificate:     { name: t('doc_types.adr_certificate'),      abbr: 'ADR', section: 2, hasNumber: true,  hasFrom: true, hasTo: true },
+    chip_card:           { name: t('doc_types.chip_card'),            abbr: 'TCH', section: 2, hasNumber: true,  hasFrom: true, hasTo: true },
+    code95:              { name: t('doc_types.code95'),               abbr: 'C95', section: 2, hasNumber: false, hasFrom: true, hasTo: true },
+    medical_certificate: { name: t('doc_types.medical_certificate'),  abbr: 'MED', section: 3, hasNumber: false, hasFrom: true, hasTo: true, autoFillTo: { years: 2 } },
+    psihotest:           { name: t('doc_types.psihotest'),            abbr: 'PSI', section: 3, hasNumber: false, hasFrom: true, hasTo: true },
+    travel_insurance:    { name: t('doc_types.travel_insurance'),     abbr: 'TIS', section: 3, hasNumber: false, hasFrom: true, hasTo: true, nonEUOnly: true },
+  };
+
   const [isEditing, setIsEditing] = useState(false);
   const [editDocs, setEditDocs] = useState({});
   const [isSaving, setIsSaving] = useState(false);
