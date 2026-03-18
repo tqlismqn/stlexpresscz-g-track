@@ -13,7 +13,7 @@ const LANGUAGES = [
 ];
 
 export default function Settings() {
-  const { currentUser } = useAuth();
+  const { t } = useTranslation();
   const [saving, setSaving] = useState(false);
 
   const handleLanguageChange = async (code) => {
@@ -21,9 +21,8 @@ export default function Settings() {
     try {
       i18n.changeLanguage(code);
       await base44.auth.updateMe({ language: code });
-      toast.success('Language updated');
     } catch (e) {
-      toast.error('Failed to save language');
+      // silent
     } finally {
       setSaving(false);
     }
@@ -32,15 +31,15 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Settings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('settings.title')}</h1>
         <div className="bg-white rounded-lg shadow divide-y divide-gray-100">
           <div className="flex items-center justify-between px-6 py-5">
             <div>
-              <p className="text-sm font-medium text-gray-900">Interface language</p>
-              <p className="text-xs text-gray-500 mt-0.5">Changes apply immediately</p>
+              <p className="text-sm font-medium text-gray-900">{t('settings.interface_language')}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{t('settings.changes_apply_immediately')}</p>
             </div>
             <Select
-              value={currentUser?.language || 'ru'}
+              value={i18n.language || 'en'}
               onValueChange={handleLanguageChange}
               disabled={saving}
             >
