@@ -488,13 +488,14 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
               {types.map(([docType, config]) =>
                 isEditing ? (
                 <DocumentRowEdit
-                  key={docType}
-                  docType={docType}
-                  config={config}
-                  editDocs={editDocs}
-                  handleDocFieldChange={handleDocFieldChange}
-                  onDelete={handleDeleteDocument}
-                  t={t}
+                 key={docType}
+                 docType={docType}
+                 config={config}
+                 editDocs={editDocs}
+                 handleDocFieldChange={handleDocFieldChange}
+                 onDelete={handleDeleteDocument}
+                 onRenewLicence={handleRenewLicence}
+                 t={t}
                 />
                 ) : (
                 <div key={docType}>
