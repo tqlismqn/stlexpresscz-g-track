@@ -172,6 +172,15 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDe
 }
 
 export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange, onEditingChange }) {
+  const { t } = useTranslation();
+
+  const SECTIONS = {
+    1: t('documents.sections.main'),
+    2: t('documents.sections.driving'),
+    3: t('documents.sections.medical'),
+    4: t('documents.sections.specific'),
+  };
+
   const [isEditing, setIsEditing] = useState(false);
   const [editDocs, setEditDocs] = useState({});
   const [isSaving, setIsSaving] = useState(false);
@@ -237,10 +246,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       setIsEditing(false);
       if (onEditingChange) onEditingChange(false);
       if (onDocumentsChange) onDocumentsChange();
-      toast.success('✓ Документы сохранены');
+      toast.success(t('toasts.documents_saved'));
     } catch (error) {
       console.error('Document save failed:', error);
-      toast.error('✗ Ошибка сохранения документов');
+      toast.error(t('toasts.documents_save_error'));
     } finally {
       setIsSaving(false);
     }
@@ -263,10 +272,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       setShowAddForm(false);
       setNewDoc({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' });
       if (onDocumentsChange) onDocumentsChange();
-      toast.success('✓ Документ добавлен');
+      toast.success(t('toasts.document_added'));
     } catch (error) {
       console.error('Add document failed:', error);
-      toast.error('✗ Ошибка добавления документа');
+      toast.error(t('toasts.document_add_error'));
     }
   };
 
@@ -281,10 +290,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       await DriverDocument.delete(deleteConfirm.docId);
       setDeleteConfirm(null);
       if (onDocumentsChange) onDocumentsChange();
-      toast.success('✓ Документ удалён');
+      toast.success(t('toasts.document_deleted'));
     } catch (error) {
       console.error('Delete document failed:', error);
-      toast.error('✗ Ошибка удаления документа');
+      toast.error(t('toasts.document_delete_error'));
     }
   };
 
@@ -327,7 +336,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       <div className="flex justify-end">
         {isEditing ? (
           <div className="flex gap-2">
-            <button onClick={cancelEditing} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">Отмена</button>
+            <button onClick={cancelEditing} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">{t('common.cancel')}</button>
             <button
               onClick={handleSave}
               disabled={isSaving}
@@ -336,14 +345,14 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
               {isSaving ? (
                 <>
                   <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                  Сохранение...
+                  {t('common.saving')}
                 </>
-              ) : 'Сохранить'}
+              ) : t('common.save')}
             </button>
           </div>
         ) : (
           <button onClick={startEditing} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-            <Pencil className="w-3.5 h-3.5" /> Изменить
+            <Pencil className="w-3.5 h-3.5" /> {t('common.edit')}
           </button>
         )}
       </div>
@@ -357,21 +366,23 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
             <div className="divide-y divide-gray-50">
               {types.map(([docType, config]) =>
                 isEditing ? (
-                  <DocumentRowEdit
-                    key={docType}
-                    docType={docType}
-                    config={config}
-                    editDocs={editDocs}
-                    handleDocFieldChange={handleDocFieldChange}
-                    onDelete={handleDeleteDocument}
-                  />
+                <DocumentRowEdit
+                  key={docType}
+                  docType={docType}
+                  config={config}
+                  editDocs={editDocs}
+                  handleDocFieldChange={handleDocFieldChange}
+                  onDelete={handleDeleteDocument}
+                  t={t}
+                />
                 ) : (
-                  <DocumentRowRead
-                    key={docType}
-                    docType={docType}
-                    config={config}
-                    doc={docsMap.get(docType) || null}
-                  />
+                <DocumentRowRead
+                  key={docType}
+                  docType={docType}
+                  config={config}
+                  doc={docsMap.get(docType) || null}
+                  t={t}
+                />
                 )
               )}
             </div>
@@ -383,39 +394,39 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
         <div className="mt-4 border-t border-gray-200 pt-4">
           {showAddForm ? (
             <div className="space-y-3 bg-gray-50 rounded-lg p-4">
-              <p className="text-sm font-semibold text-gray-700">Новый документ</p>
+              <p className="text-sm font-semibold text-gray-700">{t('documents.new_document')}</p>
               <div>
-                <p className="text-[10px] text-gray-400 mb-0.5">Тип документа</p>
+                <p className="text-[10px] text-gray-400 mb-0.5">{t('documents.visa_type')}</p>
                 <Select value={newDoc.document_type} onValueChange={(val) => setNewDoc(prev => ({ ...prev, document_type: val }))}>
-                  <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Выберите тип..." /></SelectTrigger>
+                  <SelectTrigger className="h-8 text-sm"><SelectValue placeholder={t('documents.select_type')} /></SelectTrigger>
                   <SelectContent>
                     {Object.entries(DOCUMENT_TYPES).map(([key, config]) => {
                       const exists = documents.find(d => d.document_type === key);
                       if (config.nonEUOnly && driver?.nationality_group === 'EU') return null;
                       return (
                         <SelectItem key={key} value={key} disabled={!!exists}>
-                          {config.name} ({config.abbr}) {exists ? '— уже есть' : ''}
+                          {t(`doc_types.${key}`, { defaultValue: config.name })} ({config.abbr}) {exists ? t('documents.already_exists') : ''}
                         </SelectItem>
                       );
                     })}
-                    <SelectItem value="other">Другой</SelectItem>
+                    <SelectItem value="other">{t('documents.other')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               {newDoc.document_type === 'other' && (
                 <div>
-                  <p className="text-[10px] text-gray-400 mb-0.5">Название документа</p>
-                  <Input value={newDoc.custom_name} onChange={(e) => setNewDoc(prev => ({ ...prev, custom_name: e.target.value }))} className="h-8 text-sm" placeholder="Введите название..." />
+                  <p className="text-[10px] text-gray-400 mb-0.5">{t('documents.document_name')}</p>
+                  <Input value={newDoc.custom_name} onChange={(e) => setNewDoc(prev => ({ ...prev, custom_name: e.target.value }))} className="h-8 text-sm" placeholder={t('documents.enter_name')} />
                 </div>
               )}
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <p className="text-[10px] text-gray-400 mb-0.5">Номер</p>
+                  <p className="text-[10px] text-gray-400 mb-0.5">{t('fields.number')}</p>
                   <Input value={newDoc.document_number} onChange={(e) => setNewDoc(prev => ({ ...prev, document_number: e.target.value }))} className="h-8 text-sm" placeholder="—" />
                 </div>
                 <div>
-                   <p className="text-[10px] text-gray-400 mb-0.5">От</p>
-                   <DateInput value={newDoc.issue_date} onChange={(val) => {
+                   <p className="text-[10px] text-gray-400 mb-0.5">{t('fields.from')}</p>
+                   <DateInput value={newDoc.issue_date} t={t} onChange={(val) => {
                      const docConfig = DOCUMENT_TYPES[newDoc.document_type];
                      if (docConfig?.autoFillTo?.years && val) {
                        const autoExpiry = new Date(val);
@@ -430,15 +441,15 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                    }} />
                  </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 mb-0.5">До</p>
-                  <DateInput value={newDoc.expiry_date} onChange={(val) => setNewDoc(prev => ({ ...prev, expiry_date: val }))} />
+                  <p className="text-[10px] text-gray-400 mb-0.5">{t('fields.to')}</p>
+                  <DateInput value={newDoc.expiry_date} t={t} onChange={(val) => setNewDoc(prev => ({ ...prev, expiry_date: val }))} />
                 </div>
               </div>
               {newDoc.document_type === 'visa' && (
                 <div>
-                  <p className="text-[10px] text-gray-400 mb-0.5">Тип визы</p>
+                  <p className="text-[10px] text-gray-400 mb-0.5">{t('documents.visa_type')}</p>
                   <Select value={newDoc.visa_type || ''} onValueChange={(val) => setNewDoc(prev => ({ ...prev, visa_type: val }))}>
-                    <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Выберите тип" /></SelectTrigger>
+                    <SelectTrigger className="h-8 text-sm"><SelectValue placeholder={t('documents.select_type')} /></SelectTrigger>
                     <SelectContent>
                       {VISA_TYPES.map(vt => <SelectItem key={vt.value} value={vt.value}>{vt.label}</SelectItem>)}
                     </SelectContent>
@@ -446,13 +457,13 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                 </div>
               )}
               <div className="flex justify-end gap-2 pt-1">
-                <button onClick={() => { setShowAddForm(false); setNewDoc({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' }); }} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1">Отмена</button>
-                <button onClick={handleAddDocument} className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700" disabled={!newDoc.document_type}>Добавить</button>
+                <button onClick={() => { setShowAddForm(false); setNewDoc({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' }); }} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1">{t('common.cancel')}</button>
+                 <button onClick={handleAddDocument} className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700" disabled={!newDoc.document_type}>{t('common.add')}</button>
               </div>
             </div>
           ) : (
             <button onClick={() => setShowAddForm(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-              + Добавить документ
+              {t('documents.add_document')}
             </button>
           )}
         </div>
@@ -461,13 +472,13 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Удалить документ</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dialogs.delete_document_title')}</h3>
             <p className="text-sm text-gray-600 mb-4">
-              Удалить документ "{DOCUMENT_TYPES[deleteConfirm.docType]?.name || deleteConfirm.docType}"? Это действие нельзя отменить.
+              {t('dialogs.delete_document_message', { name: t(`doc_types.${deleteConfirm.docType}`, { defaultValue: DOCUMENT_TYPES[deleteConfirm.docType]?.name || deleteConfirm.docType }) })}
             </p>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setDeleteConfirm(null)} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5">Отмена</button>
-              <button onClick={confirmDelete} className="text-sm bg-red-600 text-white px-4 py-1.5 rounded-md hover:bg-red-700">Удалить</button>
+              <button onClick={() => setDeleteConfirm(null)} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5">{t('common.cancel')}</button>
+              <button onClick={confirmDelete} className="text-sm bg-red-600 text-white px-4 py-1.5 rounded-md hover:bg-red-700">{t('common.delete')}</button>
             </div>
           </div>
         </div>
