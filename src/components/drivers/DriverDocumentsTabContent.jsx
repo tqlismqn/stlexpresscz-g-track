@@ -71,6 +71,9 @@ function DocumentRowRead({ docType, config, doc, driver, t }) {
         <div className="flex items-baseline gap-1.5">
           <span className="text-sm font-medium text-gray-900">{config.name}</span>
           <span className="text-xs text-gray-400">({config.abbr})</span>
+          {docType === 'visa' && driver?.visa_type && (
+            <span className="text-xs text-muted-foreground ml-1">({t(`visa_types.${driver.visa_type}`)})</span>
+          )}
         </div>
         <div className="text-xs text-gray-500 mt-0.5">
           {!doc ? (
