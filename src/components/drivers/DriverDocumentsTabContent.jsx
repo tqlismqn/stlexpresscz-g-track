@@ -250,6 +250,26 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
   const isNonEU = driver?.nationality_group === 'non-EU';
   const docsMap = new Map(documents.map(d => [d.document_type, d]));
 
+  // Licence tracking: find all licence docs sorted by expiry desc
+  const allLicenceDocs = documents
+    .filter(d => LICENCE_TYPES.includes(d.document_type))
+    .sort((a, b) => (b.expiry_date || '') < (a.expiry_date || '') ? -1 : 1);
+  const previousLicences = allLicenceDocs.slice(1); // everything after the newest
+
+  const handleMarkAsReturned = async (doc) => {
+    await DriverDocument.update(doc.id, { return_status: 'returned' });
+    await base44.entities.DriverHistory.create({
+      driver_id: driver.id,
+      action: 'updated',
+      field_name: 'return_status',
+      old_value: 'pending_return',
+      new_value: 'returned',
+      description: 'Transport licence marked as returned',
+      changed_by: 'Admin',
+    });
+    if (onDocumentsChange) onDocumentsChange();
+  };
+
   const startEditing = () => {
     const map = {};
     documents.forEach(doc => {
