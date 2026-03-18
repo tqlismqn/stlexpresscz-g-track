@@ -86,34 +86,6 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
   const incompleteFields = getIncompleteFields(driver);
   const hasIncomplete = incompleteFields.length > 0;
 
-  const documentPills = useMemo(() => {
-    const isEU = driver.nationality_group === 'EU';
-    const requiredDocTypes = isEU ? euRequiredDocs : nonEuRequiredDocs;
-
-    const docMap = new Map();
-    documents.forEach(doc => { docMap.set(doc.document_type, doc.status); });
-
-    // Required pills (always shown)
-    const pills = requiredDocTypes.map(docType => ({
-      type: docType,
-      abbr: documentConfig[docType].abbr,
-      status: docMap.get(docType) || 'missing',
-      isRequired: true,
-    }));
-
-    // Optional pills (always shown — gray dashed when missing)
-    optionalDocs.forEach(docType => {
-      pills.push({
-        type: docType,
-        abbr: documentConfig[docType].abbr,
-        status: docMap.get(docType) || 'missing',
-        isRequired: false,
-      });
-    });
-
-    return pills;
-  }, [driver.nationality_group, documents]);
-
   const drvId = formatDriverId(driver);
 
   return (
