@@ -202,6 +202,17 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDe
           </Select>
         </div>
       )}
+      {showRenewButton && (
+        <div className="mt-1.5">
+          <button
+            type="button"
+            onClick={() => onRenewLicence(existingDoc)}
+            className="flex items-center gap-1 text-xs text-orange-600 hover:text-orange-800 border border-orange-300 rounded px-2 py-1"
+          >
+            🔄 {t('documents.renew_licence')}
+          </button>
+        </div>
+      )}
       {config.hasA1CHCheckbox && (
         <div className="flex items-center gap-2 mt-1.5">
           <Checkbox
