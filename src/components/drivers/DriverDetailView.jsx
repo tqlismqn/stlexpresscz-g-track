@@ -720,9 +720,23 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
             <p className="text-sm text-gray-500 mb-4">
               {t('dialogs.archive_description')}
             </p>
+            {/* Archive reason */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 block mb-1">{t('dialogs.archive_reason')}</label>
+              <select
+                value={archiveReasonTagId}
+                onChange={e => setArchiveReasonTagId(e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="">{t('dialogs.archive_reason_none')}</option>
+                {archiveTags.map(tag => (
+                  <option key={tag.id} value={tag.id}>{t(tag.label_key)}</option>
+                ))}
+              </select>
+            </div>
             <div className="flex justify-end gap-2">
               <button
-                onClick={() => setShowArchiveModal(false)}
+                onClick={() => { setShowArchiveModal(false); setArchiveReasonTagId(''); }}
                 disabled={isArchiving}
                 className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 disabled:opacity-50"
               >
