@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('expired');
   const [expiredDocs, setExpiredDocs] = useState([]);
   const [expiringDocs, setExpiringDocs] = useState([]);

@@ -73,22 +73,22 @@ export default function Dashboard() {
   }, []);
 
   if (loading) {
-    return <div className="p-8 text-center">Загрузка...</div>;
+    return <div className="p-8 text-center">{t('common.loading')}</div>;
   }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="w-full px-6">
         <div className="flex items-baseline justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Дашборд</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('nav.dashboard')}</h1>
           <p className="text-sm text-gray-500">
-            {format(new Date(), "EEEE, dd MMMM yyyy", { locale: ru })}
+            {format(new Date(), "EEEE, dd MMMM yyyy", { locale: dateLocale })}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <StatCard
-            title="Активных водителей"
+            title={t('dashboard.active_drivers')}
             value={stats.activeDrivers}
             icon={Users}
             color="blue"
@@ -96,21 +96,21 @@ export default function Dashboard() {
             onClick={() => navigate('/Drivers')}
           />
           <StatCard
-            title="Готовы к рейсу"
+            title={t('dashboard.ready_for_trip')}
             value={stats.readyDrivers}
             icon={AlertCircle}
             color="green"
             onClick={() => navigate('/Drivers?filter=ready')}
           />
           <StatCard
-            title="Истекающие документы"
+            title={t('dashboard.expiring_documents')}
             value={stats.expiringDocs}
             icon={Clock}
             color="orange"
             onClick={() => navigate('/Drivers?filter=expiring')}
           />
           <StatCard
-            title="Просроченные"
+            title={t('dashboard.expired_documents')}
             value={stats.expiredDocs}
             icon={XCircle}
             color="red"
@@ -120,7 +120,7 @@ export default function Dashboard() {
 
         {lastUpdated && (
           <p className="text-xs text-gray-400 text-right mb-4">
-            Обновлено: {format(lastUpdated, 'HH:mm')}
+            {t('dashboard.updated_at')} {format(lastUpdated, 'HH:mm')}
           </p>
         )}
 
