@@ -168,6 +168,14 @@ const buildDescription = (field, oldVal, newVal, t) => {
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const { currentUser } = useAuth();
+  const { t } = useTranslation();
+
+  const statusConfig = {
+    active:     { bg: 'bg-green-100 text-green-700', label: t('drivers.status_active') },
+    inactive:   { bg: 'bg-amber-100 text-amber-700', label: t('drivers.status_inactive') },
+    on_leave:   { bg: 'bg-blue-100 text-blue-700',   label: t('drivers.status_on_leave') },
+    terminated: { bg: 'bg-gray-100 text-gray-500',   label: t('drivers.status_fired') }
+  };
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -219,11 +227,11 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         await base44.entities.DriverHistory.create({
           driver_id: newDriver.id,
           action: 'created',
-          description: `Водитель создан: DRV-${String(newDriver.internal_number).padStart(5, '0')}`,
+          description: t('history.driver_created', { id: String(newDriver.internal_number).padStart(5, '0') }),
           changed_by: currentUser?.full_name || 'Unknown'
         });
         
-        toast.success('✓ Водитель создан');
+        toast.success(t('toasts.driver_created'));
         if (onSave) onSave(newDriver);
       } else {
         // Compare and log changes
@@ -238,7 +246,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               field_name: field,
               old_value: String(oldVal || ''),
               new_value: String(newVal || ''),
-              description: buildDescription(field, oldVal, newVal),
+              description: buildDescription(field, oldVal, newVal, t),
               changed_by: currentUser?.full_name || 'Unknown'
             });
           }
@@ -253,11 +261,11 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
         setIsEditing(false);
         if (onSave) onSave(dataToSave);
-        toast.success('✓ Изменения сохранены');
+        toast.success(t('toasts.changes_saved'));
       }
     } catch (error) {
       console.error('Save failed:', error);
-      toast.error('✗ Ошибка сохранения. Попробуйте ещё раз.');
+      toast.error(t('toasts.save_error'));
     } finally {
       setIsSaving(false);
     }
@@ -288,15 +296,15 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         field_name: 'status',
         old_value: driver.status,
         new_value: 'terminated',
-        description: 'Водитель архивирован',
+        description: t('toasts.driver_archived'),
         changed_by: currentUser?.full_name || 'Unknown'
       });
       
-      toast.success('✓ Водитель архивирован');
+      toast.success(t('toasts.driver_archived'));
       setShowArchiveModal(false);
       if (onSave) onSave({ ...driver, status: 'terminated' });
     } catch (error) {
-      toast.error('✗ Ошибка архивирования');
+      toast.error(t('toasts.archive_error'));
     } finally {
       setIsArchiving(false);
     }
@@ -314,15 +322,15 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         field_name: 'status',
         old_value: 'terminated',
         new_value: 'inactive',
-        description: 'Водитель восстановлен',
+        description: t('toasts.driver_restored', { name: formatDriverName(driver.name) }),
         changed_by: currentUser?.full_name || 'Unknown'
       });
       
-      toast.success(`✓ Водитель ${formatDriverName(driver.name)} восстановлен`);
+      toast.success(t('toasts.driver_restored', { name: formatDriverName(driver.name) }));
       setShowRestoreModal(false);
       if (onSave) onSave({ ...driver, status: 'inactive', fired_date: null });
     } catch (error) {
-      toast.error('✗ Ошибка восстановления');
+      toast.error(t('toasts.restore_error'));
     } finally {
       setIsRestoring(false);
     }
