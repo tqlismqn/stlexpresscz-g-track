@@ -20,6 +20,8 @@ export default function Drivers() {
     search: '',
     sortBy: 'name'
   });
+  const [docTypeFilter, setDocTypeFilter] = useState('all');
+  const [docStatusFilter, setDocStatusFilter] = useState('any');
 
   const [selectedTab, setSelectedTab] = useState('overview');
 
