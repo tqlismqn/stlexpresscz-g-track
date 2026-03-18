@@ -58,7 +58,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
         </button>
       </div>
 
-      {/* Row 2: Status pills */}
+      {/* Row 2: Status pills + nationality pills */}
       <div className="flex gap-2 flex-wrap items-center">
         {STATUS_PILLS.map(item => (
           <button
@@ -73,6 +73,28 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
             {item.label} ({counts[item.countKey] || 0})
           </button>
         ))}
+
+        {/* Separator */}
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+        {/* Nationality pills */}
+        {['EU', 'non-EU'].map(nat => {
+          const filterVal = nat === 'EU' ? 'EU' : 'non-EU';
+          const isActive = filters.nationalityFilter === filterVal;
+          return (
+            <button
+              key={nat}
+              onClick={() => setFilters({ ...filters, nationalityFilter: isActive ? 'all' : filterVal })}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
+                isActive
+                  ? 'bg-blue-50 border-blue-500 text-blue-700'
+                  : 'bg-white border-blue-300 text-blue-500 hover:bg-blue-50'
+              }`}
+            >
+              {nat === 'EU' ? t('filters.eu') : t('filters.non_eu')}
+            </button>
+          );
+        })}
       </div>
 
       {/* Row 3: Document filters */}
@@ -106,7 +128,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
         )}
       </div>
 
-      {/* Row 4: Search + filters */}
+      {/* Row 4: Search */}
       <div className="flex gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
@@ -127,25 +149,6 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
             </button>
           )}
         </div>
-
-        <select
-          value={filters.nationalityFilter}
-          onChange={(e) => setFilters({ ...filters, nationalityFilter: e.target.value })}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
-        >
-          <option value="all">{t('drivers.all_drivers')}</option>
-          <option value="EU">EU</option>
-          <option value="non-EU">non-EU</option>
-        </select>
-
-        <select
-          value={filters.sortBy}
-          onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
-        >
-          <option value="name">{t('drivers.sort_by_name')}</option>
-          <option value="readiness">{t('drivers.sort_by_readiness')}</option>
-        </select>
       </div>
     </div>
   );
