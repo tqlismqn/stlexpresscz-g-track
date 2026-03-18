@@ -671,7 +671,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
           {/* COMMENTS TAB */}
           <TabsContent value="comments" className="p-4">
-            <DriverCommentsTab driver={driver} isTerminated={isTerminated} />
+            <DriverCommentsTab driver={driver} isTerminated={isArchived} />
           </TabsContent>
 
           {/* HISTORY TAB */}
