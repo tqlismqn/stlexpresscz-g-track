@@ -22,6 +22,7 @@ export default function Drivers() {
   });
   const [docTypeFilter, setDocTypeFilter] = useState('all');
   const [docStatusFilter, setDocStatusFilter] = useState('any');
+  const [visaTypeFilter, setVisaTypeFilter] = useState('any');
 
   const [selectedTab, setSelectedTab] = useState('overview');
 
