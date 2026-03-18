@@ -385,14 +385,14 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               {/* Top-right action area */}
               {!isCreateMode && !isEditing && (
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                   <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
-                   {driver?.status === 'terminated' ? (
+                  <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
+                  {driver?.status === 'archived' ? (
                     <button
                       onClick={() => setShowRestoreModal(true)}
                       title={t('drivers.restore_driver')}
-                        className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                      >
-                        {t('common.restore')}
+                      className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                    >
+                      {t('common.restore')}
                     </button>
                   ) : (
                     <button
