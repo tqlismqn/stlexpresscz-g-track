@@ -105,6 +105,7 @@ function getPillClass(status, isRequired) {
 
 export default function DriverListItem({ driver, documents, isSelected, onSelect }) {
   const { t } = useTranslation();
+  const { tagMap } = useDriverTags();
 
   const statusConfig = {
     candidate: { bg: 'bg-purple-100 text-purple-700', label: t('drivers.status_candidate') },
