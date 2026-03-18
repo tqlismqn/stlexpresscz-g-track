@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { useAppInitialization } from '@/hooks/useAppInitialization';
 import Layout from '@/components/Layout';
+import I18nProvider from '@/components/I18nProvider';
 import Dashboard from '@/pages/Dashboard';
 import Drivers from '@/pages/Drivers';
 import Settings from '@/pages/Settings';
