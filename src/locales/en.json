@@ -1,6 +1,6 @@
 {
   "nav": { "dashboard": "Dashboard", "drivers": "Drivers", "vehicles": "Vehicles", "documents": "Documents", "settings": "Settings" },
-  "common": { "search": "Search", "filter": "Filter", "all": "All", "active": "Active", "inactive": "Inactive", "save": "Save", "cancel": "Cancel", "delete": "Delete", "edit": "Edit", "add": "Add", "loading": "Loading...", "no_results": "No results found", "back": "Back", "close": "Close", "confirm": "Confirm" },
+  "common": { "search": "Search", "filter": "Filter", "all": "All", "active": "Active", "inactive": "Inactive", "save": "Save", "cancel": "Cancel", "delete": "Delete", "edit": "Edit", "add": "Add", "loading": "Loading...", "no_results": "No results found", "back": "Back", "close": "Close", "confirm": "Confirm", "soon": "Soon", "logout": "Logout" },
   "drivers": { "title": "Drivers", "add_driver": "Add Driver", "not_ready": "Not Ready", "expiring": "Expiring", "ready_for_trip": "Ready for Trip", "total_drivers": "Total Drivers", "trip_readiness": "Trip Readiness" },
   "documents": { "valid": "Valid", "expiring": "Expiring", "expired": "Expired", "missing": "Missing", "pending": "Pending Renewal", "expires_in": "expires in {{days}} days", "expired_ago": "expired {{days}} days ago" },
   "settings": { "title": "Settings", "language": "Language", "theme": "Theme", "dark_mode": "Dark Mode" }

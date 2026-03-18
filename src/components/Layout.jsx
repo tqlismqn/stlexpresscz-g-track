@@ -4,19 +4,21 @@ import { LayoutDashboard, Users, Truck, FileText, Settings, LogOut, Menu } from 
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-
-const navigation = [
-  { label: 'Дашборд', icon: LayoutDashboard, path: '/Dashboard', section: 'main' },
-  { label: 'Водители', icon: Users, path: '/Drivers', section: 'main' },
-  { label: 'Транспорт', icon: Truck, path: '#', disabled: true, badge: 'Soon', section: 'main' },
-  { label: 'Документы', icon: FileText, path: '#', disabled: true, badge: 'Soon', section: 'main' },
-  { label: 'Настройки', icon: Settings, path: '/Settings', section: 'settings' }
-];
+import { useTranslation } from 'react-i18next';
 
 export default function Layout() {
   const location = useLocation();
   const { currentUser } = useAuth();
+  const { t } = useTranslation();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+
+  const navigation = [
+    { label: t('nav.dashboard'), icon: LayoutDashboard, path: '/Dashboard', section: 'main' },
+    { label: t('nav.drivers'), icon: Users, path: '/Drivers', section: 'main' },
+    { label: t('nav.vehicles'), icon: Truck, path: '#', disabled: true, badge: t('common.soon'), section: 'main' },
+    { label: t('nav.documents'), icon: FileText, path: '#', disabled: true, badge: t('common.soon'), section: 'main' },
+    { label: t('nav.settings'), icon: Settings, path: '/Settings', section: 'settings' }
+  ];
 
   const handleLogout = () => {
     base44.auth.logout();
@@ -113,13 +115,13 @@ export default function Layout() {
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-3 py-3 rounded text-gray-300 hover:bg-gray-800 transition-colors w-full group relative"
-              title={sidebarExpanded ? '' : 'Выход'}
+              title={sidebarExpanded ? '' : t('common.logout')}
             >
               <LogOut className="w-5 h-5 flex-shrink-0" />
-              {sidebarExpanded && <span className="truncate">Выход</span>}
+              {sidebarExpanded && <span className="truncate">{t('common.logout')}</span>}
               {!sidebarExpanded && (
                 <div className="absolute left-20 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap">
-                  Выход
+                  {t('common.logout')}
                 </div>
               )}
             </button>

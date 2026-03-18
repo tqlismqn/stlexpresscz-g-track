@@ -1,6 +1,6 @@
 {
   "nav": { "dashboard": "Панель", "drivers": "Водители", "vehicles": "Транспорт", "documents": "Документы", "settings": "Настройки" },
-  "common": { "search": "Поиск", "filter": "Фильтр", "all": "Все", "active": "Активные", "inactive": "Неактивные", "save": "Сохранить", "cancel": "Отмена", "delete": "Удалить", "edit": "Редактировать", "add": "Добавить", "loading": "Загрузка...", "no_results": "Ничего не найдено", "back": "Назад", "close": "Закрыть", "confirm": "Подтвердить" },
+  "common": { "search": "Поиск", "filter": "Фильтр", "all": "Все", "active": "Активные", "inactive": "Неактивные", "save": "Сохранить", "cancel": "Отмена", "delete": "Удалить", "edit": "Редактировать", "add": "Добавить", "loading": "Загрузка...", "no_results": "Ничего не найдено", "back": "Назад", "close": "Закрыть", "confirm": "Подтвердить", "soon": "Скоро", "logout": "Выход" },
   "drivers": { "title": "Водители", "add_driver": "Добавить водителя", "not_ready": "Не готовы", "expiring": "Истекающие", "ready_for_trip": "Готовы к рейсу", "total_drivers": "Всего водителей", "trip_readiness": "Готовность к рейсу" },
   "documents": { "valid": "Действителен", "expiring": "Истекает", "expired": "Просрочен", "missing": "Отсутствует", "pending": "На продлении", "expires_in": "истекает через {{days}} дн.", "expired_ago": "просрочен {{days}} дн." },
   "settings": { "title": "Настройки", "language": "Язык", "theme": "Тема", "dark_mode": "Тёмная тема" }
