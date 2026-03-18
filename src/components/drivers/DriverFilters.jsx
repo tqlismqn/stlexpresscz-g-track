@@ -4,7 +4,17 @@ import { useTranslation } from 'react-i18next';
 
 export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, filteredCount, totalCount }) {
   const { t } = useTranslation();
-  const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any';
+  const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any';
+
+  const VISA_TYPES = [
+    { value: 'any',                label: t('filters.any_visa_type') },
+    { value: 'docasna_ochrana',    label: t('visa_types.docasna_ochrana') },
+    { value: 'povoleni_k_pobytu',  label: t('visa_types.povoleni_k_pobytu') },
+    { value: 'trvaly_pobyt',       label: t('visa_types.trvaly_pobyt') },
+    { value: 'vizum',              label: t('visa_types.vizum') },
+    { value: 'vizum_strpeni',      label: t('visa_types.vizum_strpeni') },
+    { value: 'other',              label: t('visa_types.other') },
+  ];
 
   const DOC_TYPES = [
     { value: 'all',                label: t('filters.all_types') },
