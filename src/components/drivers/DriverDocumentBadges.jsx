@@ -43,16 +43,32 @@ export function getPillClass(status, isRequired) {
 export default function DriverDocumentBadges({ driver, documents, size = 'sm' }) {
   const pillHeight = size === 'md' ? 'h-6 px-2 text-xs' : 'h-5 px-1.5 text-[10px]';
 
-  const hasPendingReturn = useMemo(() =>
-    documents.some(d => ['transport_licence', 'licence'].includes(d.document_type) && d.return_status === 'pending_return'),
-    [documents]);
+  const LICENCE_TYPES = ['transport_licence', 'licence'];
+
+  // Build a set of types that have at least one pending_return doc
+  const pendingReturnTypes = useMemo(() => {
+    const set = new Set();
+    documents.forEach(d => {
+      if (d.return_status === 'pending_return') {
+        // Normalize licence types
+        set.add(LICENCE_TYPES.includes(d.document_type) ? 'transport_licence' : d.document_type);
+      }
+    });
+    return set;
+  }, [documents]);
 
   const documentPills = useMemo(() => {
     const isEU = driver.nationality_group === 'EU';
     const requiredDocTypes = isEU ? euRequiredDocs : nonEuRequiredDocs;
 
+    // For status: use the newest doc per type (sort by expiry_date desc)
     const docMap = new Map();
-    documents.forEach(doc => { docMap.set(doc.document_type, doc.status); });
+    [...documents]
+      .sort((a, b) => (b.expiry_date || '') > (a.expiry_date || '') ? 1 : -1)
+      .forEach(doc => {
+        const key = LICENCE_TYPES.includes(doc.document_type) ? 'transport_licence' : doc.document_type;
+        if (!docMap.has(key)) docMap.set(key, doc.status);
+      });
 
     const pills = requiredDocTypes.map(docType => ({
       type: docType,
@@ -81,7 +97,7 @@ export default function DriverDocumentBadges({ driver, documents, size = 'sm' })
           className={`relative rounded-sm flex items-center justify-center font-medium ${pillHeight} ${getPillClass(pill.status, pill.isRequired)}`}
         >
           {pill.abbr}
-          {['transport_licence', 'licence'].includes(pill.type) && hasPendingReturn && (
+          {pendingReturnTypes.has(pill.type) && (
             <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-orange-500 border border-white" />
           )}
         </div>
