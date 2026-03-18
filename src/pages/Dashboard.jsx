@@ -6,7 +6,8 @@ import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWid
 import ReadinessChart from '@/components/dashboard/ReadinessChart';
 import { Users, AlertCircle, Clock, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { enUS, ru, cs } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 export default function Dashboard() {
   const navigate = useNavigate();
