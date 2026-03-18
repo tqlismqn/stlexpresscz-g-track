@@ -17,15 +17,9 @@ import { getCountryByCode, isEUCountry, getSortedCountries } from "@/lib/countri
 import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { formatDriverId } from '@/lib/driverUtils';
 import { useAuth } from '@/lib/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Driver = base44.entities.Driver;
-
-const statusConfig = {
-  active:     { bg: 'bg-green-100 text-green-700', label: 'Активный' },
-  inactive:   { bg: 'bg-amber-100 text-amber-700', label: 'Неактивный' },
-  on_leave:   { bg: 'bg-blue-100 text-blue-700',   label: 'В отпуске' },
-  terminated: { bg: 'bg-gray-100 text-gray-500',   label: 'Уволен' }
-};
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '—';
@@ -81,6 +75,7 @@ const getInitials = (name) => {
 };
 
 function CountryCombobox({ value, onChange }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const { pinned, rest } = getSortedCountries();
@@ -97,17 +92,17 @@ function CountryCombobox({ value, onChange }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="w-full h-8 justify-between text-sm font-normal">
-          {selected ? `${selected.flag} ${selected.name}` : "Выберите страну..."}
+          {selected ? `${selected.flag} ${selected.name}` : t('fields.select_country')}
           <ChevronsUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Поиск страны..." value={search} onValueChange={setSearch} />
+          <CommandInput placeholder={t('fields.search_country')} value={search} onValueChange={setSearch} />
           <CommandList>
-            <CommandEmpty>Страна не найдена</CommandEmpty>
+            <CommandEmpty>{t('fields.country_not_found')}</CommandEmpty>
             {filteredPinned.length > 0 && (
-              <CommandGroup heading="Основные">
+              <CommandGroup heading={t('fields.main_countries')}>
                 {filteredPinned.map((c) => (
                   <CommandItem key={c.code} value={`${c.name} ${c.code}`} onSelect={() => { onChange(c.code); setOpen(false); setSearch(''); }}>
                     <Check className={cn("mr-2 h-4 w-4", value === c.code ? "opacity-100" : "opacity-0")} />
@@ -117,7 +112,7 @@ function CountryCombobox({ value, onChange }) {
               </CommandGroup>
             )}
             {filteredRest.length > 0 && (
-              <CommandGroup heading="Все страны">
+              <CommandGroup heading={t('fields.all_countries')}>
                 {filteredRest.map((c) => (
                   <CommandItem key={c.code} value={`${c.name} ${c.code}`} onSelect={() => { onChange(c.code); setOpen(false); setSearch(''); }}>
                     <Check className={cn("mr-2 h-4 w-4", value === c.code ? "opacity-100" : "opacity-0")} />
@@ -151,25 +146,24 @@ const EMPTY_FORM = {
 
 const TRACKED_FIELDS = ['name', 'phone', 'email', 'date_of_birth', 'nationality_group', 'country_code', 'address', 'passport_number', 'driving_license_number', 'status', 'rodne_cislo'];
 
-const fieldLabels = {
-  name: 'Имя',
-  phone: 'Телефон',
-  email: 'Email',
-  date_of_birth: 'Дата рождения',
-  nationality_group: 'Национальность',
-  country_code: 'Гражданство',
-  address: 'Адрес',
-  passport_number: 'Номер паспорта',
-  driving_license_number: 'Вод. удостоверение',
-  status: 'Статус',
-  rodne_cislo: 'Rodné číslo'
-};
-
-const buildDescription = (field, oldVal, newVal) => {
+const buildDescription = (field, oldVal, newVal, t) => {
+  const fieldLabels = {
+    name: t('fields.name'),
+    phone: t('fields.phone'),
+    email: t('fields.email'),
+    date_of_birth: t('fields.date_of_birth'),
+    nationality_group: t('fields.nationality'),
+    country_code: t('fields.citizenship'),
+    address: t('fields.address'),
+    passport_number: t('fields.passport_number'),
+    driving_license_number: t('fields.driving_license'),
+    status: t('fields.status'),
+    rodne_cislo: t('fields.rodne_cislo')
+  };
   if (field === 'status') {
-    return `Статус изменён: ${oldVal} → ${newVal}`;
+    return `${t('history.status_changed')} ${oldVal} → ${newVal}`;
   }
-  return `${fieldLabels[field] || field} обновлён`;
+  return `${fieldLabels[field] || field} ${t('history.field_updated')}`;
 };
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {

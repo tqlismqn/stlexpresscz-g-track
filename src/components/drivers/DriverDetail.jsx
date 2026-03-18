@@ -1,6 +1,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 import DriverDetailView from './DriverDetailView';
+import { useTranslation } from 'react-i18next';
 
 export default function DriverDetail({ driver, onSave, documents, isCreating, onCreateDriver, initialTab = 'overview' }) {
   if (!driver && !isCreating) {
