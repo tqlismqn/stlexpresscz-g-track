@@ -18,16 +18,16 @@ const STATUS_COLORS = {
   missing: 'bg-gray-300',
 };
 
-function RemainingDays({ expiryDate }) {
+function RemainingDays({ expiryDate, t }) {
   if (!expiryDate) return null;
   const days = getRemainingDays(expiryDate);
   if (days === null) return null;
-  if (days < 0) return <span className="text-red-600 font-medium">Просрочено на {Math.abs(days)} дн.</span>;
-  if (days <= 30) return <span className="text-yellow-600 font-medium">Осталось {days} дн.</span>;
-  return <span className="text-gray-500">Осталось {days} дн.</span>;
+  if (days < 0) return <span className="text-red-600 font-medium">{t('documents.overdue_days', { days: Math.abs(days) })}</span>;
+  if (days <= 30) return <span className="text-yellow-600 font-medium">{t('documents.remaining_days', { days })}</span>;
+  return <span className="text-gray-500">{t('documents.remaining_days', { days })}</span>;
 }
 
-const DateInput = ({ value, onChange }) => {
+const DateInput = ({ value, onChange, t }) => {
   const isoToDisplay = (iso) => {
     if (!iso) return '';
     return formatDate(iso);
@@ -49,7 +49,7 @@ const DateInput = ({ value, onChange }) => {
   return (
     <Input
       type="text"
-      placeholder="ДД.ММ.ГГГГ"
+      placeholder={t('common.date_placeholder')}
       defaultValue={isoToDisplay(value)}
       onChange={handleChange}
       className="h-7 text-xs"
@@ -57,11 +57,11 @@ const DateInput = ({ value, onChange }) => {
   );
 };
 
-function DocumentRowRead({ docType, config, doc }) {
+function DocumentRowRead({ docType, config, doc, t }) {
   const status = doc?.status || 'missing';
   const dotColor = STATUS_COLORS[status] || 'bg-gray-300';
   const isIndefinite = config.indefiniteByDefault && !doc?.expiry_date;
-  const toDisplay = isIndefinite ? 'na dobu neurčitou' : formatDate(doc?.expiry_date);
+  const toDisplay = isIndefinite ? t('documents.indefinite') : formatDate(doc?.expiry_date);
   const hasDateInfo = doc?.issue_date || doc?.expiry_date || isIndefinite;
 
   return (
@@ -74,27 +74,27 @@ function DocumentRowRead({ docType, config, doc }) {
         </div>
         <div className="text-xs text-gray-500 mt-0.5">
           {!doc ? (
-            <span className="italic text-gray-400">Нет данных</span>
+            <span className="italic text-gray-400">{t('documents.no_data')}</span>
           ) : (
             <>
               {doc.document_number && <span>{doc.document_number} · </span>}
               {hasDateInfo ? (
                 <span>{formatDate(doc?.issue_date)} → {toDisplay}</span>
               ) : (
-                <span className="italic text-gray-400">Нет данных</span>
+                <span className="italic text-gray-400">{t('documents.no_data')}</span>
               )}
             </>
           )}
         </div>
       </div>
       <div className="text-xs text-right flex-shrink-0">
-        {doc?.expiry_date && !isIndefinite && <RemainingDays expiryDate={doc.expiry_date} />}
+        {doc?.expiry_date && !isIndefinite && <RemainingDays expiryDate={doc.expiry_date} t={t} />}
       </div>
     </div>
   );
 }
 
-function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete }) {
+function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete, t }) {
   const existingDoc = editDocs[docType];
   return (
     <div className="py-2">
@@ -105,7 +105,7 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDe
           <button
             onClick={() => onDelete(existingDoc.id, docType)}
             className="text-gray-300 hover:text-red-500 transition-colors ml-auto"
-            title="Удалить документ"
+            title={t('documents.delete_document')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -114,7 +114,7 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDe
       <div className="grid grid-cols-3 gap-2">
         {config.hasNumber && (
           <div>
-            <p className="text-[10px] text-gray-400 mb-0.5">Номер</p>
+            <p className="text-[10px] text-gray-400 mb-0.5">{t('fields.number')}</p>
             <Input
               value={editDocs[docType]?.document_number || ''}
               onChange={(e) => handleDocFieldChange(docType, 'document_number', e.target.value)}
@@ -125,31 +125,33 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDe
         )}
         {config.hasFrom && (
           <div>
-            <p className="text-[10px] text-gray-400 mb-0.5">От</p>
+            <p className="text-[10px] text-gray-400 mb-0.5">{t('fields.from')}</p>
             <DateInput
               value={editDocs[docType]?.issue_date || ''}
               onChange={(val) => handleDocFieldChange(docType, 'issue_date', val)}
+              t={t}
             />
           </div>
         )}
         {config.hasTo && (
           <div>
-            <p className="text-[10px] text-gray-400 mb-0.5">До</p>
+            <p className="text-[10px] text-gray-400 mb-0.5">{t('fields.to')}</p>
             <DateInput
               value={editDocs[docType]?.expiry_date || ''}
               onChange={(val) => handleDocFieldChange(docType, 'expiry_date', val)}
+              t={t}
             />
           </div>
         )}
       </div>
       {config.hasVisaType && (
         <div className="mt-1.5">
-          <p className="text-[10px] text-gray-400 mb-0.5">Тип визы</p>
+          <p className="text-[10px] text-gray-400 mb-0.5">{t('documents.visa_type')}</p>
           <Select
             value={editDocs[docType]?.visa_type || ''}
             onValueChange={(val) => handleDocFieldChange(docType, 'visa_type', val)}
           >
-            <SelectTrigger className="h-7 text-xs"><SelectValue placeholder="Выберите тип" /></SelectTrigger>
+            <SelectTrigger className="h-7 text-xs"><SelectValue placeholder={t('documents.select_type')} /></SelectTrigger>
             <SelectContent>
               {VISA_TYPES.map(vt => <SelectItem key={vt.value} value={vt.value}>{vt.label}</SelectItem>)}
             </SelectContent>
@@ -162,7 +164,7 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDe
             checked={editDocs[docType]?.a1_ch || false}
             onCheckedChange={(val) => handleDocFieldChange(docType, 'a1_ch', val)}
           />
-          <span className="text-xs text-gray-600">A1 CH (Швейцария)</span>
+          <span className="text-xs text-gray-600">{t('documents.a1_ch_switzerland')}</span>
         </div>
       )}
     </div>
