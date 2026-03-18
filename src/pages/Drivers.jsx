@@ -212,6 +212,12 @@ export default function Drivers() {
             setFilters={setFilters}
             counts={counts}
             onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
+            docTypeFilter={docTypeFilter}
+            docStatusFilter={docStatusFilter}
+            onDocTypeChange={setDocTypeFilter}
+            onDocStatusChange={setDocStatusFilter}
+            filteredCount={filteredDrivers.length}
+            totalCount={drivers.filter(d => d.status !== 'terminated').length}
           />
         </div>
       </div>
