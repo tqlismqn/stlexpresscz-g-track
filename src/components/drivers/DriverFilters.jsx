@@ -35,13 +35,13 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
   ];
 
   const STATUS_PILLS = [
-    { key: 'all',        label: t('common.all'),        countKey: 'all' },
-    { key: 'ready',      label: t('filters.ready'),      countKey: 'ready' },
-    { key: 'incomplete', label: t('filters.incomplete'),  countKey: 'incomplete' },
-    { key: 'expiring',   label: t('filters.expiring'),   countKey: 'expiring' },
-    { key: 'expired',    label: t('filters.expired'),    countKey: 'expired' },
-    { key: 'inactive',   label: t('common.inactive'),    countKey: 'inactive' },
-    { key: 'archive',    label: t('filters.archive'),    countKey: 'archive' },
+    { key: 'all',        label: t('common.all'),           countKey: 'all' },
+    { key: 'candidates', label: t('filters.candidates'),   countKey: 'candidates' },
+    { key: 'ready',      label: t('filters.ready'),        countKey: 'ready' },
+    { key: 'incomplete', label: t('filters.incomplete'),   countKey: 'incomplete' },
+    { key: 'expiring',   label: t('filters.expiring'),     countKey: 'expiring' },
+    { key: 'expired',    label: t('filters.expired'),      countKey: 'expired' },
+    { key: 'archived',   label: t('filters.archived'),     countKey: 'archived' },
   ];
 
   return (
@@ -68,7 +68,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
               filters.statusFilter === item.key
                 ? 'bg-blue-600 text-white'
                 : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-            } ${item.key === 'archive' ? 'ml-2' : ''}`}
+            } ${item.key === 'archived' ? 'ml-2' : ''}`}
           >
             {item.label} ({counts[item.countKey] || 0})
           </button>
