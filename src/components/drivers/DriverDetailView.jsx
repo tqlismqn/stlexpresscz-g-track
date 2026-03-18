@@ -441,7 +441,17 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
           <TabsContent value="overview" className="p-0">
             {incompleteFields.length > 0 && !isCreateMode && (
               <div className="mx-4 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
-                {t('drivers.incomplete_data_warning')} {incompleteFields.map(f => f.label).join(', ')}
+                {t('drivers.incomplete_data_warning')} {incompleteFields.map(f => {
+                  const keyMap = {
+                    country_code: 'fields.citizenship',
+                    date_of_birth: 'fields.date_of_birth',
+                    phone: 'fields.phone',
+                    passport_number: 'fields.passport_number',
+                    driving_license_number: 'fields.driving_license',
+                    bank: 'drivers.bank_details',
+                  };
+                  return keyMap[f.field] ? t(keyMap[f.field]) : f.label;
+                }).join(', ')}
               </div>
             )}
 
