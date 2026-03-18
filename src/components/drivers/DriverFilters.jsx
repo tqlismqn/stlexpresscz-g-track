@@ -19,13 +19,13 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
     <div className="space-y-4">
       {/* Row 1: Title + Add button */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Водители</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('drivers.title')}</h1>
         <button
           onClick={onCreateDriver}
           className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
-          Добавить водителя
+          {t('drivers.add_driver')}
         </button>
       </div>
 
@@ -52,7 +52,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
           <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Поиск по имени, ID, телефону..."
+            placeholder={t('drivers.search_placeholder')}
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
             className="w-full pl-10 pr-9 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
@@ -73,7 +73,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
           onChange={(e) => setFilters({ ...filters, nationalityFilter: e.target.value })}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
         >
-          <option value="all">Все водители</option>
+          <option value="all">{t('drivers.all_drivers')}</option>
           <option value="EU">EU</option>
           <option value="non-EU">non-EU</option>
         </select>
@@ -83,8 +83,8 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
           onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
         >
-          <option value="name">По имени</option>
-          <option value="readiness">По готовности</option>
+          <option value="name">{t('drivers.sort_by_name')}</option>
+          <option value="readiness">{t('drivers.sort_by_readiness')}</option>
         </select>
       </div>
     </div>

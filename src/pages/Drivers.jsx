@@ -11,6 +11,7 @@ import { formatDriverId } from '@/lib/driverUtils';
 
 export default function Drivers() {
   const location = useLocation();
+  const { t } = useTranslation();
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({

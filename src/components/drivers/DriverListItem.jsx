@@ -103,6 +103,15 @@ function getPillClass(status, isRequired) {
 }
 
 export default function DriverListItem({ driver, documents, isSelected, onSelect }) {
+  const { t } = useTranslation();
+
+  const statusConfig = {
+    active:     { bg: 'bg-green-100 text-green-700', label: t('drivers.status_active') },
+    inactive:   { bg: 'bg-amber-100 text-amber-700', label: t('drivers.status_inactive') },
+    on_leave:   { bg: 'bg-blue-100 text-blue-700',   label: t('drivers.status_on_leave') },
+    terminated: { bg: 'bg-gray-100 text-gray-500',   label: t('drivers.status_fired') }
+  };
+
   const readiness = driver.trip_readiness_pct || 0;
   const incompleteFields = getIncompleteFields(driver);
   const hasIncomplete = incompleteFields.length > 0;
@@ -156,7 +165,7 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
           <div className="flex items-center gap-2 mb-1">
             <p className="font-semibold text-gray-900">{formatDriverName(driver.name)}</p>
             {hasIncomplete && (
-              <span title="Неполные данные" className="text-amber-400 text-xs leading-none">⚠</span>
+              <span title={t('drivers.incomplete_data')} className="text-amber-400 text-xs leading-none">⚠</span>
             )}
             <span className="text-xs text-muted-foreground">{drvId}</span>
             {getCountryByCode(driver.country_code)?.flag ? (
