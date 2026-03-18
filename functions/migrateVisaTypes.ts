@@ -31,10 +31,15 @@ Deno.serve(async (req) => {
 
   let matched = 0;
   let skipped = 0;
+  let already_migrated = 0;
   let errors = 0;
   const errorDetails = [];
 
   for (const driver of drivers) {
+    if (driver.visa_type) {
+      already_migrated++;
+      continue;
+    }
     const visaType = lookupVisaType(driver.name);
     if (!visaType) {
       skipped++;
@@ -49,9 +54,10 @@ Deno.serve(async (req) => {
       errors++;
       errorDetails.push({ name: driver.name, error: err.message });
     }
+    await new Promise(r => setTimeout(r, 200));
   }
 
-  const summary = { total: drivers.length, matched, skipped, errors, errorDetails };
+  const summary = { total: drivers.length, matched, skipped, already_migrated, errors, errorDetails };
   console.log('Migration summary:', JSON.stringify(summary));
   return Response.json(summary);
 });
