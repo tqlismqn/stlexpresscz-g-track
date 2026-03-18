@@ -78,9 +78,12 @@ export default function DriverDocumentBadges({ driver, documents, size = 'sm' })
       {documentPills.map(pill => (
         <div
           key={pill.type}
-          className={`rounded-sm flex items-center justify-center font-medium ${pillHeight} ${getPillClass(pill.status, pill.isRequired)}`}
+          className={`relative rounded-sm flex items-center justify-center font-medium ${pillHeight} ${getPillClass(pill.status, pill.isRequired)}`}
         >
           {pill.abbr}
+          {['transport_licence', 'licence'].includes(pill.type) && hasPendingReturn && (
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-orange-500 border border-white" />
+          )}
         </div>
       ))}
     </div>
