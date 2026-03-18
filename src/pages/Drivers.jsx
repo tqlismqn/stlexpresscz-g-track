@@ -106,7 +106,10 @@ export default function Drivers() {
     // Step 1: Status filter
     switch (filters.statusFilter) {
       case 'all':
-        result = result.filter(d => d.status !== 'terminated');
+        result = result.filter(d => d.status !== 'archived');
+        break;
+      case 'candidates':
+        result = result.filter(d => d.status === 'candidate');
         break;
       case 'ready':
         result = result.filter(d => d.status === 'active' && d.trip_readiness_pct === 100);
@@ -123,26 +126,23 @@ export default function Drivers() {
         break;
       case 'expiring':
         result = result.filter(d => {
-          if (d.status !== 'active' && d.status !== 'inactive') return false;
+          if (d.status !== 'active') return false;
           const docs = documents.filter(doc => doc.driver_id === d.id);
           return docs.some(doc => doc.status === 'expiring');
         });
         break;
       case 'expired':
         result = result.filter(d => {
-          if (d.status !== 'active' && d.status !== 'inactive') return false;
+          if (d.status !== 'active') return false;
           const docs = documents.filter(doc => doc.driver_id === d.id);
           return docs.some(doc => doc.status === 'expired');
         });
         break;
-      case 'inactive':
-        result = result.filter(d => d.status === 'inactive' || d.status === 'on_leave');
-        break;
-      case 'archive':
-        result = result.filter(d => d.status === 'terminated');
+      case 'archived':
+        result = result.filter(d => d.status === 'archived');
         break;
       default:
-        result = result.filter(d => d.status !== 'terminated');
+        result = result.filter(d => d.status !== 'archived');
     }
 
     // Step 2: Nationality filter
