@@ -8,7 +8,7 @@ import { VISA_TYPES, formatDate, getRemainingDays } from '@/lib/documentTypes';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Pencil, X } from 'lucide-react';
+import { Pencil, X, RotateCcw } from 'lucide-react';
 
 const STATUS_COLORS = {
   valid: 'bg-green-500',
