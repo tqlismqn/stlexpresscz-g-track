@@ -2,8 +2,33 @@ import React from 'react';
 import { Search, Plus, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver }) {
+export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, filteredCount, totalCount }) {
   const { t } = useTranslation();
+  const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any';
+
+  const DOC_TYPES = [
+    { value: 'all',                          label: t('filters.all_types') },
+    { value: 'work_contract',                label: t('doc_types.work_contract') },
+    { value: 'driver_license',               label: t('doc_types.driver_license') },
+    { value: 'posted_worker_certificate_a1', label: t('doc_types.posted_worker_certificate_a1') },
+    { value: 'declaration',                  label: t('doc_types.declaration') },
+    { value: 'insurance',                    label: t('doc_types.insurance') },
+    { value: 'visa',                         label: t('doc_types.visa') },
+    { value: 'passport',                     label: t('doc_types.passport') },
+    { value: 'adr_certificate',              label: t('doc_types.adr_certificate') },
+    { value: 'medical_certificate',          label: t('doc_types.medical_certificate') },
+    { value: 'cz_license',                   label: t('doc_types.cz_license') },
+  ];
+
+  const DOC_STATUSES = [
+    { value: 'any',         label: t('filters.any_status') },
+    { value: 'expired',     label: t('filters.expired') },
+    { value: 'expiring_30', label: t('filters.expiring_30') },
+    { value: 'expiring_60', label: t('filters.expiring_60') },
+    { value: 'expiring_90', label: t('filters.expiring_90') },
+    { value: 'valid',       label: t('filters.valid') },
+    { value: 'missing',     label: t('filters.missing') },
+  ];
 
   const STATUS_PILLS = [
     { key: 'all',        label: t('common.all'),        countKey: 'all' },
