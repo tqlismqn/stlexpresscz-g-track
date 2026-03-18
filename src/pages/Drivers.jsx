@@ -203,7 +203,7 @@ export default function Drivers() {
     });
 
     return result;
-  }, [drivers, documents, filters, docTypeFilter, docStatusFilter]);
+  }, [drivers, documents, filters, docTypeFilter, docStatusFilter, visaTypeFilter]);
 
   const handleSaveDriver = async (savedDriver) => {
     setIsCreating(false);
