@@ -4,6 +4,8 @@ import { toast } from 'sonner';
 import DriverDocumentsTabContent from './DriverDocumentsTabContent';
 import DriverCommentsTab from './DriverCommentsTab';
 import DriverHistoryTab from './DriverHistoryTab';
+import DriverDocumentBadges from './DriverDocumentBadges';
+import TagSelector from './TagSelector';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
