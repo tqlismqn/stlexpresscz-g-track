@@ -332,8 +332,9 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
 
   const startEditing = () => {
     const map = {};
-    documents.forEach(doc => {
-      map[doc.document_type] = {
+    // Only edit the CURRENT (newest) doc per type
+    docsMap.forEach((doc, key) => {
+      map[key] = {
         id: doc.id,
         document_type: doc.document_type,
         document_number: doc.document_number || '',
@@ -341,6 +342,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
         expiry_date: doc.expiry_date || '',
         visa_type: doc.visa_type || '',
         status: doc.status || '',
+        return_status: doc.return_status || '',
       };
     });
     setEditDocs(map);
@@ -503,16 +505,17 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
               {SECTIONS[sectionNum]}
             </p>
             <div className="divide-y divide-gray-50">
-              {types.map(([docType, config]) =>
-                isEditing ? (
+              {types.map(([docType, config]) => {
+                const normalizedType = normalizeDocType(docType);
+                return isEditing ? (
                 <DocumentRowEdit
                  key={docType}
-                 docType={docType}
+                 docType={normalizedType}
                  config={config}
                  editDocs={editDocs}
                  handleDocFieldChange={handleDocFieldChange}
                  onDelete={handleDeleteDocument}
-                 onRenewLicence={handleRenewLicence}
+                 onRenewDocument={handleRenewDocument}
                  t={t}
                 />
                 ) : (
@@ -520,21 +523,21 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                   <DocumentRowRead
                     docType={docType}
                     config={config}
-                    doc={docsMap.get(docType) || null}
+                    doc={docsMap.get(normalizedType) || null}
                     driver={driver}
                     t={t}
                   />
-                  {LICENCE_TYPES.includes(docType) && previousLicences.map(prevDoc => (
-                    <PreviousLicenceRow
-                      key={prevDoc.id}
-                      doc={prevDoc}
+                  {previousDocMap.has(normalizedType) && (
+                    <PreviousDocumentRow
+                      doc={previousDocMap.get(normalizedType)}
+                      docTypeName={config.name}
                       onMarkAsReturned={handleMarkAsReturned}
                       t={t}
                     />
-                  ))}
+                  )}
                 </div>
-                )
-              )}
+                );
+              })}
             </div>
           </div>
         )
