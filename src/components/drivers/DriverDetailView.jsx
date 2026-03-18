@@ -172,7 +172,7 @@ const buildDescription = (field, oldVal, newVal, t) => {
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const { currentUser } = useAuth();
   const { t } = useTranslation();
-  const { tagMap, archiveTags } = useDriverTags();
+  const { tagMap, archiveTags, tags: allTags } = useDriverTags();
 
   const statusConfig = {
     candidate: { bg: 'bg-purple-100 text-purple-700', label: t('drivers.status_candidate') },
