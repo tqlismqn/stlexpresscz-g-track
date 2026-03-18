@@ -353,10 +353,10 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
             <div className="flex items-start justify-between mb-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-xl font-bold text-gray-900">
-                  {isCreateMode ? 'Новый водитель' : formatDriverName(driver?.name)}
+                  {isCreateMode ? t('drivers.new_driver') : formatDriverName(driver?.name)}
                 </h3>
                 {isCreateMode ? (
-                  <span className="text-xs text-gray-400 italic">ID присваивается автоматически</span>
+                  <span className="text-xs text-gray-400 italic">{t('drivers.id_auto_assigned')}</span>
                 ) : (
                   <>
                     <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
@@ -374,15 +374,15 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                    {driver?.status === 'terminated' ? (
                     <button
                       onClick={() => setShowRestoreModal(true)}
-                      title="Восстановить водителя"
-                      className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                    >
-                      Восстановить
+                      title={t('drivers.restore_driver')}
+                        className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                      >
+                        {t('common.restore')}
                     </button>
                   ) : (
                     <button
                       onClick={() => setShowArchiveModal(true)}
-                      title="Архивировать водителя"
+                      title={t('drivers.archive_driver')}
                       className="p-1 text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -430,10 +430,10 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         }
       }} className="flex-1 min-h-0 flex flex-col">
         <TabsList className="flex-shrink-0 w-full justify-start border-b bg-transparent p-0 rounded-none h-auto">
-          <TabsTrigger value="overview" className="rounded-none">Обзор</TabsTrigger>
-          <TabsTrigger value="documents" className={cn("rounded-none", isCreateMode && "opacity-40 cursor-not-allowed")} disabled={isCreateMode}>Документы</TabsTrigger>
-          <TabsTrigger value="comments" className={cn("rounded-none", isCreateMode && "opacity-40 cursor-not-allowed")} disabled={isCreateMode}>Комментарии</TabsTrigger>
-          <TabsTrigger value="history" className={cn("rounded-none", isCreateMode && "opacity-40 cursor-not-allowed")} disabled={isCreateMode}>История</TabsTrigger>
+          <TabsTrigger value="overview" className="rounded-none">{t('tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="documents" className={cn("rounded-none", isCreateMode && "opacity-40 cursor-not-allowed")} disabled={isCreateMode}>{t('tabs.documents')}</TabsTrigger>
+          <TabsTrigger value="comments" className={cn("rounded-none", isCreateMode && "opacity-40 cursor-not-allowed")} disabled={isCreateMode}>{t('tabs.comments')}</TabsTrigger>
+          <TabsTrigger value="history" className={cn("rounded-none", isCreateMode && "opacity-40 cursor-not-allowed")} disabled={isCreateMode}>{t('tabs.history')}</TabsTrigger>
         </TabsList>
 
         <div className="flex-1 min-h-0 overflow-y-auto pb-6">
@@ -441,7 +441,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
           <TabsContent value="overview" className="p-0">
             {incompleteFields.length > 0 && !isCreateMode && (
               <div className="mx-4 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700">
-                ⚠ Неполные данные: {incompleteFields.map(f => f.label).join(', ')}
+                {t('drivers.incomplete_data_warning')} {incompleteFields.map(f => f.label).join(', ')}
               </div>
             )}
 
@@ -450,7 +450,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               {showEditableFields ? (
                 <div className="flex gap-2">
                   <button onClick={handleCancel} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">
-                    Отмена
+                    {t('common.cancel')}
                   </button>
                   <button
                     onClick={handleSave}
@@ -458,15 +458,15 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                     className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
                   >
                     {isSaving ? (
-                      <><svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>Сохранение...</>
-                    ) : 'Сохранить'}
+                      <><svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>{t('common.saving')}</>
+                    ) : t('common.save')}
                   </button>
                 </div>
               ) : (
                 !isTerminated && (
                   <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                    <Pencil className="w-3.5 h-3.5" /> Изменить
-                  </button>
+                     <Pencil className="w-3.5 h-3.5" /> {t('common.edit')}
+                   </button>
                 )
               )}
             </div>
@@ -474,12 +474,12 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
             <div className="divide-y divide-gray-100">
               {/* SECTION 1: Личные данные */}
               <div className="p-4">
-                <p className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">Личные данные</p>
+                <p className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">{t('drivers.personal_data')}</p>
                 <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
 
                   {/* Имя */}
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Имя <span className="text-red-500">*</span></p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.name')} <span className="text-red-500">*</span></p>
                     {showEditableFields ? (
                       <Input value={formData.name || ''} onChange={(e) => handleFieldChange('name', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -489,11 +489,11 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
                   {/* Дата рождения */}
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Дата рождения</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.date_of_birth')}</p>
                     {showEditableFields ? (
                       <Input
                         type="text"
-                        placeholder="ДД.ММ.ГГГГ"
+                        placeholder={t('common.date_placeholder')}
                         value={formData._dob_display || ''}
                         onChange={(e) => {
                           let val = e.target.value.replace(/[^\d.]/g, '');
@@ -519,7 +519,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
                   {/* Гражданство (no asterisk) */}
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Гражданство</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.citizenship')}</p>
                     {showEditableFields ? (
                       <CountryCombobox
                         value={formData.country_code || ''}
@@ -533,7 +533,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                         {(() => {
                           const c = getCountryByCode(driver?.country_code);
                           if (c) return `${c.flag} ${c.name}`;
-                          return <span className="text-gray-400">Не указано</span>;
+                          return <span className="text-gray-400">{t('common.not_specified')}</span>;
                         })()}
                       </p>
                     )}
@@ -541,7 +541,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
                   {/* Rodné číslo */}
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Rodné číslo</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.rodne_cislo')}</p>
                     {showEditableFields ? (
                       <Input value={formData.rodne_cislo || ''} onChange={(e) => handleFieldChange('rodne_cislo', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -551,7 +551,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
                   {/* Телефон */}
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Телефон</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.phone')}</p>
                     {showEditableFields ? (
                       <Input value={formData.phone || ''} onChange={(e) => handleFieldChange('phone', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -561,7 +561,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
                   {/* Email */}
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Email</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.email')}</p>
                     {showEditableFields ? (
                       <Input value={formData.email || ''} onChange={(e) => handleFieldChange('email', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -573,17 +573,17 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                   {!isCreateMode && (
                     <>
                       <div>
-                        <p className="text-xs text-gray-500 mb-0.5">Статус</p>
-                        {isEditing ? (
-                          <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
-                            <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="active">Активный</SelectItem>
-                              <SelectItem value="inactive">Неактивный</SelectItem>
-                              <SelectItem value="on_leave">В отпуске</SelectItem>
-                              <SelectItem value="terminated">Уволен</SelectItem>
-                            </SelectContent>
-                          </Select>
+                        <p className="text-xs text-gray-500 mb-0.5">{t('fields.status')}</p>
+                         {isEditing ? (
+                           <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
+                             <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+                             <SelectContent>
+                               <SelectItem value="active">{t('drivers.status_active')}</SelectItem>
+                               <SelectItem value="inactive">{t('drivers.status_inactive')}</SelectItem>
+                               <SelectItem value="on_leave">{t('drivers.status_on_leave')}</SelectItem>
+                               <SelectItem value="terminated">{t('drivers.status_fired')}</SelectItem>
+                             </SelectContent>
+                           </Select>
                         ) : (
                           <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
                             {statusConfig[driver?.status]?.label || '—'}
@@ -596,7 +596,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
                   {/* Адрес */}
                   <div className="col-span-2">
-                    <p className="text-xs text-gray-500 mb-0.5">Адрес / Прописка CZ</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.address_cz')}</p>
                     {showEditableFields ? (
                       <Input value={formData.address || ''} onChange={(e) => handleFieldChange('address', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -608,10 +608,10 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
               {/* SECTION 2: Банковские реквизиты */}
               <div className="p-4">
-                <p className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">Банковские реквизиты</p>
+                <p className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">{t('drivers.bank_details')}</p>
                 <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Банк</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.bank')}</p>
                     {showEditableFields ? (
                       <Input value={formData.bank_name || ''} onChange={(e) => handleFieldChange('bank_name', e.target.value)} className="h-8 text-sm" />
                     ) : (
@@ -619,7 +619,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                     )}
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-0.5">Счёт / IBAN</p>
+                    <p className="text-xs text-gray-500 mb-0.5">{t('fields.iban')}</p>
                     {showEditableFields ? (
                       <Input value={formData.bank_account || ''} onChange={(e) => handleFieldChange('bank_account', e.target.value)} className="h-8 text-sm" />
                     ) : (
