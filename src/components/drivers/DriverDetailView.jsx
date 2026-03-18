@@ -652,9 +652,9 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       {showRestoreModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Восстановить водителя?</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dialogs.restore_title')}</h3>
             <p className="text-sm text-gray-600 mb-4">
-              Водитель <span className="font-semibold">{formatDriverName(driver?.name)}</span> будет восстановлен со статусом «Неактивный». Чтобы вернуть водителя к работе, измените статус на «Активный».
+              {t('dialogs.restore_message', { name: formatDriverName(driver?.name) })}
             </p>
             <div className="flex justify-end gap-2">
               <button
@@ -662,14 +662,14 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 disabled={isRestoring}
                 className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 disabled:opacity-50"
               >
-                Отмена
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleRestore}
                 disabled={isRestoring}
                 className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center gap-1.5"
               >
-                {isRestoring ? 'Восстановление...' : 'Восстановить'}
+                {isRestoring ? t('common.restoring') : t('common.restore')}
               </button>
             </div>
           </div>
@@ -680,12 +680,12 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       {showArchiveModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Архивировать водителя?</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dialogs.archive_title')}</h3>
             <p className="text-sm text-gray-600 mb-1">
-              Вы собираетесь архивировать водителя <span className="font-semibold">{formatDriverName(driver?.name)}</span>.
+              {t('dialogs.archive_message', { name: formatDriverName(driver?.name) })}
             </p>
             <p className="text-sm text-gray-500 mb-4">
-              Водитель будет скрыт из основного списка и перемещён в раздел «Архив». Это действие можно отменить вручную.
+              {t('dialogs.archive_description')}
             </p>
             <div className="flex justify-end gap-2">
               <button
@@ -693,14 +693,14 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 disabled={isArchiving}
                 className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 disabled:opacity-50"
               >
-                Отмена
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleArchive}
                 disabled={isArchiving}
                 className="text-sm bg-red-600 text-white px-4 py-1.5 rounded-md hover:bg-red-700 disabled:opacity-50 flex items-center gap-1.5"
               >
-                {isArchiving ? 'Архивирование...' : 'Архивировать'}
+                {isArchiving ? t('common.archiving') : t('common.archive')}
               </button>
             </div>
           </div>
@@ -711,8 +711,8 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       {showUnsavedModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Несохранённые изменения</h3>
-            <p className="text-sm text-gray-600 mb-4">У вас есть несохранённые изменения. Сохранить перед переключением?</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dialogs.unsaved_title')}</h3>
+            <p className="text-sm text-gray-600 mb-4">{t('dialogs.unsaved_message')}</p>
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => {
@@ -724,13 +724,13 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 }}
                 className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5"
               >
-                Не сохранять
+                {t('dialogs.discard')}
               </button>
               <button
                 onClick={() => { setShowUnsavedModal(false); setPendingTab(null); }}
                 className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700"
               >
-                Остаться
+                {t('dialogs.stay')}
               </button>
             </div>
           </div>
