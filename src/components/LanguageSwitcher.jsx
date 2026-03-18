@@ -12,10 +12,9 @@ const LANGUAGES = [
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
-  const { currentUser } = useAuth();
   const [open, setOpen] = useState(false);
 
-  const current = currentUser?.language || 'ru';
+  const current = i18n.language || 'ru';
 
   const handleSelect = async (code) => {
     setOpen(false);
