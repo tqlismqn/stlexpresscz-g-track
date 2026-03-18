@@ -49,10 +49,10 @@ export default function Dashboard() {
         const terminated = driversList.filter(d => d.status === 'terminated').length;
 
         const breakdownParts = [];
-        if (activeCount > 0) breakdownParts.push(`${activeCount} активных`);
-        if (onLeave > 0) breakdownParts.push(`${onLeave} в отпуске`);
-        if (inactive > 0) breakdownParts.push(`${inactive} неакт.`);
-        if (terminated > 0) breakdownParts.push(`${terminated} архив`);
+        if (activeCount > 0) breakdownParts.push(t('dashboard.active_count', { count: activeCount }));
+        if (onLeave > 0) breakdownParts.push(t('dashboard.on_leave_count', { count: onLeave }));
+        if (inactive > 0) breakdownParts.push(t('dashboard.inactive_short', { count: inactive }));
+        if (terminated > 0) breakdownParts.push(t('dashboard.archived_short', { count: terminated }));
 
         setStats({
           activeDrivers: activeCount,

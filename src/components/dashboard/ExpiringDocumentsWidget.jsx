@@ -3,24 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Clock, ChevronRight } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
-import { ru } from 'date-fns/locale';
-
-const docTypeLabels = {
-  work_contract: 'Трудовой договор',
-  transport_licence: 'Лицензия на транспорт',
-  a1_certificate: 'Сертификат A1',
-  declaration: 'Декларация',
-  insurance: 'Страховка',
-  travel_insurance: 'Путешественческая страховка',
-  visa: 'Виза',
-  passport: 'Паспорт',
-  driver_license: 'Водительское удостоверение',
-  medical_certificate: 'Медицинское свидетельство',
-  psihotest: 'Психотест',
-  adr_certificate: 'Сертификат ADR',
-  chip_card: 'Чип-карта',
-  code95: 'Код 95'
-};
+import { useTranslation } from 'react-i18next';
 
 export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
   const navigate = useNavigate();
