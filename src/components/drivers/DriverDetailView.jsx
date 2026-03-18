@@ -18,6 +18,7 @@ import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { formatDriverId } from '@/lib/driverUtils';
 import { useAuth } from '@/lib/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { useDriverTags } from '@/hooks/useDriverTags';
 
 const Driver = base44.entities.Driver;
 
