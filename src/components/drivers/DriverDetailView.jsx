@@ -170,12 +170,12 @@ const buildDescription = (field, oldVal, newVal, t) => {
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const { currentUser } = useAuth();
   const { t } = useTranslation();
+  const { tagMap, archiveTags } = useDriverTags();
 
   const statusConfig = {
-    active:     { bg: 'bg-green-100 text-green-700', label: t('drivers.status_active') },
-    inactive:   { bg: 'bg-amber-100 text-amber-700', label: t('drivers.status_inactive') },
-    on_leave:   { bg: 'bg-blue-100 text-blue-700',   label: t('drivers.status_on_leave') },
-    terminated: { bg: 'bg-gray-100 text-gray-500',   label: t('drivers.status_fired') }
+    candidate: { bg: 'bg-purple-100 text-purple-700', label: t('drivers.status_candidate') },
+    active:    { bg: 'bg-green-100 text-green-700',   label: t('drivers.status_active') },
+    archived:  { bg: 'bg-gray-100 text-gray-500',     label: t('drivers.status_archived') },
   };
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
