@@ -97,6 +97,45 @@ function DocumentRowRead({ docType, config, doc, driver, t }) {
   );
 }
 
+const LICENCE_TYPES = ['transport_licence', 'licence'];
+
+function PreviousLicenceRow({ doc, onMarkAsReturned, t }) {
+  const isPending = doc.return_status === 'pending_return';
+  const isReturned = doc.return_status === 'returned';
+
+  return (
+    <div className={`ml-4 pl-3 border-l-2 py-1.5 ${isPending ? 'border-orange-400' : 'border-gray-200'} ${isReturned ? 'opacity-50' : ''}`}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-xs text-gray-500 italic">{t('documents.old_licence')}</span>
+            {isPending && (
+              <span className="text-xs text-orange-600 font-medium">⏳ {t('documents.pending_return')}</span>
+            )}
+            {isReturned && (
+              <span className="text-xs text-green-600 font-medium">✓ {t('documents.returned')}</span>
+            )}
+          </div>
+          <div className="text-xs text-gray-400 mt-0.5">
+            {doc.document_number && <span>{doc.document_number} · </span>}
+            {(doc.issue_date || doc.expiry_date) && (
+              <span>{formatDate(doc.issue_date)} → {formatDate(doc.expiry_date)}</span>
+            )}
+          </div>
+        </div>
+        {isPending && (
+          <button
+            onClick={() => onMarkAsReturned(doc)}
+            className="flex items-center gap-1 text-xs text-orange-600 hover:text-orange-800 border border-orange-300 rounded px-2 py-0.5 whitespace-nowrap flex-shrink-0"
+          >
+            <RotateCcw className="w-3 h-3" /> {t('documents.mark_as_returned')}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete, t }) {
   const existingDoc = editDocs[docType];
   return (
