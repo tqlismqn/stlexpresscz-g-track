@@ -96,8 +96,9 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
         })}
       </div>
 
-      {/* Row 3: Document filters */}
-      <div className="bg-slate-50 rounded-lg p-2 flex flex-wrap items-center gap-2">
+      {/* Row 2: Doc filters + Search (combined) */}
+      <div className="bg-slate-50 rounded-lg px-3 py-2 flex items-center gap-2">
+        <Filter className="w-4 h-4 text-gray-400 flex-shrink-0" />
         <select
           value={docTypeFilter}
           onChange={(e) => onDocTypeChange(e.target.value)}
@@ -112,42 +113,42 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
         >
           {DOC_STATUSES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
-        {docFiltersActive && (
-          <>
-            <button
-              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); }}
-              className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-gray-800 border border-gray-300 rounded-md bg-white"
-            >
-              <X className="w-3 h-3" /> {t('filters.clear_doc_filters')}
-            </button>
-            <span className="text-xs text-gray-500 ml-1">
-              {t('filters.showing_filtered', { count: filteredCount, total: totalCount })}
-            </span>
-          </>
-        )}
-      </div>
 
-      {/* Row 4: Search */}
-      <div className="flex gap-4">
+        <div className="w-px h-5 bg-gray-300 mx-1 flex-shrink-0" />
+
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
           <input
             type="text"
-            placeholder={t('drivers.search_placeholder')}
+            placeholder={t('common.search')}
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="w-full pl-10 pr-9 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+            className="w-full pl-8 pr-7 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white"
           />
           {filters.search && (
             <button
               type="button"
               onClick={() => setFilters({ ...filters, search: '' })}
-              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
+
+        {docFiltersActive && (
+          <>
+            <span className="text-xs text-gray-500 whitespace-nowrap">
+              {t('filters.showing_filtered', { count: filteredCount, total: totalCount })}
+            </span>
+            <button
+              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); }}
+              className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-gray-800 border border-gray-300 rounded-md bg-white whitespace-nowrap"
+            >
+              <X className="w-3 h-3" /> {t('filters.clear_doc_filters')}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
