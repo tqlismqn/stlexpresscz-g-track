@@ -1,17 +1,20 @@
 import React from 'react';
 import { Search, Plus, X } from 'lucide-react';
-
-const STATUS_PILLS = [
-  { key: 'all',      label: 'Все',         countKey: 'all' },
-  { key: 'ready',      label: 'Готовы',    countKey: 'ready' },
-  { key: 'incomplete', label: 'Неполные', countKey: 'incomplete' },
-  { key: 'expiring',   label: 'Истекают', countKey: 'expiring' },
-  { key: 'expired',  label: 'Просрочены',  countKey: 'expired' },
-  { key: 'inactive', label: 'Неактивные',  countKey: 'inactive' },
-  { key: 'archive',  label: 'Архив',       countKey: 'archive' },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver }) {
+  const { t } = useTranslation();
+
+  const STATUS_PILLS = [
+    { key: 'all',        label: t('common.all'),        countKey: 'all' },
+    { key: 'ready',      label: t('filters.ready'),      countKey: 'ready' },
+    { key: 'incomplete', label: t('filters.incomplete'),  countKey: 'incomplete' },
+    { key: 'expiring',   label: t('filters.expiring'),   countKey: 'expiring' },
+    { key: 'expired',    label: t('filters.expired'),    countKey: 'expired' },
+    { key: 'inactive',   label: t('common.inactive'),    countKey: 'inactive' },
+    { key: 'archive',    label: t('filters.archive'),    countKey: 'archive' },
+  ];
+
   return (
     <div className="space-y-4">
       {/* Row 1: Title + Add button */}
