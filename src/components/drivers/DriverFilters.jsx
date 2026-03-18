@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus, X } from 'lucide-react';
+import { Search, Plus, X, Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, filteredCount, totalCount }) {
