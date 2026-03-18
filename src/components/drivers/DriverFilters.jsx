@@ -78,20 +78,19 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
         <div className="w-px h-6 bg-gray-300 mx-1" />
 
         {/* Nationality pills */}
-        {['EU', 'non-EU'].map(nat => {
-          const filterVal = nat === 'EU' ? 'EU' : 'non-EU';
-          const isActive = filters.nationalityFilter === filterVal;
+        {[{ val: 'EU', label: t('filters.eu'), countKey: 'eu' }, { val: 'non-EU', label: t('filters.non_eu'), countKey: 'nonEu' }].map(nat => {
+          const isActive = filters.nationalityFilter === nat.val;
           return (
             <button
-              key={nat}
-              onClick={() => setFilters({ ...filters, nationalityFilter: isActive ? 'all' : filterVal })}
+              key={nat.val}
+              onClick={() => setFilters({ ...filters, nationalityFilter: isActive ? 'all' : nat.val })}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
                 isActive
                   ? 'bg-blue-50 border-blue-500 text-blue-700'
                   : 'bg-white border-blue-300 text-blue-500 hover:bg-blue-50'
               }`}
             >
-              {nat === 'EU' ? t('filters.eu') : t('filters.non_eu')}
+              {nat.label} ({counts[nat.countKey] || 0})
             </button>
           );
         })}

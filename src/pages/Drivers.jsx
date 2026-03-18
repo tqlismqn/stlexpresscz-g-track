@@ -88,7 +88,9 @@ export default function Drivers() {
       expiring: [...active, ...inactive].filter(d => hasDocs(d, ['expiring'])).length,
       expired:  [...active, ...inactive].filter(d => hasDocs(d, ['expired'])).length,
       inactive: inactive.length,
-      archive:  src.filter(d => d.status === 'terminated').length
+      archive:  src.filter(d => d.status === 'terminated').length,
+      eu:       src.filter(d => d.status !== 'terminated' && d.nationality_group === 'EU').length,
+      nonEu:    src.filter(d => d.status !== 'terminated' && d.nationality_group === 'non-EU').length,
     };
   }, [drivers, documents, filters.nationalityFilter]);
 
@@ -172,7 +174,8 @@ export default function Drivers() {
         if (docStatusFilter === 'missing') return !matchingDoc;
         if (!matchingDoc) return false;
         if (docStatusFilter === 'any') return true;
-        if (!matchingDoc.expiry_date) return false;
+        // No expiry date = indefinite = valid
+        if (!matchingDoc.expiry_date) return docStatusFilter === 'valid';
 
         const daysUntilExpiry = Math.ceil((new Date(matchingDoc.expiry_date) - new Date()) / (1000 * 60 * 60 * 24));
         switch (docStatusFilter) {
