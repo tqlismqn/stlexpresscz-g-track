@@ -352,8 +352,8 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   };
 
   const isCreateMode = isCreating && !driver;
-  const isTerminated = driver?.status === 'terminated';
-  const showEditableFields = (isEditing || isCreateMode) && !isTerminated;
+  const isArchived = driver?.status === 'archived';
+  const showEditableFields = (isEditing || isCreateMode) && !isArchived;
 
   return (
     <div className="h-full flex flex-col bg-white">
