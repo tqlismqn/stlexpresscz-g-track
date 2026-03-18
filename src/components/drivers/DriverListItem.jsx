@@ -17,26 +17,7 @@ const avatarColors = [
   'bg-rose-500'
 ];
 
-const documentConfig = {
-  work_contract:       { abbr: 'CON', isRequired: true },
-  transport_licence:   { abbr: 'LIC', isRequired: true },
-  a1_certificate:      { abbr: 'A1',  isRequired: true },
-  declaration:         { abbr: 'DEC', isRequired: true },
-  insurance:           { abbr: 'INS', isRequired: true },
-  travel_insurance:    { abbr: 'TIS', isRequired: true },  // required for non-EU only
-  visa:                { abbr: 'VIS', isRequired: true },  // required for non-EU only
-  passport:            { abbr: 'PAS', isRequired: true },
-  driver_license:      { abbr: 'DL',  isRequired: true },
-  medical_certificate: { abbr: 'MED', isRequired: true },
-  psihotest:           { abbr: 'PSI', isRequired: true },
-  adr_certificate:     { abbr: 'ADR', isRequired: false },
-  chip_card:           { abbr: 'TCH', isRequired: false },
-  code95:              { abbr: 'C95', isRequired: false },
-};
 
-const euRequiredDocs    = ['work_contract', 'transport_licence', 'a1_certificate', 'declaration', 'insurance', 'passport', 'driver_license', 'medical_certificate', 'psihotest'];
-const nonEuRequiredDocs = ['work_contract', 'transport_licence', 'a1_certificate', 'declaration', 'insurance', 'travel_insurance', 'visa', 'passport', 'driver_license', 'medical_certificate', 'psihotest'];
-const optionalDocs      = ['adr_certificate', 'chip_card', 'code95'];
 
 const formatDriverName = (fullName) => {
   if (!fullName) return '';
