@@ -106,11 +106,14 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
   const { t } = useTranslation();
 
   const statusConfig = {
-    active:     { bg: 'bg-green-100 text-green-700', label: t('drivers.status_active') },
-    inactive:   { bg: 'bg-amber-100 text-amber-700', label: t('drivers.status_inactive') },
-    on_leave:   { bg: 'bg-blue-100 text-blue-700',   label: t('drivers.status_on_leave') },
-    terminated: { bg: 'bg-gray-100 text-gray-500',   label: t('drivers.status_fired') }
+    candidate: { bg: 'bg-purple-100 text-purple-700', label: t('drivers.status_candidate') },
+    active:    { bg: 'bg-green-100 text-green-700',   label: t('drivers.status_active') },
+    archived:  { bg: 'bg-gray-100 text-gray-500',     label: t('drivers.status_archived') },
   };
+
+  const daysAsCandidate = driver.status === 'candidate' && driver.created_date
+    ? Math.floor((Date.now() - new Date(driver.created_date).getTime()) / (1000 * 60 * 60 * 24))
+    : null;
 
   const readiness = driver.trip_readiness_pct || 0;
   const incompleteFields = getIncompleteFields(driver);
