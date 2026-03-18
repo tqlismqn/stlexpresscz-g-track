@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useTranslation } from 'react-i18next';
 
 const DriverDocument = base44.entities.DriverDocument;
-import { DOCUMENT_TYPES, SECTIONS, VISA_TYPES, formatDate, getRemainingDays } from '@/lib/documentTypes';
+import { DOCUMENT_TYPES, VISA_TYPES, formatDate, getRemainingDays } from '@/lib/documentTypes';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';

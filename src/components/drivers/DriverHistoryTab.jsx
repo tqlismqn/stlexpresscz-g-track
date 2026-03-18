@@ -14,6 +14,7 @@ const actionConfig = {
 };
 
 export default function DriverHistoryTab({ driver }) {
+  const { t } = useTranslation();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 

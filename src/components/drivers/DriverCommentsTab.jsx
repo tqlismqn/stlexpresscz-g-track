@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function DriverCommentsTab({ driver, isTerminated }) {
   const { currentUser } = useAuth();
+  const { t } = useTranslation();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
