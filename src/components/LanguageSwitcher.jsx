@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { base44 } from '@/api/base44Client';
-import { useAuth } from '@/lib/AuthContext';
+
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
