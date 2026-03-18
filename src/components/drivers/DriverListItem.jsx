@@ -66,24 +66,7 @@ function getReadinessTextColor(pct) {
   return 'text-red-600';
 }
 
-function getPillClass(status, isRequired) {
-  switch (status) {
-    case 'valid':
-      return 'bg-green-100 text-green-700 border border-green-300';
-    case 'expiring':
-      return 'bg-amber-100 text-amber-700 border border-amber-300';
-    case 'expired':
-      return 'bg-red-100 text-red-700 border border-red-300';
-    case 'pending_renewal':
-      return 'bg-blue-100 text-blue-700 border border-blue-300';
-    case 'missing':
-      return isRequired
-        ? 'bg-red-50 text-red-400 border border-dashed border-red-300'
-        : 'bg-gray-50 text-gray-300 border border-dashed border-gray-200';
-    default:
-      return 'bg-gray-50 text-gray-300 border border-dashed border-gray-200';
-  }
-}
+
 
 export default function DriverListItem({ driver, documents, isSelected, onSelect }) {
   const { t } = useTranslation();
