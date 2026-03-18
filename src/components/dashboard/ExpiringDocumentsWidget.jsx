@@ -70,7 +70,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
   }, [activeDrivers]);
 
   if (loading) {
-    return <div className="bg-white rounded-lg shadow p-6">Загрузка...</div>;
+    return <div className="bg-white rounded-lg shadow p-6">{t('common.loading')}</div>;
   }
 
   const items = activeTab === 'expired' ? expiredDocs : expiringDocs;
@@ -80,7 +80,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex items-center gap-2 mb-4">
         <Clock className="w-5 h-5 text-orange-600" />
-        <h2 className="text-lg font-semibold text-gray-900">Документы, требующие внимания</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('dashboard.documents_attention')}</h2>
       </div>
 
       {/* Tabs */}
@@ -93,7 +93,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          Просроченные ({expiredCount})
+          {t('dashboard.expired_tab', { count: expiredCount })}
         </button>
         <button
           onClick={() => setActiveTab('expiring')}
@@ -103,7 +103,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          Истекают ({expiringCount})
+          {t('dashboard.expiring_tab', { count: expiringCount })}
         </button>
       </div>
 
@@ -111,7 +111,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
       <div className="max-h-[400px] overflow-y-auto space-y-1">
         {items.length === 0 ? (
           <p className="text-gray-500 text-sm">
-            {activeTab === 'expired' ? 'Нет просроченных документов' : 'Нет истекающих документов'}
+            {activeTab === 'expired' ? t('dashboard.no_expired') : t('dashboard.no_expiring')}
           </p>
         ) : (
           items.map(doc => {
@@ -126,7 +126,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
             if (isExpired) {
               bgColor = 'bg-red-50';
               borderColor = 'border-l-red-500';
-              statusText = `(просрочен ${daysValue} дн.)`;
+              statusText = `(${t('documents.expired_ago', { days: daysValue })})`;
               statusColor = 'text-red-600 font-bold';
             } else {
               if (daysValue <= 3) {
@@ -138,7 +138,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
                 borderColor = 'border-l-orange-500';
                 statusColor = 'text-orange-600';
               }
-              statusText = `(через ${daysValue} дн.)`;
+              statusText = `(${t('documents.expires_in', { days: daysValue })})`;
             }
 
             return (
@@ -149,7 +149,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
               >
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 text-sm">{doc.driverName}</p>
-                  <p className="text-xs text-gray-600">{docTypeLabels[doc.document_type]}</p>
+                  <p className="text-xs text-gray-600">{t(`doc_types.${doc.document_type}`, { defaultValue: doc.document_type })}</p>
                 </div>
                 <div className="flex items-center gap-2 ml-2 flex-shrink-0">
                   <span className={`text-xs ${statusColor}`}>
@@ -168,7 +168,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
           onClick={() => navigate(`/Drivers?filter=${activeTab === 'expired' ? 'expired' : 'expiring'}`)}
           className="mt-3 w-full text-center text-sm text-blue-600 hover:text-blue-800 flex items-center justify-center gap-1 py-2 rounded hover:bg-blue-50 transition-colors"
         >
-          Показать все <ChevronRight className="w-4 h-4" />
+          {t('common.show_all')} <ChevronRight className="w-4 h-4" />
         </button>
       )}
     </div>
