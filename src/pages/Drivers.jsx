@@ -67,8 +67,8 @@ export default function Drivers() {
     }
 
     const active     = src.filter(d => d.status === 'active');
-    const inactive   = src.filter(d => d.status === 'inactive' || d.status === 'on_leave');
-    const nonArchive = src.filter(d => d.status !== 'terminated');
+    const candidates = src.filter(d => d.status === 'candidate');
+    const nonArchived = src.filter(d => d.status !== 'archived');
 
     const hasDocs = (driver, statuses) => {
       const docs = documents.filter(doc => doc.driver_id === driver.id);
@@ -76,8 +76,9 @@ export default function Drivers() {
     };
 
     return {
-      all:      nonArchive.length,
-      ready:    active.filter(d => d.trip_readiness_pct === 100).length,
+      all:        nonArchived.length,
+      candidates: candidates.length,
+      ready:      active.filter(d => d.trip_readiness_pct === 100).length,
       incomplete: active.filter(d => {
         if (d.trip_readiness_pct === 100) return false;
         const docs = documents?.filter(doc => doc.driver_id === d.id) || [];
@@ -85,12 +86,11 @@ export default function Drivers() {
         const hasExpiring = docs.some(doc => doc.status === 'expiring');
         return !hasExpired && !hasExpiring;
       }).length,
-      expiring: [...active, ...inactive].filter(d => hasDocs(d, ['expiring'])).length,
-      expired:  [...active, ...inactive].filter(d => hasDocs(d, ['expired'])).length,
-      inactive: inactive.length,
-      archive:  src.filter(d => d.status === 'terminated').length,
-      eu:       src.filter(d => d.status !== 'terminated' && d.nationality_group === 'EU').length,
-      nonEu:    src.filter(d => d.status !== 'terminated' && d.nationality_group === 'non-EU').length,
+      expiring: active.filter(d => hasDocs(d, ['expiring'])).length,
+      expired:  active.filter(d => hasDocs(d, ['expired'])).length,
+      archived: src.filter(d => d.status === 'archived').length,
+      eu:       src.filter(d => d.status !== 'archived' && d.nationality_group === 'EU').length,
+      nonEu:    src.filter(d => d.status !== 'archived' && d.nationality_group === 'non-EU').length,
     };
   }, [drivers, documents, filters.nationalityFilter]);
 
