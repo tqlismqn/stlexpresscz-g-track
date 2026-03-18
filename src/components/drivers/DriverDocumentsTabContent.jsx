@@ -208,10 +208,10 @@ function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDe
         <div className="mt-1.5">
           <button
             type="button"
-            onClick={() => onRenewLicence(existingDoc)}
+            onClick={() => onRenewDocument(existingDoc)}
             className="flex items-center gap-1 text-xs text-orange-600 hover:text-orange-800 border border-orange-300 rounded px-2 py-1"
           >
-            🔄 {t('documents.renew_licence')}
+            🔄 {t('documents.renew')}
           </button>
         </div>
       )}
@@ -263,15 +263,31 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const isNonEU = driver?.nationality_group === 'non-EU';
-  const docsMap = new Map(documents.map(d => [d.document_type, d]));
 
-  // Licence tracking: find all licence docs sorted by expiry desc
-  const allLicenceDocs = documents
-    .filter(d => LICENCE_TYPES.includes(d.document_type))
-    .sort((a, b) => (b.expiry_date || '') < (a.expiry_date || '') ? -1 : 1);
-  const previousLicences = allLicenceDocs.slice(1); // everything after the newest
+  // Group all documents by normalized type, sorted by expiry_date desc (fallback: created_date)
+  const groupedDocs = new Map();
+  documents.forEach(doc => {
+    const key = normalizeDocType(doc.document_type);
+    if (!groupedDocs.has(key)) groupedDocs.set(key, []);
+    groupedDocs.get(key).push(doc);
+  });
+  groupedDocs.forEach((docs, key) => {
+    docs.sort((a, b) => {
+      const aDate = a.expiry_date || a.issue_date || a.created_date || '';
+      const bDate = b.expiry_date || b.issue_date || b.created_date || '';
+      return bDate > aDate ? 1 : -1;
+    });
+  });
 
-  const handleRenewLicence = async (oldDoc) => {
+  // For view mode: currentDoc = [0], previousDoc = [1] only if pending_return
+  const docsMap = new Map();
+  const previousDocMap = new Map(); // docType -> previousDoc (if pending_return)
+  groupedDocs.forEach((docs, key) => {
+    if (docs[0]) docsMap.set(key, docs[0]);
+    if (docs[1] && docs[1].return_status === 'pending_return') previousDocMap.set(key, docs[1]);
+  });
+
+  const handleRenewDocument = async (oldDoc) => {
     try {
       await DriverDocument.update(oldDoc.id, { return_status: 'pending_return' });
       await DriverDocument.create({
@@ -286,13 +302,13 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
         action: 'updated',
-        field_name: 'transport_licence',
+        field_name: oldDoc.document_type,
         old_value: oldDoc.expiry_date || '',
         new_value: '',
-        description: t('documents.licence_renewed'),
+        description: t('documents.document_renewed'),
         changed_by: 'Admin',
       });
-      toast.success(t('documents.licence_renewed'));
+      toast.success(t('documents.document_renewed'));
       if (onDocumentsChange) onDocumentsChange();
     } catch (err) {
       console.error(err);
@@ -308,7 +324,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       field_name: 'return_status',
       old_value: 'pending_return',
       new_value: 'returned',
-      description: 'Transport licence marked as returned',
+      description: t('documents.returned'),
       changed_by: 'Admin',
     });
     if (onDocumentsChange) onDocumentsChange();
