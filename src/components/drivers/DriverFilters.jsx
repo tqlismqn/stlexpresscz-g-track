@@ -17,7 +17,9 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
     { value: 'passport',                     label: t('doc_types.passport') },
     { value: 'adr_certificate',              label: t('doc_types.adr_certificate') },
     { value: 'medical_certificate',          label: t('doc_types.medical_certificate') },
-    { value: 'cz_license',                   label: t('doc_types.cz_license') },
+    { value: 'licence',                      label: t('doc_types.licence') },
+    { value: 'code95',                       label: t('doc_types.code95') },
+    { value: 'chip_card',                    label: t('doc_types.chip_card') },
   ];
 
   const DOC_STATUSES = [
