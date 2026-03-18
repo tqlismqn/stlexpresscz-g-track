@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { getCountryByCode } from '@/lib/countries';
 import { formatDriverId } from '@/lib/driverUtils';
 import { useTranslation } from 'react-i18next';
 import { useDriverTags } from '@/hooks/useDriverTags';
+import DriverDocumentBadges from './DriverDocumentBadges';
 
 const avatarColors = [
   'bg-blue-500',
