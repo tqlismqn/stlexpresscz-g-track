@@ -39,6 +39,7 @@ export default function Layout() {
         </div>
 
         <div className="flex items-center gap-3">
+          <LanguageSwitcher />
           <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
             <span className="text-sm font-semibold text-white">{currentUser?.full_name ? currentUser.full_name.substring(0, 2).toUpperCase() : 'U'}</span>
           </div>
