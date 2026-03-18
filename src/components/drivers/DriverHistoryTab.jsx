@@ -36,11 +36,11 @@ export default function DriverHistoryTab({ driver }) {
   };
 
   if (loading) {
-    return <div className="p-4 text-center text-gray-500">Загрузка...</div>;
+    return <div className="p-4 text-center text-gray-500">{t('common.loading')}</div>;
   }
 
   if (history.length === 0) {
-    return <div className="text-center py-8 text-gray-500">Нет записей</div>;
+    return <div className="text-center py-8 text-gray-500">{t('history.no_entries')}</div>;
   }
 
   return (
