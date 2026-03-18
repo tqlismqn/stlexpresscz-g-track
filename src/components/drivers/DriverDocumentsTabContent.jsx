@@ -99,7 +99,10 @@ function DocumentRowRead({ docType, config, doc, driver, t }) {
 
 const LICENCE_TYPES = ['transport_licence', 'licence'];
 
-function PreviousLicenceRow({ doc, onMarkAsReturned, t }) {
+// Normalize licence types to a single key for grouping
+const normalizeDocType = (docType) => LICENCE_TYPES.includes(docType) ? 'transport_licence' : docType;
+
+function PreviousDocumentRow({ doc, docTypeName, onMarkAsReturned, t }) {
   const isPending = doc.return_status === 'pending_return';
   const isReturned = doc.return_status === 'returned';
 
@@ -108,7 +111,7 @@ function PreviousLicenceRow({ doc, onMarkAsReturned, t }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-xs text-gray-500 italic">{t('documents.old_licence')}</span>
+            <span className="text-xs text-gray-500 italic">{t('documents.previous_document')} {docTypeName}</span>
             {isPending && (
               <span className="text-xs text-orange-600 font-medium">⏳ {t('documents.pending_return')}</span>
             )}
@@ -136,10 +139,9 @@ function PreviousLicenceRow({ doc, onMarkAsReturned, t }) {
   );
 }
 
-function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete, onRenewLicence, t }) {
+function DocumentRowEdit({ docType, config, editDocs, handleDocFieldChange, onDelete, onRenewDocument, t }) {
   const existingDoc = editDocs[docType];
-  const isLicenceType = docType === 'transport_licence' || docType === 'licence';
-  const showRenewButton = isLicenceType && existingDoc?.expiry_date && existingDoc?.return_status !== 'pending_return';
+  const showRenewButton = existingDoc?.expiry_date && existingDoc?.return_status !== 'pending_return';
   return (
     <div className="py-2">
       <div className="flex items-baseline gap-2 mb-1.5">
