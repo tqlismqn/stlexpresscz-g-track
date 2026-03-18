@@ -411,10 +411,20 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
             </div>
 
             {!isCreateMode && (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 {(() => { const sc = statusConfig[driver?.status] || statusConfig.active; return (
                   <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${sc.bg}`}>{sc.label}</span>
                 ); })()}
+                {/* Tag pills — all tags, no limit */}
+                {(driver?.tags || []).map(tagId => {
+                  const tag = tagMap[tagId];
+                  if (!tag) return null;
+                  return (
+                    <span key={tagId} className={`text-sm px-3 py-1 rounded-full font-medium ${tag.color}`}>
+                      {t(tag.label_key)}
+                    </span>
+                  );
+                })}
                 <div className="relative w-12 h-12">
                   <svg className="h-full w-full transform -rotate-90" viewBox="0 0 36 36">
                     <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-200" />
