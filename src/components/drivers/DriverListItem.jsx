@@ -3,6 +3,7 @@ import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { getCountryByCode } from '@/lib/countries';
 import { formatDriverId } from '@/lib/driverUtils';
 import { useTranslation } from 'react-i18next';
+import { useDriverTags } from '@/hooks/useDriverTags';
 
 const avatarColors = [
   'bg-blue-500',
