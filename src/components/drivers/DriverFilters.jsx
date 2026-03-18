@@ -7,19 +7,21 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
   const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any';
 
   const DOC_TYPES = [
-    { value: 'all',                          label: t('filters.all_types') },
-    { value: 'work_contract',                label: t('doc_types.work_contract') },
-    { value: 'driver_license',               label: t('doc_types.driver_license') },
-    { value: 'posted_worker_certificate_a1', label: t('doc_types.posted_worker_certificate_a1') },
-    { value: 'declaration',                  label: t('doc_types.declaration') },
-    { value: 'insurance',                    label: t('doc_types.insurance') },
-    { value: 'visa',                         label: t('doc_types.visa') },
-    { value: 'passport',                     label: t('doc_types.passport') },
-    { value: 'adr_certificate',              label: t('doc_types.adr_certificate') },
-    { value: 'medical_certificate',          label: t('doc_types.medical_certificate') },
-    { value: 'licence',                      label: t('doc_types.licence') },
-    { value: 'code95',                       label: t('doc_types.code95') },
-    { value: 'chip_card',                    label: t('doc_types.chip_card') },
+    { value: 'all',                label: t('filters.all_types') },
+    { value: 'work_contract',      label: t('doc_types.work_contract') },
+    { value: 'driver_license',     label: t('doc_types.driver_license') },
+    { value: 'a1_certificate',     label: t('doc_types.a1_certificate') },
+    { value: 'declaration',        label: t('doc_types.declaration') },
+    { value: 'insurance',          label: t('doc_types.insurance') },
+    { value: 'travel_insurance',   label: t('doc_types.travel_insurance') },
+    { value: 'visa',               label: t('doc_types.visa') },
+    { value: 'passport',           label: t('doc_types.passport') },
+    { value: 'adr_certificate',    label: t('doc_types.adr_certificate') },
+    { value: 'medical_certificate',label: t('doc_types.medical_certificate') },
+    { value: 'psihotest',          label: t('doc_types.psihotest') },
+    { value: 'licence',            label: t('doc_types.licence') },
+    { value: 'code95',             label: t('doc_types.code95') },
+    { value: 'chip_card',          label: t('doc_types.chip_card') },
   ];
 
   const DOC_STATUSES = [
