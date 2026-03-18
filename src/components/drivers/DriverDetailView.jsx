@@ -289,22 +289,30 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const handleArchive = async () => {
     setIsArchiving(true);
     try {
-      await Driver.update(driver.id, { ...driver, status: 'terminated' });
-      
-      // Create history
+      const existingTags = driver.tags || [];
+      const newTags = archiveReasonTagId && !existingTags.includes(archiveReasonTagId)
+        ? [...existingTags, archiveReasonTagId]
+        : existingTags;
+      const update = {
+        ...driver,
+        status: 'archived',
+        archive_reason_tag_id: archiveReasonTagId || null,
+        tags: newTags,
+      };
+      await Driver.update(driver.id, update);
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
         action: 'archived',
         field_name: 'status',
         old_value: driver.status,
-        new_value: 'terminated',
+        new_value: 'archived',
         description: t('toasts.driver_archived'),
         changed_by: currentUser?.full_name || 'Unknown'
       });
-      
       toast.success(t('toasts.driver_archived'));
       setShowArchiveModal(false);
-      if (onSave) onSave({ ...driver, status: 'terminated' });
+      setArchiveReasonTagId('');
+      if (onSave) onSave(update);
     } catch (error) {
       toast.error(t('toasts.archive_error'));
     } finally {
@@ -315,22 +323,27 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const handleRestore = async () => {
     setIsRestoring(true);
     try {
-      await Driver.update(driver.id, { ...driver, status: 'inactive', fired_date: null });
-      
-      // Create history
+      const archiveReasonId = driver.archive_reason_tag_id;
+      const cleanedTags = (driver.tags || []).filter(id => id !== archiveReasonId);
+      const update = {
+        ...driver,
+        status: 'active',
+        archive_reason_tag_id: null,
+        tags: cleanedTags,
+      };
+      await Driver.update(driver.id, update);
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
         action: 'restored',
         field_name: 'status',
-        old_value: 'terminated',
-        new_value: 'inactive',
+        old_value: 'archived',
+        new_value: 'active',
         description: t('toasts.driver_restored', { name: formatDriverName(driver.name) }),
         changed_by: currentUser?.full_name || 'Unknown'
       });
-      
       toast.success(t('toasts.driver_restored', { name: formatDriverName(driver.name) }));
       setShowRestoreModal(false);
-      if (onSave) onSave({ ...driver, status: 'inactive', fired_date: null });
+      if (onSave) onSave(update);
     } catch (error) {
       toast.error(t('toasts.restore_error'));
     } finally {
