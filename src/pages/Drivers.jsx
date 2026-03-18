@@ -172,6 +172,11 @@ export default function Drivers() {
           return d.document_type === docTypeFilter;
         });
 
+        // Visa type sub-filter: only applies when docTypeFilter === 'visa'
+        if (docTypeFilter === 'visa' && visaTypeFilter !== 'any') {
+          if (driver.visa_type !== visaTypeFilter) return false;
+        }
+
         if (docStatusFilter === 'missing') return !matchingDoc;
         if (!matchingDoc) return false;
         if (docStatusFilter === 'any') return true;
