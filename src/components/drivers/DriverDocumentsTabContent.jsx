@@ -57,7 +57,7 @@ const DateInput = ({ value, onChange, t }) => {
   );
 };
 
-function DocumentRowRead({ docType, config, doc, t }) {
+function DocumentRowRead({ docType, config, doc, driver, t }) {
   const status = doc?.status || 'missing';
   const dotColor = STATUS_COLORS[status] || 'bg-gray-300';
   const isIndefinite = config.indefiniteByDefault && !doc?.expiry_date;
