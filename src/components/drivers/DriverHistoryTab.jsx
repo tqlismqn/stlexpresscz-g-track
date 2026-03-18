@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 const actionConfig = {
   created: { icon: '🟢', color: 'text-green-600', label: 'created' },

@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function DriverCommentsTab({ driver, isTerminated }) {
   const { currentUser } = useAuth();

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { base44 } from '@/api/base44Client';
+import { useTranslation } from 'react-i18next';
 
 const DriverDocument = base44.entities.DriverDocument;
 import { DOCUMENT_TYPES, SECTIONS, VISA_TYPES, formatDate, getRemainingDays } from '@/lib/documentTypes';
