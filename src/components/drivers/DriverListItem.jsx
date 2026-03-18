@@ -220,13 +220,34 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
           )}
         </div>
 
-        {/* Status badge */}
-        <div className="flex-shrink-0">
+        {/* Status badge + tags */}
+        <div className="flex-shrink-0 flex flex-col items-end gap-1">
           {(() => { const sc = statusConfig[driver.status] || statusConfig.active; return (
-          <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${sc.bg}`}>
-            {sc.label}
-          </span>
+            <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${sc.bg}`}>
+              {sc.label}
+            </span>
           ); })()}
+          {/* Tag pills (max 2 + overflow) */}
+          {(() => {
+            const driverTagIds = driver.tags || [];
+            const resolvedTags = driverTagIds.map(id => tagMap[id]).filter(Boolean);
+            const visible = resolvedTags.slice(0, 2);
+            const overflow = resolvedTags.length - 2;
+            return (
+              <div className="flex flex-wrap gap-0.5 justify-end">
+                {visible.map(tag => (
+                  <span key={tag.id} className={`text-xs px-2 py-0.5 rounded-full font-medium ${tag.color}`}>
+                    {t(tag.label_key)}
+                  </span>
+                ))}
+                {overflow > 0 && (
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-100 text-gray-600">
+                    +{overflow}
+                  </span>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </div>
     </button>
