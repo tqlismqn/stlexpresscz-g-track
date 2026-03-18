@@ -228,8 +228,10 @@ export default function Drivers() {
             onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
             docTypeFilter={docTypeFilter}
             docStatusFilter={docStatusFilter}
-            onDocTypeChange={setDocTypeFilter}
+            onDocTypeChange={(val) => { setDocTypeFilter(val); if (val !== 'visa') setVisaTypeFilter('any'); }}
             onDocStatusChange={setDocStatusFilter}
+            visaTypeFilter={visaTypeFilter}
+            onVisaTypeChange={setVisaTypeFilter}
             filteredCount={filteredDrivers.length}
             totalCount={drivers.filter(d => d.status !== 'archived').length}
           />
