@@ -455,14 +455,23 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                   t={t}
                 />
                 ) : (
-                <DocumentRowRead
-                  key={docType}
-                  docType={docType}
-                  config={config}
-                  doc={docsMap.get(docType) || null}
-                  driver={driver}
-                  t={t}
-                />
+                <div key={docType}>
+                  <DocumentRowRead
+                    docType={docType}
+                    config={config}
+                    doc={docsMap.get(docType) || null}
+                    driver={driver}
+                    t={t}
+                  />
+                  {LICENCE_TYPES.includes(docType) && previousLicences.map(prevDoc => (
+                    <PreviousLicenceRow
+                      key={prevDoc.id}
+                      doc={prevDoc}
+                      onMarkAsReturned={handleMarkAsReturned}
+                      t={t}
+                    />
+                  ))}
+                </div>
                 )
               )}
             </div>
