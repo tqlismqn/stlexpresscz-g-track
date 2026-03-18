@@ -162,7 +162,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
               {t('filters.showing_filtered', { count: filteredCount, total: totalCount })}
             </span>
             <button
-              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); }}
+              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); onVisaTypeChange('any'); }}
               className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-gray-800 border border-gray-300 rounded-md bg-white whitespace-nowrap"
             >
               <X className="w-3 h-3" /> {t('filters.clear_doc_filters')}
