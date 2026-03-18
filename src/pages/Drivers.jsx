@@ -158,7 +158,30 @@ export default function Drivers() {
       );
     }
 
-    // Step 4: Sort
+    // Step 4: Document type + status filter
+    if (docTypeFilter !== 'all') {
+      result = result.filter(driver => {
+        const driverDocs = documents.filter(d => d.driver_id === driver.id);
+        const matchingDoc = driverDocs.find(d => d.document_type === docTypeFilter);
+
+        if (docStatusFilter === 'missing') return !matchingDoc;
+        if (!matchingDoc) return false;
+        if (docStatusFilter === 'any') return true;
+        if (!matchingDoc.expiry_date) return false;
+
+        const daysUntilExpiry = Math.ceil((new Date(matchingDoc.expiry_date) - new Date()) / (1000 * 60 * 60 * 24));
+        switch (docStatusFilter) {
+          case 'expired':     return daysUntilExpiry < 0;
+          case 'expiring_30': return daysUntilExpiry >= 0 && daysUntilExpiry <= 30;
+          case 'expiring_60': return daysUntilExpiry >= 0 && daysUntilExpiry <= 60;
+          case 'expiring_90': return daysUntilExpiry >= 0 && daysUntilExpiry <= 90;
+          case 'valid':       return daysUntilExpiry > 30;
+          default:            return true;
+        }
+      });
+    }
+
+    // Step 5: Sort
     result.sort((a, b) => {
       if (filters.sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
       if (filters.sortBy === 'readiness') return (b.trip_readiness_pct || 0) - (a.trip_readiness_pct || 0);
@@ -166,7 +189,7 @@ export default function Drivers() {
     });
 
     return result;
-  }, [drivers, documents, filters]);
+  }, [drivers, documents, filters, docTypeFilter, docStatusFilter]);
 
   const handleSaveDriver = async (savedDriver) => {
     setIsCreating(false);
