@@ -269,6 +269,35 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     .sort((a, b) => (b.expiry_date || '') < (a.expiry_date || '') ? -1 : 1);
   const previousLicences = allLicenceDocs.slice(1); // everything after the newest
 
+  const handleRenewLicence = async (oldDoc) => {
+    try {
+      await DriverDocument.update(oldDoc.id, { return_status: 'pending_return' });
+      await DriverDocument.create({
+        driver_id: driver.id,
+        document_type: oldDoc.document_type,
+        issue_date: null,
+        expiry_date: null,
+        document_number: null,
+        status: 'missing',
+        return_status: null,
+      });
+      await base44.entities.DriverHistory.create({
+        driver_id: driver.id,
+        action: 'updated',
+        field_name: 'transport_licence',
+        old_value: oldDoc.expiry_date || '',
+        new_value: '',
+        description: t('documents.licence_renewed'),
+        changed_by: 'Admin',
+      });
+      toast.success(t('documents.licence_renewed'));
+      if (onDocumentsChange) onDocumentsChange();
+    } catch (err) {
+      console.error(err);
+      toast.error(t('toasts.documents_save_error'));
+    }
+  };
+
   const handleMarkAsReturned = async (doc) => {
     await DriverDocument.update(doc.id, { return_status: 'returned' });
     await base44.entities.DriverHistory.create({
