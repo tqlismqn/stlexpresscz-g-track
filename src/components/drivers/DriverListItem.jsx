@@ -126,15 +126,8 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
           </div>
 
           {/* Line 2: Document pills */}
-          <div className="flex flex-wrap gap-0.5 mb-2">
-            {documentPills.map(pill => (
-              <div
-                key={pill.type}
-                className={`h-5 px-1.5 rounded-sm flex items-center justify-center text-[10px] font-medium ${getPillClass(pill.status, pill.isRequired)}`}
-              >
-                {pill.abbr}
-              </div>
-            ))}
+          <div className="mb-2">
+            <DriverDocumentBadges driver={driver} documents={documents} size="sm" />
           </div>
 
           {/* Line 3: Readiness bar / candidate days */}
