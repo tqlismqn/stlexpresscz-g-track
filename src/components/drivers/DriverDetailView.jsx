@@ -367,38 +367,54 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const isArchived = driver?.status === 'archived';
   const showEditableFields = (isEditing || isCreateMode) && !isArchived;
 
+  // Left border accent color based on status
+  const borderAccent = isCreateMode ? 'border-l-4 border-blue-400'
+    : driver?.status === 'active'    ? 'border-l-4 border-green-500'
+    : driver?.status === 'candidate' ? 'border-l-4 border-amber-500'
+    : 'border-l-4 border-gray-400';
+
+  // Days as candidate
+  const daysAsCandidate = driver?.status === 'candidate' && driver?.created_date
+    ? Math.floor((Date.now() - new Date(driver.created_date).getTime()) / (1000 * 60 * 60 * 24))
+    : null;
+
+  const countryFlag = getCountryByCode(driver?.country_code)?.flag || '';
+
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className={`h-full flex flex-col bg-white ${borderAccent} ${isArchived ? 'opacity-[0.65]' : ''}`}>
       {/* HEADER */}
       <div className="flex-shrink-0 p-4 border-b bg-gray-50">
-        <div className="flex items-start gap-4">
-          <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0 ${getAvatarColor(isCreateMode ? null : driver?.name)}`}>
-            {isCreateMode ? '+' : getInitials(driver?.name)}
+        <div className="flex items-start gap-3">
+
+          {/* Left col: Avatar + DRV number */}
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-white text-lg font-bold ${getAvatarColor(isCreateMode ? null : driver?.name)}`}>
+              {isCreateMode ? '+' : getInitials(driver?.name)}
+            </div>
+            {!isCreateMode && (
+              <span className="text-[10px] text-gray-400 font-mono">{formatDriverId(driver)}</span>
+            )}
           </div>
 
+          {/* Right col */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-xl font-bold text-gray-900">
+
+            {/* Row 1: Name + flag + action buttons */}
+            <div className="flex items-start justify-between gap-2 mb-1.5">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <h3 className="text-xl font-medium text-gray-900 truncate">
                   {isCreateMode ? t('drivers.new_driver') : formatDriverName(driver?.name)}
                 </h3>
                 {isCreateMode ? (
-                  <span className="text-xs text-gray-400 italic">{t('drivers.id_auto_assigned')}</span>
+                  <span className="text-xs text-gray-400 italic flex-shrink-0">{t('drivers.id_auto_assigned')}</span>
                 ) : (
-                  <>
-                    <span className={`inline-block px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
-                      driver?.nationality_group === 'EU' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'
-                    }`}>
-                      {driver?.nationality_group === 'EU' ? 'EU' : 'non-EU'}
-                    </span>
-                  </>
+                  countryFlag && <span className="text-lg leading-none flex-shrink-0">{countryFlag}</span>
                 )}
               </div>
-              {/* Top-right action area */}
+              {/* Archive / Restore button */}
               {!isCreateMode && !isEditing && (
-                <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                  <span className="text-xs text-gray-400">{formatDriverId(driver)}</span>
-                  {driver?.status === 'archived' ? (
+                <div className="flex-shrink-0">
+                  {isArchived ? (
                     <button
                       onClick={() => setShowRestoreModal(true)}
                       title={t('drivers.restore_driver')}
@@ -422,35 +438,59 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               )}
             </div>
 
+            {/* Row 2: Readiness / Candidate days + separator + tags + "+" */}
             {!isCreateMode && (
-              <div className="flex items-center gap-3 flex-wrap">
-                {(() => { const sc = statusConfig[driver?.status] || statusConfig.active; return (
-                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${sc.bg}`}>{sc.label}</span>
-                ); })()}
-                {/* Tag pills — all tags, no limit */}
-                {(driver?.tags || []).map(tagId => {
-                  const tag = tagMap[tagId];
-                  if (!tag) return null;
-                  return (
-                    <span key={tagId} className={`text-sm px-3 py-1 rounded-full font-medium ${tag.color}`}>
-                      {t(tag.label_key)}
+              <div className="flex items-center gap-2 flex-wrap mb-2">
+                {daysAsCandidate !== null ? (
+                  <span className="text-xs text-purple-600 font-medium">
+                    {t('drivers.days_as_candidate', { count: daysAsCandidate })}
+                  </span>
+                ) : isArchived ? (
+                  <span className="text-xs text-gray-500">{t('drivers.status_archived')}</span>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-[100px] h-[5px] bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${readinessPct >= 80 ? 'bg-green-500' : readinessPct >= 50 ? 'bg-amber-500' : 'bg-red-500'}`}
+                        style={{ width: `${readinessPct}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-medium ${readinessPct >= 80 ? 'text-green-600' : readinessPct >= 50 ? 'text-amber-600' : 'text-red-600'}`}>
+                      {readinessPct}%
                     </span>
-                  );
-                })}
-                <div className="relative w-12 h-12">
-                  <svg className="h-full w-full transform -rotate-90" viewBox="0 0 36 36">
-                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-200" />
-                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2"
-                      strokeDasharray={`${readinessPct} 100`}
-                      className={readinessPct >= 80 ? 'text-green-500' : readinessPct >= 50 ? 'text-amber-500' : 'text-red-500'}
-                      style={{ transition: 'all 300ms' }}
-                    />
-                  </svg>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-gray-800">
-                    {readinessPct}%
                   </div>
-                </div>
+                )}
+
+                <div className="w-px h-4 bg-gray-300 flex-shrink-0" />
+
+                {/* Tag pills */}
+                {isArchived ? (
+                  // Archived: show archive reason tag only
+                  driver?.archive_reason_tag_id && tagMap[driver.archive_reason_tag_id] && (
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${tagMap[driver.archive_reason_tag_id].color}`}>
+                      {t(tagMap[driver.archive_reason_tag_id].label_key)}
+                    </span>
+                  )
+                ) : (
+                  <>
+                    {(driver?.tags || []).map(tagId => {
+                      const tag = tagMap[tagId];
+                      if (!tag) return null;
+                      return (
+                        <span key={tagId} className={`text-xs px-2 py-0.5 rounded-full font-medium ${tag.color}`}>
+                          {t(tag.label_key)}
+                        </span>
+                      );
+                    })}
+                    <TagSelector driver={driver} allTags={allTags} onTagToggle={handleTagToggle} />
+                  </>
+                )}
               </div>
+            )}
+
+            {/* Row 3: Document badges */}
+            {!isCreateMode && (
+              <DriverDocumentBadges driver={driver} documents={documents} size="sm" />
             )}
           </div>
         </div>
