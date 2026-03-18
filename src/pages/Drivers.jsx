@@ -225,7 +225,7 @@ export default function Drivers() {
             onDocTypeChange={setDocTypeFilter}
             onDocStatusChange={setDocStatusFilter}
             filteredCount={filteredDrivers.length}
-            totalCount={drivers.filter(d => d.status !== 'terminated').length}
+            totalCount={drivers.filter(d => d.status !== 'archived').length}
           />
         </div>
       </div>
