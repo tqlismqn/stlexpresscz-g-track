@@ -2,7 +2,7 @@ import React from 'react';
 import { Search, Plus, X, Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, filteredCount, totalCount }) {
+export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, filteredCount, totalCount }) {
   const { t } = useTranslation();
   const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any';
 
