@@ -124,6 +124,16 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
           {DOC_STATUSES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
 
+        {docTypeFilter === 'visa' && (
+          <select
+            value={visaTypeFilter}
+            onChange={(e) => onVisaTypeChange(e.target.value)}
+            className="px-3 py-1.5 text-sm border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-600 bg-blue-50 text-blue-800"
+          >
+            {VISA_TYPES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+        )}
+
         <div className="w-px h-5 bg-gray-300 mx-1 flex-shrink-0" />
 
         <div className="flex-1 relative">
