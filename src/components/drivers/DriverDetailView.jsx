@@ -353,6 +353,16 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
     }
   };
 
+  const handleTagToggle = async (tagId) => {
+    const currentTags = driver?.tags || [];
+    const newTags = currentTags.includes(tagId)
+      ? currentTags.filter(id => id !== tagId)
+      : [...currentTags, tagId];
+    const update = { ...driver, tags: newTags };
+    await Driver.update(driver.id, update);
+    if (onSave) onSave(update);
+  };
+
   const isCreateMode = isCreating && !driver;
   const isArchived = driver?.status === 'archived';
   const showEditableFields = (isEditing || isCreateMode) && !isArchived;
