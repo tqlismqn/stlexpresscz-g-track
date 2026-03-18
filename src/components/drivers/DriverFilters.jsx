@@ -71,7 +71,38 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
         ))}
       </div>
 
-      {/* Row 3: Search + filters */}
+      {/* Row 3: Document filters */}
+      <div className="bg-slate-50 rounded-lg p-2 flex flex-wrap items-center gap-2">
+        <select
+          value={docTypeFilter}
+          onChange={(e) => onDocTypeChange(e.target.value)}
+          className="px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 bg-white"
+        >
+          {DOC_TYPES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+        <select
+          value={docStatusFilter}
+          onChange={(e) => onDocStatusChange(e.target.value)}
+          className="px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 bg-white"
+        >
+          {DOC_STATUSES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+        {docFiltersActive && (
+          <>
+            <button
+              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); }}
+              className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-gray-800 border border-gray-300 rounded-md bg-white"
+            >
+              <X className="w-3 h-3" /> {t('filters.clear_doc_filters')}
+            </button>
+            <span className="text-xs text-gray-500 ml-1">
+              {t('filters.showing_filtered', { count: filteredCount, total: totalCount })}
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Row 4: Search + filters */}
       <div className="flex gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
