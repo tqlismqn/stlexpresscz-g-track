@@ -198,18 +198,24 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
             ))}
           </div>
 
-          {/* Line 3: Readiness bar + percentage */}
-          <div className="flex items-center gap-2">
-            <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className={`h-full ${getReadinessBarColor(readiness)}`}
-                style={{ width: `${readiness}%` }}
-              />
-            </div>
-            <span className={`text-xs font-medium ${getReadinessTextColor(readiness)}`}>
-              {readiness}%
+          {/* Line 3: Readiness bar / candidate days */}
+          {daysAsCandidate !== null ? (
+            <span className="text-xs text-purple-600 font-medium">
+              {t('drivers.days_as_candidate', { count: daysAsCandidate })}
             </span>
-          </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className={`h-full ${getReadinessBarColor(readiness)}`}
+                  style={{ width: `${readiness}%` }}
+                />
+              </div>
+              <span className={`text-xs font-medium ${getReadinessTextColor(readiness)}`}>
+                {readiness}%
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Status badge */}
