@@ -9,8 +9,12 @@ import { format } from 'date-fns';
 import { enUS, ru, cs } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 
+const dateLocales = { en: enUS, ru, cs };
+
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const dateLocale = dateLocales[i18n.language] || enUS;
   const [stats, setStats] = useState({
     activeDrivers: 0,
     readyDrivers: 0,

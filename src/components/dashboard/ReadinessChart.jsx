@@ -44,11 +44,11 @@ export default function ReadinessChart({ drivers }) {
       <div className="mt-4 flex items-center justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-green-500" />
-          <span>Готовы {readyCount}</span>
+          <span>{t('dashboard.ready_count', { count: readyCount })}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500" />
-          <span>Не готовы {notReadyCount}</span>
+          <span>{t('dashboard.not_ready_count', { count: notReadyCount })}</span>
         </div>
       </div>
     </div>
