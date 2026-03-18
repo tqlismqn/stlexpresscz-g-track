@@ -162,7 +162,12 @@ export default function Drivers() {
     if (docTypeFilter !== 'all') {
       result = result.filter(driver => {
         const driverDocs = documents.filter(d => d.driver_id === driver.id);
-        const matchingDoc = driverDocs.find(d => d.document_type === docTypeFilter);
+        const matchingDoc = driverDocs.find(d => {
+          if (docTypeFilter === 'transport_licence') {
+            return d.document_type === 'transport_licence' || d.document_type === 'licence';
+          }
+          return d.document_type === docTypeFilter;
+        });
 
         if (docStatusFilter === 'missing') return !matchingDoc;
         if (!matchingDoc) return false;

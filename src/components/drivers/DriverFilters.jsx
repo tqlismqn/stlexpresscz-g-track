@@ -19,7 +19,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
     { value: 'adr_certificate',    label: t('doc_types.adr_certificate') },
     { value: 'medical_certificate',label: t('doc_types.medical_certificate') },
     { value: 'psihotest',          label: t('doc_types.psihotest') },
-    { value: 'licence',            label: t('doc_types.licence') },
+    { value: 'transport_licence',  label: t('doc_types.transport_licence') },
     { value: 'code95',             label: t('doc_types.code95') },
     { value: 'chip_card',          label: t('doc_types.chip_card') },
   ];
