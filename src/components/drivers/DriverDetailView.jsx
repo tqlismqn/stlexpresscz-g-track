@@ -609,16 +609,14 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                     <>
                       <div>
                         <p className="text-xs text-gray-500 mb-0.5">{t('fields.status')}</p>
-                         {isEditing ? (
-                           <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
-                             <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
-                             <SelectContent>
-                               <SelectItem value="active">{t('drivers.status_active')}</SelectItem>
-                               <SelectItem value="inactive">{t('drivers.status_inactive')}</SelectItem>
-                               <SelectItem value="on_leave">{t('drivers.status_on_leave')}</SelectItem>
-                               <SelectItem value="terminated">{t('drivers.status_fired')}</SelectItem>
-                             </SelectContent>
-                           </Select>
+                        {isEditing ? (
+                          <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
+                            <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="candidate">{t('drivers.status_candidate')}</SelectItem>
+                              <SelectItem value="active">{t('drivers.status_active')}</SelectItem>
+                            </SelectContent>
+                          </Select>
                         ) : (
                           <p className={`font-medium ${driver?.status === 'active' ? 'text-green-700' : 'text-gray-700'}`}>
                             {statusConfig[driver?.status]?.label || '—'}
