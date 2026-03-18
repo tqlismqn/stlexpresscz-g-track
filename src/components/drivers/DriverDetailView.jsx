@@ -185,6 +185,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
   const [showArchiveModal, setShowArchiveModal] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
+  const [archiveReasonTagId, setArchiveReasonTagId] = useState('');
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [formData, setFormData] = useState({});
