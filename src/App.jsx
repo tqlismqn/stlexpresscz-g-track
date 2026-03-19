@@ -62,9 +62,9 @@ function App() {
           <Router>
             <I18nProvider>
               <AuthenticatedApp />
+              <Toaster />
             </I18nProvider>
           </Router>
-          <Toaster />
         </QueryClientProvider>
       </MembershipProvider>
     </AuthProvider>
