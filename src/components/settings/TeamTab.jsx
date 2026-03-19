@@ -11,13 +11,71 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Users, UserPlus, MoreVertical, Shield, ShieldCheck, Eye, Mail, Trash2, Crown, AlertTriangle } from 'lucide-react';
+import { Users, UserPlus, MoreVertical, Shield, ShieldCheck, Eye, Mail, Trash2, Crown, AlertTriangle, ChevronDown, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Switch } from '@/components/ui/switch';
 
 export default function TeamTab() {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
   const { companyId, activeMembership } = useMembership();
+
+  // Permission modules grouped by category
+  const PERMISSION_MODULES = [
+    {
+      key: 'dashboard',
+      labelKey: 'settings.team.module.dashboard',
+      permissions: [
+        { id: 'dashboard_view', labelKey: 'settings.team.perm.dashboard_view' },
+        { id: 'dashboard_export', labelKey: 'settings.team.perm.dashboard_export' },
+      ]
+    },
+    {
+      key: 'drivers',
+      labelKey: 'settings.team.module.drivers',
+      permissions: [
+        { id: 'drivers_view', labelKey: 'settings.team.perm.drivers_view' },
+        { id: 'driver_create', labelKey: 'settings.team.perm.driver_create' },
+        { id: 'driver_edit', labelKey: 'settings.team.perm.driver_edit' },
+        { id: 'driver_delete', labelKey: 'settings.team.perm.driver_delete' },
+        { id: 'driver_status', labelKey: 'settings.team.perm.driver_status' },
+        { id: 'driver_export', labelKey: 'settings.team.perm.driver_export' },
+        { id: 'driver_tags', labelKey: 'settings.team.perm.driver_tags' },
+      ]
+    },
+    {
+      key: 'documents',
+      labelKey: 'settings.team.module.documents',
+      permissions: [
+        { id: 'doc_view', labelKey: 'settings.team.perm.doc_view' },
+        { id: 'doc_create', labelKey: 'settings.team.perm.doc_create' },
+        { id: 'doc_edit', labelKey: 'settings.team.perm.doc_edit' },
+        { id: 'doc_delete', labelKey: 'settings.team.perm.doc_delete' },
+      ]
+    },
+    {
+      key: 'comments',
+      labelKey: 'settings.team.module.comments',
+      permissions: [
+        { id: 'comment_view', labelKey: 'settings.team.perm.comment_view' },
+        { id: 'comment_create', labelKey: 'settings.team.perm.comment_create' },
+        { id: 'comment_edit_own', labelKey: 'settings.team.perm.comment_edit_own' },
+        { id: 'comment_delete_any', labelKey: 'settings.team.perm.comment_delete_any' },
+      ]
+    },
+    {
+      key: 'settings',
+      labelKey: 'settings.team.module.settings',
+      permissions: [
+        { id: 'settings_profile', labelKey: 'settings.team.perm.settings_profile' },
+        { id: 'settings_company', labelKey: 'settings.team.perm.settings_company' },
+        { id: 'settings_team', labelKey: 'settings.team.perm.settings_team' },
+        { id: 'settings_billing', labelKey: 'settings.team.perm.settings_billing' },
+        { id: 'settings_notifications', labelKey: 'settings.team.perm.settings_notifications' },
+      ]
+    },
+  ];
 
   // State
   const [members, setMembers] = useState([]);
@@ -32,6 +90,13 @@ export default function TeamTab() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRoleId, setInviteRoleId] = useState('');
   const [saving, setSaving] = useState(false);
+
+  // Roles management
+  const [expandedRoles, setExpandedRoles] = useState({});
+  const [createRoleDialog, setCreateRoleDialog] = useState(false);
+  const [newRoleName, setNewRoleName] = useState('');
+  const [newRolePermissions, setNewRolePermissions] = useState([]);
+  const [editingRolePermissions, setEditingRolePermissions] = useState({});
 
   // Load all data on mount
   useEffect(() => {
@@ -224,6 +289,116 @@ export default function TeamTab() {
     return 'outline';
   }
 
+  // ROLES MANAGEMENT
+
+  function toggleRoleExpanded(roleId) {
+    setExpandedRoles(prev => ({ ...prev, [roleId]: !prev[roleId] }));
+    const role = allRoles.find(r => r.id === roleId);
+    if (role && !role.is_template && !editingRolePermissions[roleId]) {
+      setEditingRolePermissions(prev => ({ ...prev, [roleId]: [...(role.permissions || [])] }));
+    }
+  }
+
+  function togglePermission(roleId, permId) {
+    setEditingRolePermissions(prev => {
+      const current = prev[roleId] || [];
+      if (current.includes(permId)) {
+        return { ...prev, [roleId]: current.filter(p => p !== permId) };
+      } else {
+        return { ...prev, [roleId]: [...current, permId] };
+      }
+    });
+  }
+
+  function toggleNewRolePermission(permId) {
+    setNewRolePermissions(prev => {
+      if (prev.includes(permId)) return prev.filter(p => p !== permId);
+      return [...prev, permId];
+    });
+  }
+
+  async function handleSaveRolePermissions(roleId) {
+    try {
+      setSaving(true);
+      const perms = editingRolePermissions[roleId] || [];
+      await base44.entities.Role.update(roleId, { permissions: perms });
+      toast.success(t('settings.team.roleSaved'));
+      await loadTeamData();
+    } catch (err) {
+      console.error('Failed to save role', err);
+      toast.error(t('toasts.save_error'));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleCreateRole() {
+    if (!newRoleName.trim()) return;
+    try {
+      setSaving(true);
+      await base44.entities.Role.create({
+        name: newRoleName.trim().toLowerCase(),
+        permissions: newRolePermissions,
+        company_id: companyId,
+        is_template: false,
+      });
+      setCreateRoleDialog(false);
+      setNewRoleName('');
+      setNewRolePermissions([]);
+      toast.success(t('settings.team.roleCreated'));
+      await loadTeamData();
+    } catch (err) {
+      console.error('Failed to create role', err);
+      toast.error(t('toasts.save_error'));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDeleteRole(roleId) {
+    const usedBy = members.filter(m => m.membership.role_id === roleId);
+    if (usedBy.length > 0) {
+      toast.error(t('settings.team.roleInUse'));
+      return;
+    }
+    try {
+      setSaving(true);
+      await base44.entities.Role.delete(roleId);
+      toast.success(t('settings.team.roleDeleted'));
+      await loadTeamData();
+    } catch (err) {
+      console.error('Failed to delete role', err);
+      toast.error(t('toasts.save_error'));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function PermissionGrid({ permissions: rolePerms, onToggle, readOnly }) {
+    return (
+      <div className="space-y-4 mt-3">
+        {PERMISSION_MODULES.map(module => (
+          <div key={module.key}>
+            <div className="text-sm font-medium text-muted-foreground mb-2">{t(module.labelKey)}</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {module.permissions.map(perm => (
+                <div key={perm.id} className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted/50">
+                  <span className="text-sm">{t(perm.labelKey)}</span>
+                  <Switch
+                    checked={rolePerms.includes(perm.id)}
+                    onCheckedChange={() => onToggle(perm.id)}
+                    disabled={readOnly}
+                    className="scale-90"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if (loading) {
     return <div className="flex justify-center py-8"><div className="text-muted-foreground">{t('common.loading')}</div></div>;
   }
@@ -346,28 +521,80 @@ export default function TeamTab() {
 
       {/* === SECTION 3: ROLES OVERVIEW === */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            {t('settings.team.rolesTitle')}
-          </CardTitle>
-          <CardDescription>{t('settings.team.rolesDesc')}</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              {t('settings.team.rolesTitle')}
+            </CardTitle>
+            <CardDescription>{t('settings.team.rolesDesc')}</CardDescription>
+          </div>
+          <Button onClick={() => setCreateRoleDialog(true)} size="sm" variant="outline">
+            <Plus className="h-4 w-4 mr-2" />
+            {t('settings.team.createRole')}
+          </Button>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {allRoles.map(role => (
-              <div key={role.id} className="p-4 rounded-lg border">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium capitalize">{role.name}</span>
-                  <Badge variant={role.is_template ? 'secondary' : 'outline'}>
-                    {role.is_template ? t('settings.team.templateRole') : t('settings.team.customRole')}
-                  </Badge>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {(role.permissions || []).length} {t('settings.team.permissionsCount')}
-                </div>
-              </div>
-            ))}
+          <div className="space-y-3">
+            {allRoles.map(role => {
+              const isExpanded = expandedRoles[role.id];
+              const isTemplate = role.is_template;
+              const currentPerms = isTemplate ? (role.permissions || []) : (editingRolePermissions[role.id] || role.permissions || []);
+              const hasChanges = !isTemplate && editingRolePermissions[role.id] && 
+                JSON.stringify(editingRolePermissions[role.id].sort()) !== JSON.stringify((role.permissions || []).sort());
+
+              return (
+                <Collapsible key={role.id} open={isExpanded} onOpenChange={() => toggleRoleExpanded(role.id)}>
+                  <div className="border rounded-lg">
+                    <CollapsibleTrigger asChild>
+                      <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50">
+                        <div className="flex items-center gap-3">
+                          <span className="font-medium capitalize">{role.name}</span>
+                          <Badge variant={isTemplate ? 'secondary' : 'outline'}>
+                            {isTemplate ? t('settings.team.templateRole') : t('settings.team.customRole')}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">
+                            {(role.permissions || []).length} {t('settings.team.permissionsCount')}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {!isTemplate && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => { e.stopPropagation(); handleDeleteRole(role.id); }}
+                              className="text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                          <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        </div>
+                      </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="px-4 pb-4 border-t">
+                        {isTemplate && (
+                          <p className="text-xs text-muted-foreground mt-3 mb-1">{t('settings.team.templateReadOnly')}</p>
+                        )}
+                        <PermissionGrid
+                          permissions={currentPerms}
+                          onToggle={(permId) => togglePermission(role.id, permId)}
+                          readOnly={isTemplate}
+                        />
+                        {!isTemplate && hasChanges && (
+                          <div className="flex justify-end mt-4">
+                            <Button size="sm" onClick={() => handleSaveRolePermissions(role.id)} disabled={saving}>
+                              {t('settings.team.savePermissions')}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </CollapsibleContent>
+                  </div>
+                </Collapsible>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
@@ -453,6 +680,37 @@ export default function TeamTab() {
             <Button onClick={handleInvite} disabled={saving || !inviteEmail || !inviteRoleId}>
               <UserPlus className="h-4 w-4 mr-2" />
               {t('settings.team.sendInvite')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Role Dialog */}
+      <Dialog open={createRoleDialog} onOpenChange={setCreateRoleDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{t('settings.team.createRoleTitle')}</DialogTitle>
+            <DialogDescription>{t('settings.team.createRoleDesc')}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>{t('settings.team.roleName')}</Label>
+              <Input
+                value={newRoleName}
+                onChange={(e) => setNewRoleName(e.target.value)}
+                placeholder={t('settings.team.roleNamePlaceholder')}
+              />
+            </div>
+            <PermissionGrid
+              permissions={newRolePermissions}
+              onToggle={toggleNewRolePermission}
+              readOnly={false}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateRoleDialog(false)}>{t('common.cancel')}</Button>
+            <Button onClick={handleCreateRole} disabled={saving || !newRoleName.trim()}>
+              {t('settings.team.createRole')}
             </Button>
           </DialogFooter>
         </DialogContent>
