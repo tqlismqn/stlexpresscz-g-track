@@ -452,8 +452,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
         )
       ))}
 
-      {!isEditing && (
-        <div className="mt-4 border-t border-gray-200 pt-4">
+      <div className="mt-4 border-t border-gray-200 pt-4">
           {showAddForm ? (
             <div className="space-y-3 bg-gray-50 rounded-lg p-4">
               <p className="text-sm font-semibold text-gray-700">{t('documents.new_document')}</p>
