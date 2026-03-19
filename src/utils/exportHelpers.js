@@ -77,12 +77,12 @@ export function generateCSV(drivers, allDocuments, templateKey, t) {
     headers = [
       t('export.internal_number'),
       t('export.full_name'),
-      ...DOCUMENT_TYPES.map(dt => t(`doc_types.${dt}`, { defaultValue: dt })),
+      ...DOCUMENT_TYPE_KEYS.map(dt => t(`doc_types.${dt}`, { defaultValue: dt })),
     ];
 
     rows = drivers.map(driver => {
       const driverDocs = docsByDriver.get(driver.id) || [];
-      const docCells = DOCUMENT_TYPES.map(docType => {
+      const docCells = DOCUMENT_TYPE_KEYS.map(docType => {
         const doc = getCurrentDoc(driverDocs, docType);
         if (!doc) return 'missing';
         let status = doc.status || 'missing';
@@ -103,12 +103,12 @@ export function generateCSV(drivers, allDocuments, templateKey, t) {
     headers = [
       t('export.internal_number'),
       t('export.full_name'),
-      ...DOCUMENT_TYPES.map(dt => t(`doc_types.${dt}`, { defaultValue: dt })),
+      ...DOCUMENT_TYPE_KEYS.map(dt => t(`doc_types.${dt}`, { defaultValue: dt })),
     ];
 
     rows = drivers.map(driver => {
       const driverDocs = docsByDriver.get(driver.id) || [];
-      const docCells = DOCUMENT_TYPES.map(docType => {
+      const docCells = DOCUMENT_TYPE_KEYS.map(docType => {
         const doc = getCurrentDoc(driverDocs, docType);
         if (!doc || !doc.expiry_date) return '';
         return formatDate(doc.expiry_date);
@@ -153,7 +153,7 @@ export async function generateAndDownloadPDF(drivers, allDocuments, templateKey,
   };
 
   const DOC_TYPE_LABELS = {};
-  DOCUMENT_TYPES.forEach(dt => {
+  DOCUMENT_TYPE_KEYS.forEach(dt => {
     DOC_TYPE_LABELS[dt] = t(`doc_types.${dt}`, { defaultValue: dt });
   });
 
@@ -199,10 +199,10 @@ export async function generateAndDownloadPDF(drivers, allDocuments, templateKey,
       Array.isArray(driver.tags) ? driver.tags.join(', ') : '',
     ]);
   } else if (templateKey === 'document_statuses') {
-    headers = [t('export.internal_number'), t('export.full_name'), ...DOCUMENT_TYPES.map(dt => DOC_TYPE_LABELS[dt] || dt)];
+    headers = [t('export.internal_number'), t('export.full_name'), ...DOCUMENT_TYPE_KEYS.map(dt => DOC_TYPE_LABELS[dt] || dt)];
     rows = drivers.map(driver => {
       const driverDocs = docsByDriver.get(driver.id) || [];
-      const docCells = DOCUMENT_TYPES.map(docType => {
+      const docCells = DOCUMENT_TYPE_KEYS.map(docType => {
         const doc = getCurrentDoc(driverDocs, docType);
         if (!doc) return 'missing';
         let status = doc.status || 'missing';
@@ -216,10 +216,10 @@ export async function generateAndDownloadPDF(drivers, allDocuments, templateKey,
       ];
     });
   } else if (templateKey === 'document_expiry') {
-    headers = [t('export.internal_number'), t('export.full_name'), ...DOCUMENT_TYPES.map(dt => DOC_TYPE_LABELS[dt] || dt)];
+    headers = [t('export.internal_number'), t('export.full_name'), ...DOCUMENT_TYPE_KEYS.map(dt => DOC_TYPE_LABELS[dt] || dt)];
     rows = drivers.map(driver => {
       const driverDocs = docsByDriver.get(driver.id) || [];
-      const docCells = DOCUMENT_TYPES.map(docType => {
+      const docCells = DOCUMENT_TYPE_KEYS.map(docType => {
         const doc = getCurrentDoc(driverDocs, docType);
         if (!doc || !doc.expiry_date) return '';
         return formatDate(doc.expiry_date);
