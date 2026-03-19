@@ -334,7 +334,6 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                     {previousDocMap.has(normalizedType) && (
                       <PreviousDocumentRow
                         doc={previousDocMap.get(normalizedType)}
-                        docTypeName={config.name}
                         docTypeName={t(config.i18nKey)}
                         onMarkAsReturned={handleMarkAsReturned}
                         t={t}
@@ -362,7 +361,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                       if (config.nonEUOnly && driver?.nationality_group === 'EU') return null;
                       return (
                         <SelectItem key={key} value={key} disabled={!!exists}>
-                          {t(`doc_types.${key}`, { defaultValue: config.name })} ({config.abbr}) {exists ? t('documents.already_exists') : ''}
+                          {t(config.i18nKey)} ({config.abbr}) {exists ? t('documents.already_exists') : ''}
                         </SelectItem>
                       );
                     })}
@@ -430,7 +429,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dialogs.delete_document_title')}</h3>
             <p className="text-sm text-gray-600 mb-4">
-              {t('dialogs.delete_document_message', { name: t(`doc_types.${deleteConfirm.docType}`, { defaultValue: DOCUMENT_TYPES[deleteConfirm.docType]?.name || deleteConfirm.docType }) })}
+              {t('dialogs.delete_document_message', { name: DOCUMENT_TYPES[deleteConfirm.docType] ? t(DOCUMENT_TYPES[deleteConfirm.docType].i18nKey) : deleteConfirm.docType })}
             </p>
             <div className="flex justify-end gap-2">
               <button onClick={() => setDeleteConfirm(null)} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5">{t('common.cancel')}</button>
