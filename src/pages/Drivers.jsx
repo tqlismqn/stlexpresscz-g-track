@@ -285,6 +285,7 @@ export default function Drivers() {
             hasFilteredResults={filteredDrivers.length > 0}
             filteredCount={filteredDrivers.length}
             totalCount={drivers.filter(d => d.status !== 'archived').length}
+            onExportCSV={handleExportCSV}
           />
         </div>
       </div>
@@ -322,6 +323,7 @@ export default function Drivers() {
           <FloatingExportToolbar
             selectedCount={selectedDriverIds.size}
             onClearSelection={clearSelection}
+            onExportCSV={handleExportCSV}
           />
         )}
       </AnimatePresence>
