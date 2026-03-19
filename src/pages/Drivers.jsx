@@ -26,6 +26,7 @@ export default function Drivers() {
   const [docStatusFilter, setDocStatusFilter] = useState('any');
   const [visaTypeFilter, setVisaTypeFilter] = useState('any');
   const [a1SwitzerlandFilter, setA1SwitzerlandFilter] = useState(false);
+  const [selectedDriverIds, setSelectedDriverIds] = useState(new Set());
 
   const [selectedTab, setSelectedTab] = useState('overview');
 

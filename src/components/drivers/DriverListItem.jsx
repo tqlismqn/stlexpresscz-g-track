@@ -96,6 +96,17 @@ export default function DriverListItem({ driver, documents, isSelected, onSelect
       } ${driver.status === 'archived' ? 'opacity-50' : ''}`}
     >
       <div className="flex items-start gap-3">
+        {/* Checkbox */}
+        <div className="flex-shrink-0 flex items-center pt-0.5">
+          <input
+            type="checkbox"
+            checked={!!isChecked}
+            onClick={(e) => { e.stopPropagation(); onToggleSelect(driver.id); }}
+            onChange={() => {}}
+            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+          />
+        </div>
+
         {/* Avatar */}
         <div className={`w-10 h-10 rounded-full ${getAvatarColor(driver.name)} flex items-center justify-center flex-shrink-0`}>
           <span className="text-white font-bold text-sm">{getInitials(driver.name)}</span>
