@@ -51,7 +51,7 @@ export default function DocumentEditModal({ open, onClose, document, documentTyp
         driver_id: driverId,
         action: 'updated',
         field_name: documentTypeConfig.type,
-        description: `${documentTypeConfig.name} ${t('history.field_updated')}`,
+        description: `${documentTypeConfig.i18nKey ? t(documentTypeConfig.i18nKey) : documentTypeConfig.name} ${t('history.field_updated')}`,
         changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown',
       });
 
@@ -69,7 +69,7 @@ export default function DocumentEditModal({ open, onClose, document, documentTyp
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-base font-semibold">
-            {documentTypeConfig?.name}
+            {documentTypeConfig?.i18nKey ? t(documentTypeConfig.i18nKey) : documentTypeConfig?.name}
             {documentTypeConfig?.abbr && (
               <span className="ml-2 text-sm font-normal text-gray-400">({documentTypeConfig.abbr})</span>
             )}
