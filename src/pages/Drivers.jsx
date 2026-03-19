@@ -332,6 +332,7 @@ export default function Drivers() {
             selectedCount={selectedDriverIds.size}
             onClearSelection={clearSelection}
             onExportCSV={handleExportCSV}
+            onExportPDF={handleExportPDF}
           />
         )}
       </AnimatePresence>
