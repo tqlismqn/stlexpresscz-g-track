@@ -10,7 +10,7 @@ import DriverDetail from '@/components/drivers/DriverDetail';
 import DriverFilters from '@/components/drivers/DriverFilters';
 import FloatingExportToolbar from '@/components/drivers/FloatingExportToolbar';
 import { formatDriverId } from '@/lib/driverUtils';
-import { generateCSV, downloadCSV } from '@/utils/exportHelpers';
+import { generateCSV, downloadCSV, generatePDF, downloadPDF } from '@/utils/exportHelpers';
 
 export default function Drivers() {
   const location = useLocation();
