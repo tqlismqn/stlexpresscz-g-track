@@ -357,71 +357,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     if (onDocumentsChange) onDocumentsChange();
   };
 
-  const startEditing = () => {
-    const map = {};
-    // Only edit the CURRENT (newest) doc per type
-    docsMap.forEach((doc, key) => {
-      map[key] = {
-        id: doc.id,
-        document_type: doc.document_type,
-        document_number: doc.document_number || '',
-        issue_date: doc.issue_date || '',
-        expiry_date: doc.expiry_date || '',
-        visa_type: doc.visa_type || '',
-        status: doc.status || '',
-        return_status: doc.return_status || '',
-      };
-    });
-    setEditDocs(map);
-    setIsEditing(true);
-    if (onEditingChange) onEditingChange(true);
-  };
 
-  const cancelEditing = () => {
-    setEditDocs({});
-    setIsEditing(false);
-    if (onEditingChange) onEditingChange(false);
-  };
-
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      for (const [docType, docData] of Object.entries(editDocs)) {
-        const existingDoc = documents.find(d => d.document_type === docType);
-        if (existingDoc) {
-          const updatePayload = {
-            document_number: docData.document_number || '',
-            issue_date: docData.issue_date || null,
-            expiry_date: docData.expiry_date || null,
-          };
-          if (docData.visa_type) updatePayload.visa_type = docData.visa_type;
-          await DriverDocument.update(existingDoc.id, updatePayload);
-        } else {
-          const hasData = docData.document_number || docData.issue_date || docData.expiry_date;
-          if (hasData) {
-            const createPayload = {
-              driver_id: driver.id,
-              document_type: docType,
-              document_number: docData.document_number || '',
-              issue_date: docData.issue_date || null,
-              expiry_date: docData.expiry_date || null,
-              status: 'valid',
-            };
-            await DriverDocument.create(createPayload);
-          }
-        }
-      }
-      setIsEditing(false);
-      if (onEditingChange) onEditingChange(false);
-      if (onDocumentsChange) onDocumentsChange();
-      toast.success(t('toasts.documents_saved'));
-    } catch (error) {
-      console.error('Document save failed:', error);
-      toast.error(t('toasts.documents_save_error'));
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleAddDocument = async () => {
     if (!newDoc.document_type) return;
