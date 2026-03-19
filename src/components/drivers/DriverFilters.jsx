@@ -3,11 +3,11 @@ import { Search, Plus, X, Filter, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@/lib/permissions';
 
-export default function DriverFilters({ permissions = [], filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV, onExportPDF }) {
+export default function DriverFilters({ permissions = [], filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, pendingReturnFilter, onPendingReturnChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV, onExportPDF }) {
   const { t } = useTranslation();
   const [exportOpen, setExportOpen] = useState(false);
   const exportRef = useRef(null);
-  const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any' || a1SwitzerlandFilter;
+  const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any' || a1SwitzerlandFilter || pendingReturnFilter;
 
   useEffect(() => {
     if (!exportOpen) return;
@@ -166,6 +166,16 @@ export default function DriverFilters({ permissions = [], filters, setFilters, c
           </label>
         )}
 
+        <label className="flex items-center gap-1.5 cursor-pointer px-2 py-1.5 border border-orange-300 rounded-md bg-orange-50 text-orange-800 text-sm whitespace-nowrap select-none">
+          <input
+            type="checkbox"
+            checked={!!pendingReturnFilter}
+            onChange={(e) => onPendingReturnChange(e.target.checked)}
+            className="w-3.5 h-3.5 accent-orange-600"
+          />
+          ⏳ {t('filters.pending_return')}
+        </label>
+
         <div className="w-px h-5 bg-gray-300 mx-1 flex-shrink-0" />
 
         {hasFilteredResults && (
@@ -243,7 +253,7 @@ export default function DriverFilters({ permissions = [], filters, setFilters, c
               {t('filters.showing_filtered', { count: filteredCount, total: totalCount })}
             </span>
             <button
-              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); onVisaTypeChange('any'); onA1SwitzerlandChange(false); }}
+              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); onVisaTypeChange('any'); onA1SwitzerlandChange(false); onPendingReturnChange(false); }}
               className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-gray-800 border border-gray-300 rounded-md bg-white whitespace-nowrap"
             >
               <X className="w-3 h-3" /> {t('filters.clear_doc_filters')}

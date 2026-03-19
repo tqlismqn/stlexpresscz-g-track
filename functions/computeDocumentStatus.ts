@@ -9,12 +9,17 @@ const computeDocStatus = (doc) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const thirtyDaysAhead = new Date(today);
-  thirtyDaysAhead.setDate(thirtyDaysAhead.getDate() + 30);
+  let thresholdDays = 30;
+  if (doc.document_type === 'visa' && doc.visa_type === 'povoleni_k_pobytu') {
+    thresholdDays = 90;
+  }
+
+  const thresholdDate = new Date(today);
+  thresholdDate.setDate(thresholdDate.getDate() + thresholdDays);
 
   if (expiryDate < today) {
     return 'expired';
-  } else if (expiryDate < thirtyDaysAhead) {
+  } else if (expiryDate < thresholdDate) {
     return 'expiring';
   } else {
     return 'valid';

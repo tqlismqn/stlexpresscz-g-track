@@ -30,6 +30,7 @@ export default function Drivers() {
   const [docStatusFilter, setDocStatusFilter] = useState('any');
   const [visaTypeFilter, setVisaTypeFilter] = useState('any');
   const [a1SwitzerlandFilter, setA1SwitzerlandFilter] = useState(false);
+  const [pendingReturnFilter, setPendingReturnFilter] = useState(false);
   const [selectedDriverIds, setSelectedDriverIds] = useState(new Set());
 
   const [selectedTab, setSelectedTab] = useState('overview');
@@ -215,6 +216,13 @@ export default function Drivers() {
       });
     }
 
+    // Step 4c: Pending return filter
+    if (pendingReturnFilter) {
+      result = result.filter(driver => {
+        return documents.some(d => d.driver_id === driver.id && d.return_status === 'pending_return');
+      });
+    }
+
     // Step 5: Sort
     result.sort((a, b) => {
       if (filters.sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
@@ -223,7 +231,7 @@ export default function Drivers() {
     });
 
     return result;
-  }, [drivers, documents, filters, docTypeFilter, docStatusFilter, visaTypeFilter, a1SwitzerlandFilter]);
+  }, [drivers, documents, filters, docTypeFilter, docStatusFilter, visaTypeFilter, a1SwitzerlandFilter, pendingReturnFilter]);
 
   const toggleSelect = (driverId) => {
     setSelectedDriverIds(prev => {
@@ -291,6 +299,8 @@ export default function Drivers() {
             onVisaTypeChange={(val) => { setVisaTypeChange(val); clearSelection(); }}
             a1SwitzerlandFilter={a1SwitzerlandFilter}
             onA1SwitzerlandChange={(val) => { setA1SwitzerlandChange(val); clearSelection(); }}
+            pendingReturnFilter={pendingReturnFilter}
+            onPendingReturnChange={(val) => { setPendingReturnFilter(val); clearSelection(); }}
             isAllSelected={isAllSelected}
             onToggleSelectAll={toggleSelectAll}
             hasFilteredResults={filteredDrivers.length > 0}
