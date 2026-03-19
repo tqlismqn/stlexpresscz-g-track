@@ -5,9 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 const DriverDocument = base44.entities.DriverDocument;
 import { VISA_TYPES, formatDate, getRemainingDays } from '@/lib/documentTypes';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Pencil, X, RotateCcw } from 'lucide-react';
 import DocumentEditModal from './DocumentEditModal';
 
