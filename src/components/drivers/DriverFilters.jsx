@@ -148,6 +148,18 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
 
         <div className="w-px h-5 bg-gray-300 mx-1 flex-shrink-0" />
 
+        {hasFilteredResults && (
+          <label className="flex items-center gap-1.5 cursor-pointer whitespace-nowrap select-none flex-shrink-0">
+            <input
+              type="checkbox"
+              checked={!!isAllSelected}
+              onChange={onToggleSelectAll}
+              className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-sm text-gray-600">{t('export.select_all')}</span>
+          </label>
+        )}
+
         <div className="flex-1 relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
           <input
@@ -167,6 +179,13 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
             </button>
           )}
         </div>
+
+        <button
+          disabled
+          className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-400 opacity-50 cursor-not-allowed whitespace-nowrap flex-shrink-0"
+        >
+          {t('export.export')} <ChevronDown className="w-3.5 h-3.5" />
+        </button>
 
         {docFiltersActive && (
           <>
