@@ -83,11 +83,14 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="w-full px-6">
-        <div className="flex items-baseline justify-between mb-6">
+        <div className="flex items-start justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">{t('nav.dashboard')}</h1>
-          <p className="text-sm text-gray-500">
-            {format(new Date(), "EEEE, dd MMMM yyyy", { locale: dateLocale })}
-          </p>
+          <div className="text-right">
+            <p className="text-sm text-gray-500">{format(new Date(), "EEEE, dd MMMM yyyy", { locale: dateLocale })}</p>
+            {lastUpdated && (
+              <p className="text-xs text-gray-400">{t('dashboard.updated_at')} {format(lastUpdated, 'HH:mm')}</p>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
