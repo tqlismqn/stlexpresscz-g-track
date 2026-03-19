@@ -128,7 +128,7 @@ export default function RecentActivityWidget({ drivers = [] }) {
                         <span>·</span>
                       </>
                     )}
-                    <span>{timeAgo(activity.created_date, t)}</span>
+                    <span>{formatTimeAgo(activity.created_date, t)}</span>
                     {activity.changed_by && (
                       <>
                         <span>·</span>
