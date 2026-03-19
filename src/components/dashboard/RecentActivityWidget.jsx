@@ -97,7 +97,7 @@ export default function RecentActivityWidget({ drivers = [] }) {
         <h2 className="text-lg font-semibold text-gray-900">{t('dashboard.recent_activity')}</h2>
       </div>
 
-      <div className="space-y-1 max-h-80 overflow-y-auto">
+      <div className="space-y-1 max-h-96 overflow-y-auto">
         {activities.length === 0 ? (
           <p className="text-sm text-gray-500 text-center py-4">{t('dashboard.no_recent_activity')}</p>
         ) : (
@@ -115,7 +115,7 @@ export default function RecentActivityWidget({ drivers = [] }) {
                   {getActionIcon(activity.action)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900 truncate">
+                  <p className="text-sm text-gray-900">
                     {activity.description || t('dashboard.activity_default', {
                       user: activity.changed_by || '—',
                       driver: driverName,

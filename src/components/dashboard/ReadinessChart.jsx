@@ -2,15 +2,15 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShieldCheck } from 'lucide-react';
 
-export default function ReadinessChart({ activeDrivers = [] }) {
+export default function ReadinessChart({ drivers = [] }) {
   const { t } = useTranslation();
   
   const groups = useMemo(() => {
-    const total = activeDrivers.length || 1;
-    const ready100 = activeDrivers.filter(d => d.trip_readiness_pct === 100).length;
-    const ready80 = activeDrivers.filter(d => d.trip_readiness_pct >= 80 && d.trip_readiness_pct < 100).length;
-    const ready50 = activeDrivers.filter(d => d.trip_readiness_pct >= 50 && d.trip_readiness_pct < 80).length;
-    const readyLow = activeDrivers.filter(d => (d.trip_readiness_pct || 0) < 50).length;
+    const total = drivers.length || 1;
+    const ready100 = drivers.filter(d => d.trip_readiness_pct === 100).length;
+    const ready80 = drivers.filter(d => d.trip_readiness_pct >= 80 && d.trip_readiness_pct < 100).length;
+    const ready50 = drivers.filter(d => d.trip_readiness_pct >= 50 && d.trip_readiness_pct < 80).length;
+    const readyLow = drivers.filter(d => (d.trip_readiness_pct || 0) < 50).length;
     
     return [
       { label: t('dashboard.readiness_100'), count: ready100, color: 'bg-green-500', textColor: 'text-green-700', pct: (ready100/total)*100 },
@@ -18,7 +18,7 @@ export default function ReadinessChart({ activeDrivers = [] }) {
       { label: t('dashboard.readiness_50'), count: ready50, color: 'bg-orange-400', textColor: 'text-orange-700', pct: (ready50/total)*100 },
       { label: t('dashboard.readiness_low'), count: readyLow, color: 'bg-red-500', textColor: 'text-red-700', pct: (readyLow/total)*100 },
     ];
-  }, [activeDrivers, t]);
+  }, [drivers, t]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -43,7 +43,7 @@ export default function ReadinessChart({ activeDrivers = [] }) {
         ))}
       </div>
       <div className="mt-4 pt-3 border-t text-center">
-        <span className="text-2xl font-bold text-gray-800">{activeDrivers.length}</span>
+        <span className="text-2xl font-bold text-gray-800">{drivers.length}</span>
         <span className="text-sm text-gray-500 ml-1">{t('dashboard.total_drivers_short')}</span>
       </div>
     </div>

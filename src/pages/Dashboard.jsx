@@ -125,7 +125,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 items-start">
           <ExpiringDocumentsWidget activeDrivers={activeDrivers} />
           <RecentActivityWidget drivers={drivers} />
           <ReadinessChart drivers={activeDrivers} />
