@@ -414,30 +414,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
 
   return (
     <div className="p-4 space-y-4">
-      {/* Edit / Save / Cancel buttons */}
-      <div className="flex justify-end">
-        {isEditing ? (
-          <div className="flex gap-2">
-            <button onClick={cancelEditing} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">{t('common.cancel')}</button>
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="text-sm bg-green-600 text-white px-4 py-1.5 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-            >
-              {isSaving ? (
-                <>
-                  <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                  {t('common.saving')}
-                </>
-              ) : t('common.save')}
-            </button>
-          </div>
-        ) : (
-          <button onClick={startEditing} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-            <Pencil className="w-3.5 h-3.5" /> {t('common.edit')}
-          </button>
-        )}
-      </div>
+
 
       {sections.map(({ sectionNum, types }) => (
         types.length > 0 && (
