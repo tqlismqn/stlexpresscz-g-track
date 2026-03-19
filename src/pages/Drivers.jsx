@@ -241,6 +241,14 @@ export default function Drivers() {
 
   const clearSelection = () => setSelectedDriverIds(new Set());
 
+  const handleExportPDF = (templateKey) => {
+    const driversToExport = selectedDriverIds.size > 0
+      ? filteredDrivers.filter(d => selectedDriverIds.has(d.id))
+      : filteredDrivers;
+    const doc = generatePDF(driversToExport, documents, templateKey, t);
+    downloadPDF(doc, templateKey);
+  };
+
   const handleExportCSV = (templateKey) => {
     const driversToExport = selectedDriverIds.size > 0
       ? filteredDrivers.filter(d => selectedDriverIds.has(d.id))
