@@ -195,7 +195,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   // Reset form when switching drivers or entering create mode
   useEffect(() => {
     if (isCreating && !driver) {
-      setFormData({ ...EMPTY_FORM });
+      setFormData({ ...EMPTY_FORM, company_id: currentUser?.company_id || '' });
       setIsEditing(false);
       setActiveTab('overview');
     } else if (driver) {
