@@ -40,6 +40,7 @@ export default function Dashboard() {
         setActiveDrivers(active);
 
         const docsList = await base44.entities.DriverDocument.list();
+        setDocuments(docsList);
         const activeDriverIds = new Set(active.map(d => d.id));
 
         const activeCount = active.length;
@@ -138,6 +139,10 @@ export default function Dashboard() {
 
         <div className="mt-4">
           <RecentActivityWidget drivers={drivers} />
+        </div>
+
+        <div className="mt-4">
+          <DocumentStatsWidget documents={documents} activeDriverIds={activeDrivers.map(d => d.id)} />
         </div>
       </div>
     </div>
