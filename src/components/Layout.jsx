@@ -44,7 +44,7 @@ export default function Layout() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 h-14 border-b border-white/10 bg-slate-900 text-white flex items-center justify-between px-4 z-40 shrink-0 rounded-b-xl">
+      <header className="fixed top-0 left-0 right-0 h-14 border-b border-white/10 bg-slate-900 text-white flex items-center justify-between px-4 z-40 shrink-0">
         
         {/* LEFT: Hamburger + Logo */}
         <div className="flex items-center gap-3">
@@ -55,9 +55,9 @@ export default function Layout() {
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">G</span>
-          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 30 30" className="shrink-0">
+            <path fill="#ea580c" d="M 15.070312 11.535156 L 15.070312 16.925781 C 15.070312 17.058594 15.179688 17.167969 15.316406 17.167969 L 22.515625 17.167969 C 22.691406 17.167969 22.8125 17.347656 22.742188 17.511719 C 21.53125 20.335938 18.804688 22.359375 15.589844 22.558594 C 10.628906 22.863281 6.46875 18.738281 6.738281 13.773438 C 6.976562 9.382812 10.621094 5.886719 15.070312 5.886719 C 17.484375 5.886719 19.761719 6.921875 21.347656 8.734375 C 21.4375 8.832031 21.585938 8.847656 21.6875 8.761719 L 25.84375 5.324219 C 25.949219 5.238281 25.960938 5.082031 25.871094 4.976562 C 23.160156 1.816406 19.238281 0.0078125 15.070312 0.0078125 C 11.269531 0.0078125 7.699219 1.484375 5.011719 4.171875 C 2.328125 6.859375 0.847656 10.429688 0.847656 14.230469 C 0.847656 16.707031 1.476562 19.089844 2.660156 21.191406 C 2.691406 21.246094 2.703125 21.3125 2.683594 21.375 L 0.75 28.675781 C 0.703125 28.859375 0.875 29.027344 1.058594 28.972656 L 8.242188 26.796875 C 8.304688 26.777344 8.371094 26.785156 8.429688 26.8125 C 10.449219 27.882812 12.714844 28.453125 15.070312 28.453125 C 18.871094 28.453125 22.441406 26.972656 25.128906 24.285156 C 27.8125 21.601562 29.292969 18.027344 29.292969 14.230469 L 29.292969 11.535156 C 29.292969 11.398438 29.183594 11.289062 29.046875 11.289062 L 15.316406 11.289062 C 15.179688 11.289062 15.070312 11.398438 15.070312 11.535156" fillRule="nonzero"/>
+          </svg>
           <span className="font-semibold text-sm text-white">{t('header.appName')}</span>
           <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-blue-500 text-white rounded-full">Beta</span>
         </div>
