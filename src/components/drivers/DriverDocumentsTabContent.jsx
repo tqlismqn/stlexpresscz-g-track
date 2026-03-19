@@ -543,6 +543,15 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
           </div>
         </div>
       )}
+
+      <DocumentEditModal
+        open={isModalOpen}
+        onClose={handleModalClose}
+        document={editingDocument}
+        documentTypeConfig={editingDocTypeConfig}
+        driverId={driver?.id}
+        onSaved={handleDocumentSaved}
+      />
     </div>
   );
 }
