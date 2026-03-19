@@ -307,6 +307,15 @@ export default function Drivers() {
           />
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedDriverIds.size > 0 && (
+          <FloatingExportToolbar
+            selectedCount={selectedDriverIds.size}
+            onClearSelection={clearSelection}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
