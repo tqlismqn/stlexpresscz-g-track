@@ -30,6 +30,19 @@ const CH_DRIVERS = [
   "Zaharevici Ruslan", "Zavtur Serghei", "Zingan Iurii"
 ];
 
+// Fetch all pages of an entity
+async function fetchAll(entityFn, pageSize = 200) {
+  const results = [];
+  let skip = 0;
+  while (true) {
+    const page = await entityFn(skip, pageSize);
+    results.push(...page);
+    if (page.length < pageSize) break;
+    skip += pageSize;
+  }
+  return results;
+}
+
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
   const user = await base44.auth.me();
@@ -37,13 +50,17 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
   }
 
-  // Fetch all drivers and all a1_certificate documents
-  const [allDrivers, allA1Docs] = await Promise.all([
-    base44.asServiceRole.entities.Driver.list(),
-    base44.asServiceRole.entities.DriverDocument.filter({ document_type: 'a1_certificate' }),
-  ]);
+  const sr = base44.asServiceRole;
 
-  // Build lookup: normalized name -> [driver, ...]  (handles duplicates like Tapu Veaceslav)
+  // Paginate all drivers
+  const allDrivers = await fetchAll((skip, limit) => sr.entities.Driver.list('name', limit, skip));
+
+  // Paginate all a1_certificate docs
+  const allA1Docs = await fetchAll((skip, limit) =>
+    sr.entities.DriverDocument.filter({ document_type: 'a1_certificate' }, 'expiry_date', limit, skip)
+  );
+
+  // Build lookup: normalized name -> [driver, ...]
   const driversByName = new Map();
   for (const driver of allDrivers) {
     const key = (driver.name || '').trim().toLowerCase();
@@ -51,13 +68,12 @@ Deno.serve(async (req) => {
     driversByName.get(key).push(driver);
   }
 
-  // Build lookup: driver_id -> [a1 docs sorted by expiry_date desc]
+  // Build lookup: driver_id -> [a1 docs sorted by expiry_date desc (latest first)]
   const a1DocsByDriver = new Map();
   for (const doc of allA1Docs) {
     if (!a1DocsByDriver.has(doc.driver_id)) a1DocsByDriver.set(doc.driver_id, []);
     a1DocsByDriver.get(doc.driver_id).push(doc);
   }
-  // Sort each driver's a1 docs: latest expiry first
   a1DocsByDriver.forEach((docs) => {
     docs.sort((a, b) => (b.expiry_date || '') > (a.expiry_date || '') ? 1 : -1);
   });
@@ -80,7 +96,6 @@ Deno.serve(async (req) => {
       continue;
     }
 
-    // Handle duplicates: update all matched drivers (e.g. Tapu Veaceslav x2)
     for (const driver of matched) {
       results.matched_drivers++;
       const docs = a1DocsByDriver.get(driver.id);
@@ -90,9 +105,9 @@ Deno.serve(async (req) => {
       }
 
       const currentDoc = docs[0]; // latest by expiry_date
-      await base44.asServiceRole.entities.DriverDocument.update(currentDoc.id, { a1_switzerland: true });
+      await sr.entities.DriverDocument.update(currentDoc.id, { a1_switzerland: true });
       results.updated_documents++;
-      results.updated.push(`${name} (driver: ${driver.id}, doc: ${currentDoc.id})`);
+      results.updated.push(`${name} → doc ${currentDoc.id}`);
     }
   }
 
@@ -100,8 +115,8 @@ Deno.serve(async (req) => {
   console.log(`Total in CH list: ${results.total_in_list}`);
   console.log(`Drivers matched: ${results.matched_drivers}`);
   console.log(`Documents updated: ${results.updated_documents}`);
-  console.log(`Not found (${results.no_driver_found.length}):`, results.no_driver_found);
-  console.log(`No A1 doc (${results.no_a1_doc.length}):`, results.no_a1_doc);
+  console.log(`Not found (${results.no_driver_found.length}):`, JSON.stringify(results.no_driver_found));
+  console.log(`No A1 doc (${results.no_a1_doc.length}):`, JSON.stringify(results.no_a1_doc));
 
   return Response.json(results);
 });
