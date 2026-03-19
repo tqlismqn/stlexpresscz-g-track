@@ -22,7 +22,22 @@
     "clear_selection": "Очистить",
     "export_csv": "Экспорт CSV",
     "export_pdf": "Экспорт PDF",
-    "export": "Экспорт"
+    "export": "Экспорт",
+    "driver_list": "Список водителей",
+    "driver_list_desc": "Основная информация о водителях",
+    "document_statuses": "Статусы документов",
+    "document_statuses_desc": "Статус каждого типа документа",
+    "document_expiry": "Сроки документов",
+    "document_expiry_desc": "Даты истечения всех документов",
+    "internal_number": "Внутренний номер",
+    "full_name": "ФИО",
+    "status": "Статус",
+    "nationality_group": "Национальность",
+    "country_code": "Страна",
+    "phone": "Телефон",
+    "email": "Email",
+    "readiness": "Готовность %",
+    "tags": "Теги"
   },
   "settings": { "title": "Настройки", "language": "Язык", "theme": "Тема", "dark_mode": "Тёмная тема", "interface_language": "Язык интерфейса", "changes_apply_immediately": "Изменения применяются сразу" }
 }

@@ -22,7 +22,22 @@
     "clear_selection": "Zrušit výběr",
     "export_csv": "Export CSV",
     "export_pdf": "Export PDF",
-    "export": "Export"
+    "export": "Export",
+    "driver_list": "Seznam řidičů",
+    "driver_list_desc": "Základní informace o řidičích",
+    "document_statuses": "Stavy dokumentů",
+    "document_statuses_desc": "Stav každého typu dokumentu",
+    "document_expiry": "Data expirace",
+    "document_expiry_desc": "Data vypršení všech dokumentů",
+    "internal_number": "Interní číslo",
+    "full_name": "Celé jméno",
+    "status": "Stav",
+    "nationality_group": "Národnost",
+    "country_code": "Země",
+    "phone": "Telefon",
+    "email": "Email",
+    "readiness": "Připravenost %",
+    "tags": "Štítky"
   },
   "settings": { "title": "Nastavení", "language": "Jazyk", "theme": "Motiv", "dark_mode": "Tmavý režim", "interface_language": "Jazyk rozhraní", "changes_apply_immediately": "Změny se projeví ihned" }
 }

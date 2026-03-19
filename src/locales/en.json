@@ -22,7 +22,22 @@
     "clear_selection": "Clear",
     "export_csv": "Export CSV",
     "export_pdf": "Export PDF",
-    "export": "Export"
+    "export": "Export",
+    "driver_list": "Driver List",
+    "driver_list_desc": "Basic driver information",
+    "document_statuses": "Document Statuses",
+    "document_statuses_desc": "Status of each document type",
+    "document_expiry": "Expiry Dates",
+    "document_expiry_desc": "Expiration dates for all documents",
+    "internal_number": "Internal Number",
+    "full_name": "Full Name",
+    "status": "Status",
+    "nationality_group": "Nationality",
+    "country_code": "Country",
+    "phone": "Phone",
+    "email": "Email",
+    "readiness": "Readiness %",
+    "tags": "Tags"
   },
   "settings": { "title": "Settings", "language": "Language", "theme": "Theme", "dark_mode": "Dark Mode", "interface_language": "Interface language", "changes_apply_immediately": "Changes apply immediately" }
 }

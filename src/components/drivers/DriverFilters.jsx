@@ -2,9 +2,26 @@ import React from 'react';
 import { Search, Plus, X, Filter, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults }) {
+export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV }) {
   const { t } = useTranslation();
+  const [exportOpen, setExportOpen] = React.useState(false);
+  const exportRef = React.useRef(null);
   const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any' || a1SwitzerlandFilter;
+
+  React.useEffect(() => {
+    if (!exportOpen) return;
+    const handler = (e) => {
+      if (exportRef.current && !exportRef.current.contains(e.target)) setExportOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [exportOpen]);
+
+  const exportTemplates = [
+    { key: 'driver_list', icon: '📋', label: t('export.driver_list'), desc: t('export.driver_list_desc') },
+    { key: 'document_statuses', icon: '📊', label: t('export.document_statuses'), desc: t('export.document_statuses_desc') },
+    { key: 'document_expiry', icon: '📅', label: t('export.document_expiry'), desc: t('export.document_expiry_desc') },
+  ];
 
   const VISA_TYPES = [
     { value: 'any',                label: t('filters.any_visa_type') },
