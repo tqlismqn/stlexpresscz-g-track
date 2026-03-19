@@ -178,11 +178,22 @@ const DOC_TYPE_LABELS = {
   code95: 'Code 95',
 };
 
-export async function generateAndDownloadPDF(drivers, allDocuments, templateKey) {
+export async function generateAndDownloadPDF(drivers, allDocuments, templateKey, t) {
   const { default: jsPDF } = await import('jspdf');
   const { default: html2canvas } = await import('html2canvas');
 
-  // Step 1: Prepare data (same logic as generateCSV but with English labels)
+  const TEMPLATE_NAMES = {
+    driver_list: t('export.driver_list'),
+    document_statuses: t('export.document_statuses'),
+    document_expiry: t('export.document_expiry'),
+  };
+
+  const DOC_TYPE_LABELS = {};
+  DOCUMENT_TYPES.forEach(dt => {
+    DOC_TYPE_LABELS[dt] = t(`doc_types.${dt}`, { defaultValue: dt });
+  });
+
+  // Step 1: Prepare data
   const docsByDriver = new Map();
   allDocuments.forEach(doc => {
     if (doc.is_previous === true) return;
