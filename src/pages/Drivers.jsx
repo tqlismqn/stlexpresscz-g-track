@@ -17,7 +17,7 @@ import { generateCSV, downloadCSV, generateAndDownloadPDF } from '@/utils/export
 export default function Drivers() {
   const location = useLocation();
   const { t } = useTranslation();
-  const { permissions, companyId } = useMembership();
+  const { permissions } = useMembership();
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({
@@ -36,19 +36,13 @@ export default function Drivers() {
   const [selectedTab, setSelectedTab] = useState('overview');
 
   const { data: drivers = [], isLoading, refetch } = useQuery({
-    queryKey: ['drivers', companyId],
-    queryFn: () => base44.entities.Driver.filter({ company_id: companyId }),
-    enabled: !!companyId
+    queryKey: ['drivers'],
+    queryFn: () => base44.entities.Driver.list()
   });
 
   const { data: documents = [], refetch: refetchDocuments } = useQuery({
-    queryKey: ['documents', companyId, drivers.map(d => d.id)],
-    queryFn: async () => {
-      if (!companyId || !drivers || drivers.length === 0) return [];
-      const driverIds = drivers.map(d => d.id);
-      return base44.entities.DriverDocument.filter({ driver_id: { "$in": driverIds } });
-    },
-    enabled: !!companyId && drivers.length > 0
+    queryKey: ['documents'],
+    queryFn: () => base44.entities.DriverDocument.list()
   });
 
   useEffect(() => {
