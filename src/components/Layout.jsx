@@ -44,18 +44,22 @@ export default function Layout() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 h-14 border-b bg-background flex items-center justify-between px-4 z-40 shrink-0">
+      <header className="fixed top-0 left-0 right-0 h-14 border-b border-white/10 bg-slate-900 text-white flex items-center justify-between px-4 z-40 shrink-0 rounded-b-xl">
         
         {/* LEFT: Hamburger + Logo */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
-            className="p-1 rounded-md hover:bg-accent transition-colors text-foreground"
+            className="p-1 rounded-md hover:bg-white/10 transition-colors text-white"
             title={t('common.toggleSidebar')}
           >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="font-semibold text-lg">{t('header.appName')}</span>
+          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+            <span className="text-white font-bold text-sm">G</span>
+          </div>
+          <span className="font-semibold text-sm text-white">{t('header.appName')}</span>
+          <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-blue-500 text-white rounded-full">Beta</span>
         </div>
 
         {/* CENTER: Company Switcher */}
@@ -63,10 +67,10 @@ export default function Layout() {
           {hasMultipleCompanies ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-accent transition-colors text-sm font-medium">
-                  <Building2 className="h-4 w-4 text-muted-foreground" />
+                <button className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-white/10 transition-colors text-sm font-medium text-white">
+                  <Building2 className="h-4 w-4 text-white/60" />
                   {companyName || t('settings.tabs.company')}
-                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                  <ChevronDown className="h-3 w-3 text-white/60" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-64">
@@ -88,8 +92,8 @@ export default function Layout() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+            <div className="flex items-center gap-2 text-sm font-medium text-white">
+              <Building2 className="h-4 w-4 text-white/60" />
               {companyName || t('common.loading')}
             </div>
           )}
@@ -102,21 +106,21 @@ export default function Layout() {
 
           {/* Notifications Bell */}
           <button 
-            className="p-2 rounded-md hover:bg-accent transition-colors relative" 
+            className="p-2 rounded-md hover:bg-white/10 transition-colors relative" 
             title={t('header.notifications')}
           >
-            <Bell className="h-4 w-4 text-muted-foreground" />
+            <Bell className="h-4 w-4 text-white/70" />
           </button>
 
           {/* Avatar Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 p-1 rounded-md hover:bg-accent transition-colors">
+              <button className="flex items-center gap-2 p-1 rounded-md hover:bg-white/10 transition-colors">
                 <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
                   {(currentUser?.display_name || currentUser?.email || '??').substring(0, 2).toUpperCase()}
                 </div>
-                <span className="text-sm font-medium hidden md:block truncate">{currentUser?.display_name || currentUser?.email}</span>
-                <ChevronDown className="h-3 w-3 text-muted-foreground hidden md:block flex-shrink-0" />
+                <span className="text-sm font-medium text-white hidden md:block truncate">{currentUser?.display_name || currentUser?.email}</span>
+                <ChevronDown className="h-3 w-3 text-white/60 hidden md:block flex-shrink-0" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
