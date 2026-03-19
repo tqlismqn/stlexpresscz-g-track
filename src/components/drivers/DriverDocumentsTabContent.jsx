@@ -273,6 +273,22 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
   const [newDoc, setNewDoc] = useState({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' });
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
+  const handleEditDocument = (doc, docTypeConfig) => {
+    setEditingDocument(doc);
+    setEditingDocTypeConfig(docTypeConfig);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingDocument(null);
+    setEditingDocTypeConfig(null);
+  };
+
+  const handleDocumentSaved = () => {
+    if (onDocumentsChange) onDocumentsChange();
+  };
+
   const isNonEU = driver?.nationality_group === 'non-EU';
 
   // Group all documents by normalized type, sorted by expiry_date desc (fallback: created_date)
