@@ -45,8 +45,8 @@ export default function Dashboard() {
 
         const activeCount = active.length;
         const readyCount = active.filter(d => d.trip_readiness_pct === 100).length;
-        const expiringCount = docsList.filter(d => d.status === 'expiring' && activeDriverIds.has(d.driver_id)).length;
-        const expiredCount = docsList.filter(d => d.status === 'expired' && activeDriverIds.has(d.driver_id)).length;
+        const expiringCount = docsList.filter(d => d.status === 'expiring' && companyDriverIds.has(d.driver_id)).length;
+        const expiredCount = docsList.filter(d => d.status === 'expired' && companyDriverIds.has(d.driver_id)).length;
 
         const onLeave = driversList.filter(d => d.status === 'on_leave').length;
         const inactive = driversList.filter(d => d.status === 'inactive').length;
