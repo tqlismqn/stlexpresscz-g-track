@@ -58,7 +58,7 @@ const DateInput = ({ value, onChange, t }) => {
   );
 };
 
-function DocumentRowRead({ docType, config, doc, driver, t }) {
+function DocumentRowRead({ docType, config, doc, driver, onEdit, t }) {
   const status = doc?.status || 'missing';
   const dotColor = STATUS_COLORS[status] || 'bg-gray-300';
   const isIndefinite = config.indefiniteByDefault && !doc?.expiry_date;
@@ -66,14 +66,14 @@ function DocumentRowRead({ docType, config, doc, driver, t }) {
   const hasDateInfo = doc?.issue_date || doc?.expiry_date || isIndefinite;
 
   return (
-    <div className="flex items-start gap-3 py-2">
-      <div className={`w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 ${dotColor}`} />
+    <div className="flex items-center gap-3 py-2">
+      <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotColor}`} />
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-1.5">
           <span className="text-sm font-medium text-gray-900">{config.name}</span>
           <span className="text-xs text-gray-400">({config.abbr})</span>
-          {docType === 'visa' && driver?.visa_type && (
-            <span className="text-xs text-muted-foreground ml-1">({t(`visa_types.${driver.visa_type}`)})</span>
+          {docType === 'visa' && doc?.visa_type && (
+            <span className="text-xs text-muted-foreground ml-1">({t(`visa_types.${doc.visa_type}`)})</span>
           )}
           {docType === 'a1_certificate' && doc?.a1_switzerland && (
             <span className="text-xs text-blue-700 font-medium ml-1">🇨🇭 {t('documents.a1_switzerland')}</span>
@@ -94,8 +94,15 @@ function DocumentRowRead({ docType, config, doc, driver, t }) {
           )}
         </div>
       </div>
-      <div className="text-xs text-right flex-shrink-0">
+      <div className="flex items-center gap-1.5 flex-shrink-0">
         {doc?.expiry_date && !isIndefinite && <RemainingDays expiryDate={doc.expiry_date} t={t} />}
+        <button
+          onClick={(e) => { e.stopPropagation(); onEdit(); }}
+          className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+          title={t('common.edit')}
+        >
+          <Pencil className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );
