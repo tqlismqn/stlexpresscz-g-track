@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Toaster } from 'sonner';
 import { AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
+import { useMembership } from '@/lib/MembershipContext';
+import { hasPermission } from '@/lib/permissions';
 import { useQuery } from '@tanstack/react-query';
 import DriverList from '@/components/drivers/DriverList';
 import DriverDetail from '@/components/drivers/DriverDetail';
@@ -15,6 +17,7 @@ import { generateCSV, downloadCSV, generateAndDownloadPDF } from '@/utils/export
 export default function Drivers() {
   const location = useLocation();
   const { t } = useTranslation();
+  const { permissions } = useMembership();
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({
@@ -275,6 +278,7 @@ export default function Drivers() {
       <div className="bg-white border-b border-gray-200 flex-shrink-0">
         <div className="w-full px-6 py-4">
           <DriverFilters
+            permissions={permissions}
             filters={filters}
             setFilters={(val) => { setFilters(val); clearSelection(); }}
             counts={counts}
@@ -284,9 +288,9 @@ export default function Drivers() {
             onDocTypeChange={(val) => { setDocTypeFilter(val); if (val !== 'visa') setVisaTypeFilter('any'); clearSelection(); }}
             onDocStatusChange={(val) => { setDocStatusFilter(val); clearSelection(); }}
             visaTypeFilter={visaTypeFilter}
-            onVisaTypeChange={(val) => { setVisaTypeFilter(val); clearSelection(); }}
+            onVisaTypeChange={(val) => { setVisaTypeChange(val); clearSelection(); }}
             a1SwitzerlandFilter={a1SwitzerlandFilter}
-            onA1SwitzerlandChange={(val) => { setA1SwitzerlandFilter(val); clearSelection(); }}
+            onA1SwitzerlandChange={(val) => { setA1SwitzerlandChange(val); clearSelection(); }}
             isAllSelected={isAllSelected}
             onToggleSelectAll={toggleSelectAll}
             hasFilteredResults={filteredDrivers.length > 0}

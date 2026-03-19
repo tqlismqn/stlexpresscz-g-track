@@ -3,6 +3,8 @@ import { Link, useLocation, Outlet } from 'react-router-dom';
 import { LayoutDashboard, Users, Truck, FileText, Settings, LogOut, Menu } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
+import { useMembership } from '@/lib/MembershipContext';
+import { hasPermission } from '@/lib/permissions';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { useRef } from 'react';
@@ -10,9 +12,13 @@ import { useRef } from 'react';
 export default function Layout() {
   const location = useLocation();
   const { currentUser } = useAuth();
+  const { permissions } = useMembership();
   const { t, i18n } = useTranslation();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const hasRestoredLang = useRef(false);
+
+  // Graceful fallback: if permissions haven't loaded, show all items
+  const canView = (permId) => !permissions.length || hasPermission(permissions, permId);
 
   if (currentUser?.language && !hasRestoredLang.current) {
     if (i18n.language !== currentUser.language) {
@@ -22,10 +28,10 @@ export default function Layout() {
   }
 
   const navigation = [
-    { label: t('nav.dashboard'), icon: LayoutDashboard, path: '/Dashboard', section: 'main' },
-    { label: t('nav.drivers'), icon: Users, path: '/Drivers', section: 'main' },
+    { label: t('nav.dashboard'), icon: LayoutDashboard, path: '/Dashboard', section: 'main', permission: 'dashboard_view' },
+    { label: t('nav.drivers'), icon: Users, path: '/Drivers', section: 'main', permission: 'drivers_view' },
     { label: t('nav.vehicles'), icon: Truck, path: '#', disabled: true, badge: t('common.soon'), section: 'main' },
-    { label: t('nav.documents'), icon: FileText, path: '#', disabled: true, badge: t('common.soon'), section: 'main' },
+    { label: t('nav.documents'), icon: FileText, path: '#', disabled: true, badge: t('common.soon'), section: 'main', permission: 'doc_view' },
     { label: t('nav.settings'), icon: Settings, path: '/Settings', section: 'settings' }
   ];
 
@@ -75,6 +81,8 @@ export default function Layout() {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
               const showSeparator = idx > 0 && navigation[idx].section !== navigation[idx - 1].section;
+              // Gate by permission if specified (Settings always visible)
+              if (item.permission && !canView(item.permission)) return null;
 
               return (
                 <div key={item.path}>

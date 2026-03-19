@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Plus, X, Filter, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { hasPermission } from '@/lib/permissions';
 
-export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV, onExportPDF }) {
+export default function DriverFilters({ permissions = [], filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV, onExportPDF }) {
   const { t } = useTranslation();
   const [exportOpen, setExportOpen] = useState(false);
   const exportRef = useRef(null);
@@ -74,16 +75,18 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
   return (
     <div className="space-y-4">
       {/* Row 1: Title + Add button */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">{t('drivers.title')}</h1>
-        <button
-          onClick={onCreateDriver}
-          className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
-        >
-          <Plus className="w-4 h-4" />
-          {t('drivers.add_driver')}
-        </button>
-      </div>
+       <div className="flex justify-between items-center">
+         <h1 className="text-2xl font-bold text-gray-900">{t('drivers.title')}</h1>
+         {hasPermission(permissions, 'driver_create') && (
+           <button
+             onClick={onCreateDriver}
+             className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+           >
+             <Plus className="w-4 h-4" />
+             {t('drivers.add_driver')}
+           </button>
+         )}
+       </div>
 
       {/* Row 2: Status pills + nationality pills */}
       <div className="flex gap-2 flex-wrap items-center">
@@ -197,13 +200,14 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
           )}
         </div>
 
-        <div className="relative flex-shrink-0" ref={exportRef}>
-          <button
-            onClick={() => setExportOpen(v => !v)}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 whitespace-nowrap transition-colors"
-          >
-            {t('export.export')} <ChevronDown className="w-3.5 h-3.5" />
-          </button>
+        {hasPermission(permissions, 'driver_export') && (
+           <div className="relative flex-shrink-0" ref={exportRef}>
+             <button
+               onClick={() => setExportOpen(v => !v)}
+               className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 whitespace-nowrap transition-colors"
+             >
+               {t('export.export')} <ChevronDown className="w-3.5 h-3.5" />
+             </button>
           {exportOpen && (
             <div className="absolute top-full mt-1 right-0 w-64 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-20">
               {exportTemplates.map(tpl => (
@@ -230,9 +234,10 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
               ))}
             </div>
           )}
-        </div>
+          </div>
+          )}
 
-        {docFiltersActive && (
+          {docFiltersActive && (
           <>
             <span className="text-xs text-gray-500 whitespace-nowrap">
               {t('filters.showing_filtered', { count: filteredCount, total: totalCount })}
