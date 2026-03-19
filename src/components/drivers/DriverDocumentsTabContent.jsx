@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from 'react-i18next';
+import { hasPermission } from '@/lib/permissions';
+import { useMembership } from '@/lib/MembershipContext';
 
 const DriverDocument = base44.entities.DriverDocument;
 import { DOCUMENT_TYPES, VISA_TYPES, formatDate, getRemainingDays } from '@/lib/documentTypes';
@@ -57,7 +59,7 @@ const DateInput = ({ value, onChange, t }) => {
   );
 };
 
-function DocumentRowRead({ docType, config, doc, driver, onEdit, t }) {
+function DocumentRowRead({ docType, config, doc, driver, onEdit, canEdit, t }) {
   const status = doc?.status || 'missing';
   const dotColor = STATUS_COLORS[status] || 'bg-gray-300';
   const isIndefinite = config.indefiniteByDefault && !doc?.expiry_date;
@@ -66,46 +68,48 @@ function DocumentRowRead({ docType, config, doc, driver, onEdit, t }) {
 
   return (
     <div className="flex items-center gap-3 py-2">
-      <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotColor}`} />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-sm font-medium text-gray-900">{t(config.i18nKey)}</span>
-          <span className="text-xs text-gray-400">({config.abbr})</span>
-          {docType === 'visa' && doc?.visa_type && (
-            <span className="text-xs text-muted-foreground ml-1">({t(`visa_types.${doc.visa_type}`)})</span>
-          )}
-          {docType === 'a1_certificate' && doc?.a1_switzerland && (
-            <span className="text-xs text-blue-700 font-medium ml-1">🇨🇭 {t('documents.a1_switzerland')}</span>
-          )}
-        </div>
-        <div className="text-xs text-gray-500 mt-0.5">
-          {!doc ? (
-            <span className="italic text-gray-400">{t('documents.no_data')}</span>
-          ) : (
-            <>
-              {doc.document_number && <span>{doc.document_number} · </span>}
-              {hasDateInfo ? (
-                <span>{formatDate(doc?.issue_date)} → {toDisplay}</span>
-              ) : (
-                <span className="italic text-gray-400">{t('documents.no_data')}</span>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-      <div className="flex items-center gap-1.5 flex-shrink-0">
-        {doc?.expiry_date && !isIndefinite && <RemainingDays expiryDate={doc.expiry_date} t={t} />}
-        <button
-          onClick={(e) => { e.stopPropagation(); onEdit(); }}
-          className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
-          title={t('common.edit')}
-        >
-          <Pencil className="w-3.5 h-3.5" />
-        </button>
-      </div>
-    </div>
-  );
-}
+       <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotColor}`} />
+       <div className="flex-1 min-w-0">
+         <div className="flex items-baseline gap-1.5">
+           <span className="text-sm font-medium text-gray-900">{t(config.i18nKey)}</span>
+           <span className="text-xs text-gray-400">({config.abbr})</span>
+           {docType === 'visa' && doc?.visa_type && (
+             <span className="text-xs text-muted-foreground ml-1">({t(`visa_types.${doc.visa_type}`)})</span>
+           )}
+           {docType === 'a1_certificate' && doc?.a1_switzerland && (
+             <span className="text-xs text-blue-700 font-medium ml-1">🇨🇭 {t('documents.a1_switzerland')}</span>
+           )}
+         </div>
+         <div className="text-xs text-gray-500 mt-0.5">
+           {!doc ? (
+             <span className="italic text-gray-400">{t('documents.no_data')}</span>
+           ) : (
+             <>
+               {doc.document_number && <span>{doc.document_number} · </span>}
+               {hasDateInfo ? (
+                 <span>{formatDate(doc?.issue_date)} → {toDisplay}</span>
+               ) : (
+                 <span className="italic text-gray-400">{t('documents.no_data')}</span>
+               )}
+             </>
+           )}
+         </div>
+       </div>
+       <div className="flex items-center gap-1.5 flex-shrink-0">
+         {doc?.expiry_date && !isIndefinite && <RemainingDays expiryDate={doc.expiry_date} t={t} />}
+         {canEdit && (
+           <button
+             onClick={(e) => { e.stopPropagation(); onEdit(); }}
+             className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+             title={t('common.edit')}
+           >
+             <Pencil className="w-3.5 h-3.5" />
+           </button>
+         )}
+       </div>
+     </div>
+   );
+ }
 
 const LICENCE_TYPES = ['transport_licence', 'licence'];
 
@@ -153,6 +157,7 @@ function PreviousDocumentRow({ doc, docTypeName, onMarkAsReturned, t }) {
 
 export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange }) {
   const { t } = useTranslation();
+  const { permissions } = useMembership();
 
   const SECTIONS = {
     1: t('documents.sections.main'),
@@ -324,13 +329,14 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                 return (
                   <div key={docType}>
                     <DocumentRowRead
-                      docType={docType}
-                      config={config}
-                      doc={currentDoc}
-                      driver={driver}
-                      onEdit={() => handleEditDocument(currentDoc, { ...config, type: normalizedType })}
-                      t={t}
-                    />
+                         docType={docType}
+                         config={config}
+                         doc={currentDoc}
+                         driver={driver}
+                         onEdit={() => handleEditDocument(currentDoc, { ...config, type: normalizedType })}
+                         canEdit={hasPermission(permissions, 'doc_edit')}
+                         t={t}
+                       />
                     {previousDocMap.has(normalizedType) && (
                       <PreviousDocumentRow
                         doc={previousDocMap.get(normalizedType)}
@@ -347,8 +353,9 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
         )
       ))}
 
-      <div className="mt-4 border-t border-gray-200 pt-4">
-          {showAddForm ? (
+      {hasPermission(permissions, 'doc_create') && (
+        <div className="mt-4 border-t border-gray-200 pt-4">
+           {showAddForm ? (
             <div className="space-y-3 bg-gray-50 rounded-lg p-4">
               <p className="text-sm font-semibold text-gray-700">{t('documents.new_document')}</p>
               <div>
@@ -422,9 +429,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
               {t('documents.add_document')}
             </button>
           )}
-        </div>
+          </div>
+          )}
 
-      {deleteConfirm && (
+          {hasPermission(permissions, 'doc_delete') && deleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('dialogs.delete_document_title')}</h3>
@@ -436,17 +444,19 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
               <button onClick={confirmDelete} className="text-sm bg-red-600 text-white px-4 py-1.5 rounded-md hover:bg-red-700">{t('common.delete')}</button>
             </div>
           </div>
-        </div>
-      )}
+          </div>
+          )}
 
-      <DocumentEditModal
-        open={isModalOpen}
-        onClose={handleModalClose}
-        document={editingDocument}
-        documentTypeConfig={editingDocTypeConfig}
-        driverId={driver?.id}
-        onSaved={handleDocumentSaved}
-      />
+          {hasPermission(permissions, 'doc_edit') && (
+          <DocumentEditModal
+              open={isModalOpen}
+              onClose={handleModalClose}
+              document={editingDocument}
+              documentTypeConfig={editingDocTypeConfig}
+              driverId={driver?.id}
+              onSaved={handleDocumentSaved}
+            />
+          )}
     </div>
   );
 }

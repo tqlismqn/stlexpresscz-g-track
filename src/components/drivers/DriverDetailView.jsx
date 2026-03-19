@@ -19,6 +19,8 @@ import { getCountryByCode, isEUCountry, getSortedCountries } from "@/lib/countri
 import { getIncompleteFields } from '@/lib/dataCompleteness';
 import { formatDriverId } from '@/lib/driverUtils';
 import { useAuth } from '@/lib/AuthContext';
+import { useMembership } from '@/lib/MembershipContext';
+import { hasPermission } from '@/lib/permissions';
 import { useTranslation } from 'react-i18next';
 import { useDriverTags } from '@/hooks/useDriverTags';
 
@@ -171,6 +173,7 @@ const buildDescription = (field, oldVal, newVal, t) => {
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const { currentUser } = useAuth();
+  const { permissions } = useMembership();
   const { t } = useTranslation();
   const { tagMap, archiveTags, tags: allTags } = useDriverTags();
 
@@ -369,7 +372,8 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
   const isCreateMode = isCreating && !driver;
   const isArchived = driver?.status === 'archived';
-  const showEditableFields = (isEditing || isCreateMode) && !isArchived;
+  const canEdit = hasPermission(permissions, 'driver_edit');
+  const showEditableFields = (isEditing || isCreateMode) && !isArchived && canEdit;
 
   // Left border accent color based on status
   const borderAccent = isCreateMode ? 'border-l-4 border-blue-400'
@@ -416,7 +420,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 )}
               </div>
               {/* Archive / Restore button */}
-              {!isCreateMode && !isEditing && (
+              {!isCreateMode && !isEditing && hasPermission(permissions, 'driver_delete') && (
                 <div className="flex-shrink-0">
                   {isArchived ? (
                     <button
@@ -478,15 +482,15 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                 ) : (
                   <>
                     {(driver?.tags || []).map(tagId => {
-                      const tag = tagMap[tagId];
-                      if (!tag) return null;
-                      return (
-                        <span key={tagId} className={`text-xs px-2 py-0.5 rounded-full font-medium ${tag.color}`}>
-                          {t(tag.label_key)}
-                        </span>
-                      );
-                    })}
-                    <TagSelector driver={driver} allTags={allTags} onTagToggle={handleTagToggle} />
+                       const tag = tagMap[tagId];
+                       if (!tag) return null;
+                       return (
+                         <span key={tagId} className={`text-xs px-2 py-0.5 rounded-full font-medium ${tag.color}`}>
+                           {t(tag.label_key)}
+                         </span>
+                       );
+                     })}
+                     {hasPermission(permissions, 'driver_tags') && <TagSelector driver={driver} allTags={allTags} onTagToggle={handleTagToggle} />}
                   </>
                 )}
               </div>
@@ -537,30 +541,30 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
             )}
 
             {/* Edit / Save buttons */}
-            <div className="flex justify-end px-4 pt-3 mb-1">
-              {showEditableFields ? (
-                <div className="flex gap-2">
-                  <button onClick={handleCancel} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">
-                    {t('common.cancel')}
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    disabled={isSaving || !formData.name?.trim()}
-                    className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-                  >
-                    {isSaving ? (
-                      <><svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>{t('common.saving')}</>
-                    ) : t('common.save')}
-                  </button>
-                </div>
-              ) : (
-                !isArchived && (
-                  <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                     <Pencil className="w-3.5 h-3.5" /> {t('common.edit')}
+             <div className="flex justify-end px-4 pt-3 mb-1">
+               {showEditableFields ? (
+                 <div className="flex gap-2">
+                   <button onClick={handleCancel} disabled={isSaving} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1 disabled:opacity-50">
+                     {t('common.cancel')}
                    </button>
-                )
-              )}
-            </div>
+                   <button
+                     onClick={handleSave}
+                     disabled={isSaving || !formData.name?.trim()}
+                     className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                   >
+                     {isSaving ? (
+                       <><svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>{t('common.saving')}</>
+                     ) : t('common.save')}
+                   </button>
+                 </div>
+               ) : (
+                 !isArchived && canEdit && (
+                   <button onClick={() => setIsEditing(true)} className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                      <Pencil className="w-3.5 h-3.5" /> {t('common.edit')}
+                    </button>
+                 )
+               )}
+             </div>
 
             <div className="divide-y divide-gray-100">
               {/* SECTION 1: Личные данные */}
@@ -665,7 +669,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
                     <>
                       <div>
                         <p className="text-xs text-gray-500 mb-0.5">{t('fields.status')}</p>
-                        {isEditing ? (
+                        {isEditing && hasPermission(permissions, 'driver_status') ? (
                           <Select value={formData.status || ''} onValueChange={(val) => handleFieldChange('status', val)}>
                             <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
                             <SelectContent>
