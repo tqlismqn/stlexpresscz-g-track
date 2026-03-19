@@ -39,7 +39,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
       await base44.entities.DriverComment.create({
         driver_id: driver.id,
         text: newComment,
-        author: currentUser?.full_name || 'Unknown'
+        author: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
       });
 
       // Create history record
