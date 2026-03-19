@@ -122,6 +122,9 @@ export default function TeamTab() {
       for (const membership of memberships) {
         try {
           const user = await base44.entities.User.get(membership.user_id);
+          if (user.is_platform_admin) {
+            continue;
+          }
           const role = roles.find(r => r.id === membership.role_id);
           enrichedMembers.push({
             membership,
@@ -150,7 +153,7 @@ export default function TeamTab() {
   function getAdminCount() {
     const adminRole = allRoles.find(r => r.name === 'admin' && r.is_template);
     if (!adminRole) return 0;
-    return members.filter(m => m.membership.role_id === adminRole.id).length;
+    return members.filter(m => m.membership.role_id === adminRole.id && !m.user.is_platform_admin).length;
   }
 
   // CHANGE ROLE handler
