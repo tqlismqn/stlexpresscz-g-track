@@ -425,35 +425,26 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
             <div className="divide-y divide-gray-50">
               {types.map(([docType, config]) => {
                 const normalizedType = normalizeDocType(docType);
-                return isEditing ? (
-                <DocumentRowEdit
-                 key={docType}
-                 docType={normalizedType}
-                 config={config}
-                 editDocs={editDocs}
-                 handleDocFieldChange={handleDocFieldChange}
-                 onDelete={handleDeleteDocument}
-                 onRenewDocument={handleRenewDocument}
-                 t={t}
-                />
-                ) : (
-                <div key={docType}>
-                  <DocumentRowRead
-                    docType={docType}
-                    config={config}
-                    doc={docsMap.get(normalizedType) || null}
-                    driver={driver}
-                    t={t}
-                  />
-                  {previousDocMap.has(normalizedType) && (
-                    <PreviousDocumentRow
-                      doc={previousDocMap.get(normalizedType)}
-                      docTypeName={config.name}
-                      onMarkAsReturned={handleMarkAsReturned}
+                const currentDoc = docsMap.get(normalizedType) || null;
+                return (
+                  <div key={docType}>
+                    <DocumentRowRead
+                      docType={docType}
+                      config={config}
+                      doc={currentDoc}
+                      driver={driver}
+                      onEdit={() => handleEditDocument(currentDoc, { ...config, type: normalizedType })}
                       t={t}
                     />
-                  )}
-                </div>
+                    {previousDocMap.has(normalizedType) && (
+                      <PreviousDocumentRow
+                        doc={previousDocMap.get(normalizedType)}
+                        docTypeName={config.name}
+                        onMarkAsReturned={handleMarkAsReturned}
+                        t={t}
+                      />
+                    )}
+                  </div>
                 );
               })}
             </div>
