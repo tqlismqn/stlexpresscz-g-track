@@ -112,7 +112,21 @@ export default function RecentActivityWidget({ drivers = [] }) {
                       driver: driverName,
                     })}
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">{timeAgo(activity.created_date, t)}</p>
+                  <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
+                    {driverName && driverName !== '—' && (
+                      <>
+                        <span className="font-medium text-gray-700">{driverName}</span>
+                        <span>·</span>
+                      </>
+                    )}
+                    <span>{timeAgo(activity.created_date, t)}</span>
+                    {activity.changed_by && (
+                      <>
+                        <span>·</span>
+                        <span>{activity.changed_by}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             );
