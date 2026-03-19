@@ -320,7 +320,7 @@ export async function generateAndDownloadPDF(drivers, allDocuments, templateKey,
     pdf.setPage(i);
     pdf.setFontSize(8);
     pdf.setTextColor(156, 163, 175);
-    pdf.text(`Page ${i} of ${totalPages}`, 290, 205, { align: 'right' });
+    pdf.text(t('export.page_of', { page: i, total: totalPages }), 290, 205, { align: 'right' });
     pdf.text('G-Track TMS', 5, 205);
   }
 
