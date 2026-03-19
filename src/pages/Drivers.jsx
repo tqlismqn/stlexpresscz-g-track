@@ -17,7 +17,8 @@ import { generateCSV, downloadCSV, generateAndDownloadPDF } from '@/utils/export
 export default function Drivers() {
   const location = useLocation();
   const { t } = useTranslation();
-  const { permissions } = useMembership();
+  const { permissions, companyId } = useMembership();
+  console.log('[Drivers] filtering by companyId:', companyId);
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({
@@ -36,13 +37,13 @@ export default function Drivers() {
   const [selectedTab, setSelectedTab] = useState('overview');
 
   const { data: drivers = [], isLoading, refetch } = useQuery({
-    queryKey: ['drivers'],
-    queryFn: () => base44.entities.Driver.list()
+    queryKey: ['drivers', companyId],
+    queryFn: () => base44.entities.Driver.filter({ company_id: companyId })
   });
 
   const { data: documents = [], refetch: refetchDocuments } = useQuery({
-    queryKey: ['documents'],
-    queryFn: () => base44.entities.DriverDocument.list()
+    queryKey: ['documents', companyId],
+    queryFn: () => base44.entities.DriverDocument.filter({ company_id: companyId })
   });
 
   useEffect(() => {

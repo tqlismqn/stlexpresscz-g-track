@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { useMembership } from '@/lib/MembershipContext';
 import StatCard from '@/components/dashboard/StatCard';
 import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWidget';
 import ReadinessChart from '@/components/dashboard/ReadinessChart';
@@ -16,7 +17,9 @@ const dateLocales = { en: enUS, ru, cs };
 export default function Dashboard() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { companyId } = useMembership();
   const dateLocale = dateLocales[i18n.language] || enUS;
+  console.log('[Dashboard] filtering by companyId:', companyId);
   const [stats, setStats] = useState({
     activeDrivers: 0,
     readyDrivers: 0,
@@ -33,13 +36,13 @@ export default function Dashboard() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const driversList = await base44.entities.Driver.list();
+        const driversList = await base44.entities.Driver.filter({ company_id: companyId });
         setDrivers(driversList);
 
         const active = driversList.filter(d => d.status === 'active');
         setActiveDrivers(active);
 
-        const docsList = await base44.entities.DriverDocument.list();
+        const docsList = await base44.entities.DriverDocument.filter({ company_id: companyId });
         setDocuments(docsList);
         const companyDriverIds = new Set(active.map(d => d.id));
 
@@ -74,7 +77,7 @@ export default function Dashboard() {
     };
 
     loadData();
-  }, []);
+  }, [companyId, t]);
 
   if (loading) {
     return <div className="p-8 text-center">{t('common.loading')}</div>;
