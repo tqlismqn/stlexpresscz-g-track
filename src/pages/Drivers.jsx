@@ -294,6 +294,7 @@ export default function Drivers() {
             filteredCount={filteredDrivers.length}
             totalCount={drivers.filter(d => d.status !== 'archived').length}
             onExportCSV={handleExportCSV}
+            onExportPDF={handleExportPDF}
           />
         </div>
       </div>
