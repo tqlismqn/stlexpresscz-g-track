@@ -401,29 +401,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     }
   };
 
-  const handleDocFieldChange = (docType, field, value) => {
-    setEditDocs(prev => {
-      const updated = {
-        ...prev,
-        [docType]: {
-          ...(prev[docType] || { document_type: docType }),
-          [field]: value,
-        }
-      };
-      if (field === 'issue_date' && value) {
-        const docConfig = DOCUMENT_TYPES[docType];
-        if (docConfig?.autoFillTo?.years) {
-          const autoExpiry = new Date(value);
-          autoExpiry.setFullYear(autoExpiry.getFullYear() + docConfig.autoFillTo.years);
-          const yyyy = autoExpiry.getFullYear();
-          const mm = String(autoExpiry.getMonth() + 1).padStart(2, '0');
-          const dd = String(autoExpiry.getDate()).padStart(2, '0');
-          updated[docType].expiry_date = `${yyyy}-${mm}-${dd}`;
-        }
-      }
-      return updated;
-    });
-  };
+
 
   const sections = [1, 2, 3].map(sectionNum => {
     const types = Object.entries(DOCUMENT_TYPES).filter(([, config]) => {
