@@ -241,6 +241,14 @@ export default function Drivers() {
 
   const clearSelection = () => setSelectedDriverIds(new Set());
 
+  const handleExportCSV = (templateKey) => {
+    const driversToExport = selectedDriverIds.size > 0
+      ? filteredDrivers.filter(d => selectedDriverIds.has(d.id))
+      : filteredDrivers;
+    const csvString = generateCSV(driversToExport, documents, templateKey, t);
+    downloadCSV(csvString, templateKey);
+  };
+
   const isAllSelected = selectedDriverIds.size === filteredDrivers.length && filteredDrivers.length > 0;
 
   const handleSaveDriver = async (savedDriver) => {
