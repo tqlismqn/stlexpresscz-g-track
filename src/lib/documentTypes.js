@@ -26,9 +26,13 @@ export const SECTIONS = {
 export const VISA_TYPES = [
   { value: 'vizum', label: 'Vízum' },
   { value: 'povoleni_k_pobytu', label: 'Povolení k pobytu' },
+  { value: 'docasna_ochrana', label: 'Dočasná ochrana' },
   { value: 'zamestnanecka_karta', label: 'Zaměstnanecká karta' },
   { value: 'modra_karta', label: 'Modrá karta' },
   { value: 'dlouhodoby_pobyt', label: 'Dlouhodobý pobyt' },
+  { value: 'trvaly_pobyt', label: 'Trvalý pobyt' },
+  { value: 'vizum_strpeni', label: 'Vízum strpění' },
+  { value: 'other', label: 'Jiné' },
 ];
 
 export const getDocTypeConfig = (type) => DOCUMENT_TYPES[type] || null;
