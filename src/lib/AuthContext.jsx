@@ -110,6 +110,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const freshUser = await base44.auth.me();
+      setUser(freshUser);
+    } catch (error) {
+      console.error('Failed to refresh user:', error);
+    }
+  };
+
   const logout = (shouldRedirect = true) => {
     setUser(null);
     setIsAuthenticated(false);
