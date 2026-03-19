@@ -151,7 +151,7 @@ function PreviousDocumentRow({ doc, docTypeName, onMarkAsReturned, t }) {
 
 
 
-export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange, onEditingChange }) {
+export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange }) {
   const { t } = useTranslation();
 
   const SECTIONS = {

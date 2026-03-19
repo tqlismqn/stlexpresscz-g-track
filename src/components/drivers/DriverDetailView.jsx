@@ -182,7 +182,6 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab);
-  const [documentsEditing, setDocumentsEditing] = useState(false);
   const [pendingTab, setPendingTab] = useState(null);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
   const [showArchiveModal, setShowArchiveModal] = useState(false);
@@ -504,7 +503,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       {/* TABS */}
       <Tabs value={activeTab} onValueChange={(newTab) => {
         if (isCreateMode) return; // Block tab switching in create mode
-        if (isEditing || documentsEditing) {
+        if (isEditing) {
           setPendingTab(newTab);
           setShowUnsavedModal(true);
         } else {
@@ -723,7 +722,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
 
           {/* DOCUMENTS TAB */}
           <TabsContent value="documents" className="p-0">
-            <DriverDocumentsTabContent driver={driver} documents={documents} onDocumentsChange={onSave} onEditingChange={setDocumentsEditing} />
+            <DriverDocumentsTabContent driver={driver} documents={documents} onDocumentsChange={onSave} />
           </TabsContent>
 
           {/* COMMENTS TAB */}
