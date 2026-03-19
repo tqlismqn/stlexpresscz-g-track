@@ -5,6 +5,7 @@ import StatCard from '@/components/dashboard/StatCard';
 import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWidget';
 import ReadinessChart from '@/components/dashboard/ReadinessChart';
 import { Users, AlertCircle, Clock, XCircle } from 'lucide-react';
+import RecentActivityWidget from '@/components/dashboard/RecentActivityWidget';
 import { format } from 'date-fns';
 import { enUS, ru, cs } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
@@ -131,6 +132,10 @@ export default function Dashboard() {
           <div>
             <ReadinessChart drivers={activeDrivers} />
           </div>
+        </div>
+
+        <div className="mt-4">
+          <RecentActivityWidget drivers={drivers} />
         </div>
       </div>
     </div>
