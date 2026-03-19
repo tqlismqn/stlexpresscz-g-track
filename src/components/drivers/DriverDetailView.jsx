@@ -230,7 +230,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         }
         const allDrivers = await Driver.list();
         const maxNum = Math.max(0, ...allDrivers.map(d => d.internal_number || 0));
-        const newDriver = await Driver.create({ ...dataToSave, internal_number: maxNum + 1 });
+        const newDriver = await Driver.create({ ...dataToSave, company_id: currentUser.company_id, internal_number: maxNum + 1 });
         
         // Create history for new driver
         await base44.entities.DriverHistory.create({
