@@ -21,6 +21,8 @@ export default function DriverList({ drivers, documents, selectedDriver, onSelec
             documents={documents.filter(d => d.driver_id === driver.id)}
             isSelected={selectedDriver?.id === driver.id}
             onSelect={onSelectDriver}
+            isChecked={selectedDriverIds?.has(driver.id)}
+            onToggleSelect={onToggleSelect}
           />
         ))
       )}

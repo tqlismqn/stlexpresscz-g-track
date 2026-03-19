@@ -265,12 +265,15 @@ export default function Drivers() {
             onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
             docTypeFilter={docTypeFilter}
             docStatusFilter={docStatusFilter}
-            onDocTypeChange={(val) => { setDocTypeFilter(val); if (val !== 'visa') setVisaTypeFilter('any'); }}
-            onDocStatusChange={setDocStatusFilter}
+            onDocTypeChange={(val) => { setDocTypeFilter(val); if (val !== 'visa') setVisaTypeFilter('any'); clearSelection(); }}
+            onDocStatusChange={(val) => { setDocStatusFilter(val); clearSelection(); }}
             visaTypeFilter={visaTypeFilter}
-            onVisaTypeChange={setVisaTypeFilter}
+            onVisaTypeChange={(val) => { setVisaTypeFilter(val); clearSelection(); }}
             a1SwitzerlandFilter={a1SwitzerlandFilter}
-            onA1SwitzerlandChange={setA1SwitzerlandFilter}
+            onA1SwitzerlandChange={(val) => { setA1SwitzerlandFilter(val); clearSelection(); }}
+            isAllSelected={isAllSelected}
+            onToggleSelectAll={toggleSelectAll}
+            hasFilteredResults={filteredDrivers.length > 0}
             filteredCount={filteredDrivers.length}
             totalCount={drivers.filter(d => d.status !== 'archived').length}
           />
