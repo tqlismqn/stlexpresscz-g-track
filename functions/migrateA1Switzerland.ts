@@ -30,19 +30,6 @@ const CH_DRIVERS = [
   "Zaharevici Ruslan", "Zavtur Serghei", "Zingan Iurii"
 ];
 
-// Fetch all pages of an entity
-async function fetchAll(entityFn, pageSize = 200) {
-  const results = [];
-  let skip = 0;
-  while (true) {
-    const page = await entityFn(skip, pageSize);
-    results.push(...page);
-    if (page.length < pageSize) break;
-    skip += pageSize;
-  }
-  return results;
-}
-
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
   const user = await base44.auth.me();
@@ -50,77 +37,86 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
   }
 
+  const body = await req.json().catch(() => ({}));
+  const mode = body.mode || 'lookup'; // 'lookup' or 'update'
   const sr = base44.asServiceRole;
 
-  // Paginate all drivers
-  const allDrivers = await fetchAll((skip, limit) => sr.entities.Driver.list('name', limit, skip));
+  if (mode === 'lookup') {
+    // Phase 1: fetch drivers + a1 docs in parallel, resolve doc IDs to update
+    const [allDrivers, allA1Docs] = await Promise.all([
+      sr.entities.Driver.list('name', 500),
+      sr.entities.DriverDocument.filter({ document_type: 'a1_certificate' }, 'expiry_date', 500),
+    ]);
 
-  // Paginate all a1_certificate docs
-  const allA1Docs = await fetchAll((skip, limit) =>
-    sr.entities.DriverDocument.filter({ document_type: 'a1_certificate' }, 'expiry_date', limit, skip)
-  );
-
-  // Build lookup: normalized name -> [driver, ...]
-  const driversByName = new Map();
-  for (const driver of allDrivers) {
-    const key = (driver.name || '').trim().toLowerCase();
-    if (!driversByName.has(key)) driversByName.set(key, []);
-    driversByName.get(key).push(driver);
-  }
-
-  // Build lookup: driver_id -> [a1 docs sorted by expiry_date desc (latest first)]
-  const a1DocsByDriver = new Map();
-  for (const doc of allA1Docs) {
-    if (!a1DocsByDriver.has(doc.driver_id)) a1DocsByDriver.set(doc.driver_id, []);
-    a1DocsByDriver.get(doc.driver_id).push(doc);
-  }
-  a1DocsByDriver.forEach((docs) => {
-    docs.sort((a, b) => (b.expiry_date || '') > (a.expiry_date || '') ? 1 : -1);
-  });
-
-  const results = {
-    total_in_list: CH_DRIVERS.length,
-    matched_drivers: 0,
-    updated_documents: 0,
-    no_driver_found: [],
-    no_a1_doc: [],
-    updated: [],
-  };
-
-  const updatePromises = [];
-
-  for (const name of CH_DRIVERS) {
-    const key = name.trim().toLowerCase();
-    const matched = driversByName.get(key);
-
-    if (!matched || matched.length === 0) {
-      results.no_driver_found.push(name);
-      continue;
+    const driversByName = new Map();
+    for (const driver of allDrivers) {
+      const key = (driver.name || '').trim().toLowerCase();
+      if (!driversByName.has(key)) driversByName.set(key, []);
+      driversByName.get(key).push(driver);
     }
 
-    for (const driver of matched) {
-      results.matched_drivers++;
-      const docs = a1DocsByDriver.get(driver.id);
-      if (!docs || docs.length === 0) {
-        results.no_a1_doc.push(`${name} (id: ${driver.id})`);
-        continue;
+    const a1DocsByDriver = new Map();
+    for (const doc of allA1Docs) {
+      if (!a1DocsByDriver.has(doc.driver_id)) a1DocsByDriver.set(doc.driver_id, []);
+      a1DocsByDriver.get(doc.driver_id).push(doc);
+    }
+    a1DocsByDriver.forEach((docs) => {
+      docs.sort((a, b) => (b.expiry_date || '') > (a.expiry_date || '') ? 1 : -1);
+    });
+
+    const docIdsToUpdate = [];
+    const no_driver_found = [];
+    const no_a1_doc = [];
+    const matched = [];
+
+    for (const name of CH_DRIVERS) {
+      const key = name.trim().toLowerCase();
+      const drivers = driversByName.get(key);
+      if (!drivers || drivers.length === 0) { no_driver_found.push(name); continue; }
+      for (const driver of drivers) {
+        const docs = a1DocsByDriver.get(driver.id);
+        if (!docs || docs.length === 0) { no_a1_doc.push(`${name} (${driver.id})`); continue; }
+        docIdsToUpdate.push(docs[0].id);
+        matched.push(`${name} → ${docs[0].id}`);
       }
-
-      const currentDoc = docs[0]; // latest by expiry_date
-      results.updated_documents++;
-      results.updated.push(`${name} → doc ${currentDoc.id}`);
-      updatePromises.push(sr.entities.DriverDocument.update(currentDoc.id, { a1_switzerland: true }));
     }
+
+    console.log('=== LOOKUP PHASE ===');
+    console.log(`Drivers in list: ${CH_DRIVERS.length}`);
+    console.log(`Doc IDs to update: ${docIdsToUpdate.length}`);
+    console.log(`Not found: ${no_driver_found.length}`, no_driver_found);
+    console.log(`No A1 doc: ${no_a1_doc.length}`, no_a1_doc);
+
+    return Response.json({ mode: 'lookup', docIdsToUpdate, matched, no_driver_found, no_a1_doc });
   }
 
-  await Promise.all(updatePromises);
+  if (mode === 'update') {
+    // Phase 2: receive doc IDs, update them all in parallel batches of 20
+    const { docIds } = body;
+    if (!Array.isArray(docIds) || docIds.length === 0) {
+      return Response.json({ error: 'docIds array required' }, { status: 400 });
+    }
 
-  console.log('=== A1 Switzerland Migration Results ===');
-  console.log(`Total in CH list: ${results.total_in_list}`);
-  console.log(`Drivers matched: ${results.matched_drivers}`);
-  console.log(`Documents updated: ${results.updated_documents}`);
-  console.log(`Not found (${results.no_driver_found.length}):`, JSON.stringify(results.no_driver_found));
-  console.log(`No A1 doc (${results.no_a1_doc.length}):`, JSON.stringify(results.no_a1_doc));
+    const BATCH = 20;
+    let updated = 0;
+    const errors = [];
 
-  return Response.json(results);
+    for (let i = 0; i < docIds.length; i += BATCH) {
+      const batch = docIds.slice(i, i + BATCH);
+      const batchResults = await Promise.allSettled(
+        batch.map(id => sr.entities.DriverDocument.update(id, { a1_switzerland: true }))
+      );
+      for (const r of batchResults) {
+        if (r.status === 'fulfilled') updated++;
+        else errors.push(r.reason?.message || 'unknown error');
+      }
+    }
+
+    console.log(`=== UPDATE PHASE === Updated: ${updated}/${docIds.length}, Errors: ${errors.length}`);
+    if (errors.length) console.log('Errors:', errors);
+
+    return Response.json({ mode: 'update', updated, total: docIds.length, errors });
+  }
+
+  return Response.json({ error: 'Unknown mode. Use mode: "lookup" or mode: "update"' }, { status: 400 });
 });
