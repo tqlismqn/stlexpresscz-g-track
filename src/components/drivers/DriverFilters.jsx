@@ -1,28 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, Plus, X, Filter, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { hasPermission } from '@/lib/permissions';
 
 export default function DriverFilters({ permissions = [], filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, pendingReturnFilter, onPendingReturnChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV, onExportPDF }) {
   const { t } = useTranslation();
-  const [exportOpen, setExportOpen] = useState(false);
-  const exportRef = useRef(null);
   const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any' || a1SwitzerlandFilter || pendingReturnFilter;
-
-  useEffect(() => {
-    if (!exportOpen) return;
-    const handler = (e) => {
-      if (exportRef.current && !exportRef.current.contains(e.target)) setExportOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [exportOpen]);
-
-  const exportTemplates = [
-    { key: 'driver_list', icon: '📋', label: t('export.driver_list'), desc: t('export.driver_list_desc') },
-    { key: 'document_statuses', icon: '📊', label: t('export.document_statuses'), desc: t('export.document_statuses_desc') },
-    { key: 'document_expiry', icon: '📅', label: t('export.document_expiry'), desc: t('export.document_expiry_desc') },
-  ];
 
   const VISA_TYPES = [
     { value: 'any',                label: t('filters.any_visa_type') },
@@ -166,15 +149,17 @@ export default function DriverFilters({ permissions = [], filters, setFilters, c
           </label>
         )}
 
-        <label className="flex items-center gap-1.5 cursor-pointer px-2 py-1.5 border border-orange-300 rounded-md bg-orange-50 text-orange-800 text-sm whitespace-nowrap select-none">
-          <input
-            type="checkbox"
-            checked={!!pendingReturnFilter}
-            onChange={(e) => onPendingReturnChange(e.target.checked)}
-            className="w-3.5 h-3.5 accent-orange-600"
-          />
-          ⏳ {t('filters.pending_return')}
-        </label>
+        {docTypeFilter === 'transport_licence' && (
+          <label className="flex items-center gap-1.5 cursor-pointer px-2 py-1.5 border border-orange-300 rounded-md bg-orange-50 text-orange-800 text-sm whitespace-nowrap select-none">
+            <input
+              type="checkbox"
+              checked={!!pendingReturnFilter}
+              onChange={(e) => onPendingReturnChange(e.target.checked)}
+              className="w-3.5 h-3.5 accent-orange-600"
+            />
+            ⏳ {t('filters.pending_return')}
+          </label>
+        )}
 
         <div className="w-px h-5 bg-gray-300 mx-1 flex-shrink-0" />
 
@@ -210,42 +195,7 @@ export default function DriverFilters({ permissions = [], filters, setFilters, c
           )}
         </div>
 
-        {hasPermission(permissions, 'driver_export') && (
-           <div className="relative flex-shrink-0" ref={exportRef}>
-             <button
-               onClick={() => setExportOpen(v => !v)}
-               className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 whitespace-nowrap transition-colors"
-             >
-               {t('export.export')} <ChevronDown className="w-3.5 h-3.5" />
-             </button>
-          {exportOpen && (
-            <div className="absolute top-full mt-1 right-0 w-64 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-20">
-              {exportTemplates.map(tpl => (
-                <div key={tpl.key} className="flex items-center justify-between px-3 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-0">
-                  <div className="flex-1 min-w-0 mr-2">
-                    <div className="text-sm font-medium text-gray-800 truncate">{tpl.icon} {tpl.label}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">{tpl.desc}</div>
-                  </div>
-                  <div className="flex gap-1 flex-shrink-0">
-                    <button
-                      onClick={() => { setExportOpen(false); onExportCSV(tpl.key); }}
-                      className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium transition-colors"
-                    >
-                      CSV
-                    </button>
-                    <button
-                      onClick={() => { setExportOpen(false); onExportPDF(tpl.key); }}
-                      className="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 font-medium transition-colors"
-                    >
-                      PDF
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          </div>
-          )}
+
 
           {docFiltersActive && (
           <>

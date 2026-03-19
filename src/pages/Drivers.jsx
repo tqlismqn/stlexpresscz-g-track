@@ -301,6 +301,7 @@ export default function Drivers() {
             onA1SwitzerlandChange={(val) => { setA1SwitzerlandFilter(val); clearSelection(); }}
             pendingReturnFilter={pendingReturnFilter}
             onPendingReturnChange={(val) => { setPendingReturnFilter(val); clearSelection(); }}
+            onDocTypeChange={(val) => { setDocTypeFilter(val); if (val !== 'visa') setVisaTypeFilter('any'); if (val !== 'transport_licence') setPendingReturnFilter(false); clearSelection(); }}
             isAllSelected={isAllSelected}
             onToggleSelectAll={toggleSelectAll}
             hasFilteredResults={filteredDrivers.length > 0}
