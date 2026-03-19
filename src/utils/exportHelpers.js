@@ -200,7 +200,7 @@ export async function generateAndDownloadPDF(drivers, allDocuments, templateKey,
   let rows = [];
 
   if (templateKey === 'driver_list') {
-    headers = ['#', 'Full Name', 'Status', 'Nationality', 'Country', 'Phone', 'Email', 'Readiness %', 'Tags'];
+    headers = [t('export.internal_number'), t('export.full_name'), t('export.status'), t('export.nationality_group'), t('export.country_code'), t('export.phone'), t('export.email'), t('export.readiness'), t('export.tags')];
     rows = drivers.map(driver => [
       driver.internal_number != null ? `DRV-${String(driver.internal_number).padStart(3, '0')}` : '',
       driver.name || '',
