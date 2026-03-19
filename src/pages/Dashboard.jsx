@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import StatCard from '@/components/dashboard/StatCard';
 import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWidget';
 import ReadinessChart from '@/components/dashboard/ReadinessChart';
-import { Users, AlertCircle, Clock, XCircle, UserPlus, Download, RefreshCw } from 'lucide-react';
+import { Users, AlertCircle, Clock, XCircle } from 'lucide-react';
 import RecentActivityWidget from '@/components/dashboard/RecentActivityWidget';
 import DocumentStatsWidget from '@/components/dashboard/DocumentStatsWidget';
 import { format } from 'date-fns';
@@ -124,30 +124,6 @@ export default function Dashboard() {
             color="red"
             onClick={() => navigate('/Drivers?filter=expired')}
           />
-        </div>
-
-        <div className="flex items-center gap-3 mt-6">
-          <button
-            onClick={() => navigate('/Drivers?create=true')}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <UserPlus className="w-4 h-4" />
-            {t('dashboard.add_driver')}
-          </button>
-          <button
-            onClick={() => navigate('/Drivers')}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            {t('dashboard.export')}
-          </button>
-          <button
-            onClick={() => loadData()}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-          >
-            <RefreshCw className="w-4 h-4" />
-            {t('dashboard.refresh')}
-          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6 items-start">
