@@ -232,7 +232,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
           driver_id: newDriver.id,
           action: 'created',
           description: t('history.driver_created', { id: String(newDriver.internal_number).padStart(5, '0') }),
-          changed_by: currentUser?.full_name || 'Unknown'
+          changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
         });
         
         toast.success(t('toasts.driver_created'));
@@ -251,7 +251,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               old_value: String(oldVal || ''),
               new_value: String(newVal || ''),
               description: buildDescription(field, oldVal, newVal, t),
-              changed_by: currentUser?.full_name || 'Unknown'
+              changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
             });
           }
         });
@@ -309,7 +309,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         old_value: driver.status,
         new_value: 'archived',
         description: t('toasts.driver_archived'),
-        changed_by: currentUser?.full_name || 'Unknown'
+        changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
       });
       toast.success(t('toasts.driver_archived'));
       setShowArchiveModal(false);
@@ -341,7 +341,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
         old_value: 'archived',
         new_value: 'active',
         description: t('toasts.driver_restored', { name: formatDriverName(driver.name) }),
-        changed_by: currentUser?.full_name || 'Unknown'
+        changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
       });
       toast.success(t('toasts.driver_restored', { name: formatDriverName(driver.name) }));
       setShowRestoreModal(false);

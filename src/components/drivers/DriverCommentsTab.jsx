@@ -49,7 +49,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
         action: 'comment_added',
         description: t('toasts.comment_added'),
         new_value: truncated,
-        changed_by: currentUser?.full_name || 'Unknown'
+        changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
       });
 
       setNewComment('');
@@ -75,7 +75,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
         action: 'comment_deleted',
         description: t('toasts.comment_deleted'),
         old_value: truncated,
-        changed_by: currentUser?.full_name || 'Unknown'
+        changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
       });
 
       setDeleteModalOpen(false);
