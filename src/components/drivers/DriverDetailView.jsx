@@ -207,7 +207,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       setIsEditing(false);
       setActiveTab('overview');
     }
-  }, [driver, isCreating]);
+  }, [driver, isCreating, currentUser]);
 
   const readinessPct = driver?.trip_readiness_pct || 0;
   const incompleteFields = getIncompleteFields(isEditing ? formData : driver);
