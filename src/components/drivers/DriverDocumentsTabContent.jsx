@@ -335,6 +335,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
                       <PreviousDocumentRow
                         doc={previousDocMap.get(normalizedType)}
                         docTypeName={config.name}
+                        docTypeName={t(config.i18nKey)}
                         onMarkAsReturned={handleMarkAsReturned}
                         t={t}
                       />
