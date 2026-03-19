@@ -38,7 +38,10 @@
     "email": "Email",
     "readiness": "Readiness %",
     "tags": "Tags",
-    "generating_pdf": "Generating PDF..."
+    "generating_pdf": "Generating PDF...",
+    "generated_at": "Generated:",
+    "page_of": "Page {{page}} of {{total}}",
+    "drivers_count": "drivers"
   },
   "settings": { "title": "Settings", "language": "Language", "theme": "Theme", "dark_mode": "Dark Mode", "interface_language": "Interface language", "changes_apply_immediately": "Changes apply immediately", "profile": "Profile", "profile_description": "Your personal information", "email": "Email", "role": "Role", "display_name": "Display Name", "display_name_placeholder": "Enter your name", "phone": "Phone", "phone_placeholder": "+420 ...", "save_profile": "Save", "saving": "Saving..." }
 }

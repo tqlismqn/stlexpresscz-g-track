@@ -38,7 +38,10 @@
     "email": "Email",
     "readiness": "Готовность %",
     "tags": "Теги",
-    "generating_pdf": "Создание PDF..."
+    "generating_pdf": "Создание PDF...",
+    "generated_at": "Создано:",
+    "page_of": "Стр. {{page}} из {{total}}",
+    "drivers_count": "водителей"
   },
   "settings": { "title": "Настройки", "language": "Язык", "theme": "Тема", "dark_mode": "Тёмная тема", "interface_language": "Язык интерфейса", "changes_apply_immediately": "Изменения применяются сразу", "profile": "Профиль", "profile_description": "Ваши личные данные", "email": "Email", "role": "Роль", "display_name": "Отображаемое имя", "display_name_placeholder": "Введите ваше имя", "phone": "Телефон", "phone_placeholder": "+420 ...", "save_profile": "Сохранить", "saving": "Сохранение..." }
 }

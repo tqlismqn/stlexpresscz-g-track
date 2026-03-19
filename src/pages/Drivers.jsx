@@ -245,7 +245,7 @@ export default function Drivers() {
     const driversToExport = selectedDriverIds.size > 0
       ? filteredDrivers.filter(d => selectedDriverIds.has(d.id))
       : filteredDrivers;
-    await generateAndDownloadPDF(driversToExport, documents, templateKey);
+    await generateAndDownloadPDF(driversToExport, documents, templateKey, t);
   };
 
   const handleExportCSV = (templateKey) => {
