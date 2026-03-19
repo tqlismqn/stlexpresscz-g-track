@@ -125,26 +125,13 @@ export default function Dashboard() {
           />
         </div>
 
-        {lastUpdated && (
-          <p className="text-xs text-gray-400 text-right mb-4">
-            {t('dashboard.updated_at')} {format(lastUpdated, 'HH:mm')}
-          </p>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2">
-            <ExpiringDocumentsWidget activeDrivers={activeDrivers} />
-          </div>
-          <div>
-            <ReadinessChart drivers={activeDrivers} />
-          </div>
-        </div>
-
-        <div className="mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          <ExpiringDocumentsWidget activeDrivers={activeDrivers} />
           <RecentActivityWidget drivers={drivers} />
+          <ReadinessChart drivers={activeDrivers} />
         </div>
 
-        <div className="mt-4">
+        <div className="mt-6">
           <DocumentStatsWidget documents={documents} activeDriverIds={activeDrivers.map(d => d.id)} />
         </div>
       </div>
