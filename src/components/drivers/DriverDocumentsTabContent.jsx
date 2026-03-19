@@ -74,6 +74,9 @@ function DocumentRowRead({ docType, config, doc, driver, t }) {
           {docType === 'visa' && driver?.visa_type && (
             <span className="text-xs text-muted-foreground ml-1">({t(`visa_types.${driver.visa_type}`)})</span>
           )}
+          {docType === 'a1_certificate' && doc?.a1_switzerland && (
+            <span className="text-xs text-blue-700 font-medium ml-1">🇨🇭 {t('documents.a1_switzerland')}</span>
+          )}
         </div>
         <div className="text-xs text-gray-500 mt-0.5">
           {!doc ? (

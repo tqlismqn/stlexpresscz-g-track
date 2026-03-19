@@ -2,9 +2,9 @@ import React from 'react';
 import { Search, Plus, X, Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, filteredCount, totalCount }) {
+export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount }) {
   const { t } = useTranslation();
-  const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any';
+  const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any' || a1SwitzerlandFilter;
 
   const VISA_TYPES = [
     { value: 'any',                label: t('filters.any_visa_type') },
@@ -134,6 +134,18 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
           </select>
         )}
 
+        {docTypeFilter === 'a1_certificate' && (
+          <label className="flex items-center gap-1.5 cursor-pointer px-2 py-1.5 border border-blue-300 rounded-md bg-blue-50 text-blue-800 text-sm whitespace-nowrap select-none">
+            <input
+              type="checkbox"
+              checked={!!a1SwitzerlandFilter}
+              onChange={(e) => onA1SwitzerlandChange(e.target.checked)}
+              className="w-3.5 h-3.5 accent-blue-600"
+            />
+            🇨🇭 {t('filters.a1_switzerland')}
+          </label>
+        )}
+
         <div className="w-px h-5 bg-gray-300 mx-1 flex-shrink-0" />
 
         <div className="flex-1 relative">
@@ -162,7 +174,7 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
               {t('filters.showing_filtered', { count: filteredCount, total: totalCount })}
             </span>
             <button
-              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); onVisaTypeChange('any'); }}
+              onClick={() => { onDocTypeChange('all'); onDocStatusChange('any'); onVisaTypeChange('any'); onA1SwitzerlandChange(false); }}
               className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-gray-800 border border-gray-300 rounded-md bg-white whitespace-nowrap"
             >
               <X className="w-3 h-3" /> {t('filters.clear_doc_filters')}

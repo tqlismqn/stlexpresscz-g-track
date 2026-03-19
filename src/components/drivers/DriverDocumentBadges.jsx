@@ -89,6 +89,14 @@ export default function DriverDocumentBadges({ driver, documents, size = 'sm' })
     return pills;
   }, [driver.nationality_group, documents]);
 
+  const a1SwitzerlandDocIds = useMemo(() => {
+    const set = new Set();
+    documents.forEach(d => {
+      if (d.document_type === 'a1_certificate' && d.a1_switzerland) set.add(d.driver_id);
+    });
+    return set;
+  }, [documents]);
+
   return (
     <div className="flex flex-wrap gap-0.5">
       {documentPills.map(pill => (
@@ -96,7 +104,9 @@ export default function DriverDocumentBadges({ driver, documents, size = 'sm' })
           key={pill.type}
           className={`relative rounded-sm flex items-center justify-center font-medium ${pillHeight} ${getPillClass(pill.status, pill.isRequired)}`}
         >
-          {pill.abbr}
+          {pill.type === 'a1_certificate' && a1SwitzerlandDocIds.has(driver.id)
+            ? <span>{pill.abbr}<span className="text-[8px] leading-none ml-0.5 opacity-80">CH</span></span>
+            : pill.abbr}
           {pendingReturnTypes.has(pill.type) && (
             <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-orange-500 border border-white" />
           )}
