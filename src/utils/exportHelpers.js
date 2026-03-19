@@ -156,28 +156,6 @@ export function downloadCSV(csvString, templateKey) {
 
 // ─── PDF export ───────────────────────────────────────────────────────────────
 
-const TEMPLATE_NAMES = {
-  driver_list: 'Driver List',
-  document_statuses: 'Document Statuses',
-  document_expiry: 'Document Expiry Dates',
-};
-
-const DOC_TYPE_LABELS = {
-  work_contract: 'Work Contract',
-  transport_licence: 'Transport Licence',
-  a1_certificate: 'A1 Certificate',
-  declaration: 'Declaration',
-  insurance: 'Insurance',
-  visa: 'Visa/Biometrics',
-  passport: 'Passport',
-  driver_license: 'Driver License',
-  medical_certificate: 'Medical Certificate',
-  psihotest: 'Psychotest',
-  adr_certificate: 'ADR Certificate',
-  chip_card: 'Chip Card',
-  code95: 'Code 95',
-};
-
 export async function generateAndDownloadPDF(drivers, allDocuments, templateKey, t) {
   const { default: jsPDF } = await import('jspdf');
   const { default: html2canvas } = await import('html2canvas');
