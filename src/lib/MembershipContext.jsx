@@ -32,8 +32,29 @@ export function MembershipProvider({ children }) {
         setAllMemberships(activeMemberships);
 
         if (activeMemberships.length === 0) {
-          setLoading(false);
-          return;
+          // New user — run setup only once
+          if (!setupCompleted.current) {
+            setupCompleted.current = true;
+            try {
+              await handleNewUserSetup(currentUser.email, currentUser.id);
+              // Re-fetch memberships after setup
+              const updatedMemberships = await base44.entities.Membership.filter({ user_id: currentUser.id });
+              const updatedActiveMemberships = updatedMemberships.filter(m => m.status === 'active');
+              setAllMemberships(updatedActiveMemberships);
+              
+              if (updatedActiveMemberships.length === 0) {
+                setLoading(false);
+                return;
+              }
+            } catch (setupError) {
+              console.error('MembershipContext: New user setup failed', setupError);
+              setLoading(false);
+              return;
+            }
+          } else {
+            setLoading(false);
+            return;
+          }
         }
 
         // 2. Find active membership (by last_active_membership_id or first)
