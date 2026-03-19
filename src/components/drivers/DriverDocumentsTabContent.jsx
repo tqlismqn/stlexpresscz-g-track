@@ -266,10 +266,10 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     travel_insurance:    { name: t('doc_types.travel_insurance'),     abbr: 'TIS', section: 3, hasNumber: false, hasFrom: true, hasTo: true, nonEUOnly: true },
   };
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editDocs, setEditDocs] = useState({});
-  const [isSaving, setIsSaving] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingDocument, setEditingDocument] = useState(null);
+  const [editingDocTypeConfig, setEditingDocTypeConfig] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDoc, setNewDoc] = useState({ document_type: '', document_number: '', issue_date: '', expiry_date: '', custom_name: '' });
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
