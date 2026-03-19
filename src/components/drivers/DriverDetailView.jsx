@@ -133,7 +133,7 @@ function CountryCombobox({ value, onChange }) {
 
 const EMPTY_FORM = {
   name: '',
-  company_id: '69b82c27ef634769ef155579',
+  company_id: '',
   status: 'active',
   nationality_group: 'non-EU',
   country_code: '',
