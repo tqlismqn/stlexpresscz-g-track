@@ -69,7 +69,7 @@ function DocumentRowRead({ docType, config, doc, driver, onEdit, t }) {
       <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotColor}`} />
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-1.5">
-          <span className="text-sm font-medium text-gray-900">{config.name}</span>
+          <span className="text-sm font-medium text-gray-900">{t(config.i18nKey)}</span>
           <span className="text-xs text-gray-400">({config.abbr})</span>
           {docType === 'visa' && doc?.visa_type && (
             <span className="text-xs text-muted-foreground ml-1">({t(`visa_types.${doc.visa_type}`)})</span>
