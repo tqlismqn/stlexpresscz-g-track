@@ -18,7 +18,6 @@ export default function Drivers() {
   const location = useLocation();
   const { t } = useTranslation();
   const { permissions, companyId } = useMembership();
-  console.log('[Drivers] filtering by companyId:', companyId);
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [filters, setFilters] = useState({

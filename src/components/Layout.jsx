@@ -77,7 +77,7 @@ export default function Layout() {
                 <DropdownMenuLabel>{t('header.switchCompany')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {allMemberships.map(membership => {
-                  const memberCompanyName = membership.company_id === companyId ? companyName : membership.company_id;
+                  const memberCompanyName = membership.company_id === companyId ? companyName : `${t('common.loading')}...`;
                   return (
                     <DropdownMenuItem
                       key={membership.id}

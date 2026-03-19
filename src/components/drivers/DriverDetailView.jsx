@@ -173,7 +173,7 @@ const buildDescription = (field, oldVal, newVal, t) => {
 
 export default function DriverDetailView({ driver, documents = [], onSave, isCreating, initialTab = 'overview' }) {
   const { currentUser } = useAuth();
-  const { permissions } = useMembership();
+  const { permissions, companyId } = useMembership();
   const { t } = useTranslation();
   const { tagMap, archiveTags, tags: allTags } = useDriverTags();
 
@@ -197,7 +197,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
   // Reset form when switching drivers or entering create mode
   useEffect(() => {
     if (isCreating && !driver) {
-      setFormData({ ...EMPTY_FORM, company_id: currentUser?.company_id || '' });
+      setFormData({ ...EMPTY_FORM, company_id: companyId || '' });
       setIsEditing(false);
       setActiveTab('overview');
     } else if (driver) {
@@ -209,7 +209,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       setIsEditing(false);
       setActiveTab('overview');
     }
-  }, [driver, isCreating, currentUser]);
+  }, [driver, isCreating, companyId]);
 
   const readinessPct = driver?.trip_readiness_pct || 0;
   const incompleteFields = getIncompleteFields(isEditing ? formData : driver);
@@ -225,18 +225,19 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       const dataToSave = { ...restData, name: reverseFormatDriverName(restData.name) };
 
       if (isCreating && !driver) {
-        if (!currentUser?.company_id) {
+        if (!companyId) {
           toast.error('Company not found. Cannot create driver.');
           setIsSaving(false);
           return;
         }
-        const allDrivers = await Driver.list();
+        const allDrivers = await Driver.filter({ company_id: companyId });
         const maxNum = Math.max(0, ...allDrivers.map(d => d.internal_number || 0));
-        const newDriver = await Driver.create({ ...dataToSave, company_id: currentUser.company_id, internal_number: maxNum + 1 });
+        const newDriver = await Driver.create({ ...dataToSave, company_id: companyId, internal_number: maxNum + 1 });
         
         // Create history for new driver
         await base44.entities.DriverHistory.create({
           driver_id: newDriver.id,
+          company_id: companyId,
           action: 'created',
           description: t('history.driver_created', { id: String(newDriver.internal_number).padStart(5, '0') }),
           changed_by: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
@@ -253,6 +254,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
           if (String(oldVal || '') !== String(newVal || '')) {
             historyRecords.push({
               driver_id: dataToSave.id,
+              company_id: companyId,
               action: field === 'status' ? 'status_changed' : 'updated',
               field_name: field,
               old_value: String(oldVal || ''),
@@ -311,6 +313,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       await Driver.update(driver.id, update);
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
+        company_id: companyId,
         action: 'archived',
         field_name: 'status',
         old_value: driver.status,
@@ -343,6 +346,7 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
       await Driver.update(driver.id, update);
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
+        company_id: companyId,
         action: 'restored',
         field_name: 'status',
         old_value: 'archived',
