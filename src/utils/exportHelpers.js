@@ -213,7 +213,7 @@ export async function generateAndDownloadPDF(drivers, allDocuments, templateKey,
       Array.isArray(driver.tags) ? driver.tags.join(', ') : '',
     ]);
   } else if (templateKey === 'document_statuses') {
-    headers = ['#', 'Full Name', ...DOCUMENT_TYPES.map(dt => DOC_TYPE_LABELS[dt] || dt)];
+    headers = [t('export.internal_number'), t('export.full_name'), ...DOCUMENT_TYPES.map(dt => DOC_TYPE_LABELS[dt] || dt)];
     rows = drivers.map(driver => {
       const driverDocs = docsByDriver.get(driver.id) || [];
       const docCells = DOCUMENT_TYPES.map(docType => {
