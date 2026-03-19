@@ -40,5 +40,5 @@
     "tags": "Štítky",
     "generating_pdf": "Generování PDF..."
   },
-  "settings": { "title": "Nastavení", "language": "Jazyk", "theme": "Motiv", "dark_mode": "Tmavý režim", "interface_language": "Jazyk rozhraní", "changes_apply_immediately": "Změny se projeví ihned" }
+  "settings": { "title": "Nastavení", "language": "Jazyk", "theme": "Motiv", "dark_mode": "Tmavý režim", "interface_language": "Jazyk rozhraní", "changes_apply_immediately": "Změny se projeví ihned", "profile": "Profil", "profile_description": "Vaše osobní údaje", "email": "Email", "role": "Role", "display_name": "Zobrazované jméno", "display_name_placeholder": "Zadejte své jméno", "phone": "Telefon", "phone_placeholder": "+420 ...", "save_profile": "Uložit", "saving": "Ukládání..." }
 }
