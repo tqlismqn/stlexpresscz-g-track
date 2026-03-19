@@ -37,7 +37,8 @@
     "phone": "Telefon",
     "email": "Email",
     "readiness": "Připravenost %",
-    "tags": "Štítky"
+    "tags": "Štítky",
+    "generating_pdf": "Generování PDF..."
   },
   "settings": { "title": "Nastavení", "language": "Jazyk", "theme": "Motiv", "dark_mode": "Tmavý režim", "interface_language": "Jazyk rozhraní", "changes_apply_immediately": "Změny se projeví ihned" }
 }

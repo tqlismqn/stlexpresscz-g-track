@@ -37,7 +37,8 @@
     "phone": "Phone",
     "email": "Email",
     "readiness": "Readiness %",
-    "tags": "Tags"
+    "tags": "Tags",
+    "generating_pdf": "Generating PDF..."
   },
   "settings": { "title": "Settings", "language": "Language", "theme": "Theme", "dark_mode": "Dark Mode", "interface_language": "Interface language", "changes_apply_immediately": "Changes apply immediately" }
 }
