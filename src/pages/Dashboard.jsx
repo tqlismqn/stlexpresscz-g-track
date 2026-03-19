@@ -6,6 +6,7 @@ import ExpiringDocumentsWidget from '@/components/dashboard/ExpiringDocumentsWid
 import ReadinessChart from '@/components/dashboard/ReadinessChart';
 import { Users, AlertCircle, Clock, XCircle } from 'lucide-react';
 import RecentActivityWidget from '@/components/dashboard/RecentActivityWidget';
+import DocumentStatsWidget from '@/components/dashboard/DocumentStatsWidget';
 import { format } from 'date-fns';
 import { enUS, ru, cs } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
