@@ -67,6 +67,11 @@ export function MembershipProvider({ children }) {
         }
         setActiveMembership(active);
 
+        // 2a. Sync User.company_id with active membership if needed
+        if (active && currentUser.company_id !== active.company_id) {
+          await base44.auth.updateMe({ company_id: active.company_id });
+        }
+
         // 3. Fetch Role to get permissions
         if (active?.role_id) {
           const roleData = await base44.entities.Role.get(active.role_id);
@@ -100,8 +105,8 @@ export function MembershipProvider({ children }) {
       const target = allMemberships.find(m => m.id === membershipId);
       if (!target) return;
 
-      // Update user's last_active_membership_id
-      await base44.auth.updateMe({ last_active_membership_id: membershipId });
+      // Update user's last_active_membership_id and company_id
+      await base44.auth.updateMe({ last_active_membership_id: membershipId, company_id: target.company_id });
 
       // Update local state
       setActiveMembership(target);
