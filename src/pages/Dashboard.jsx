@@ -41,7 +41,7 @@ export default function Dashboard() {
 
         const docsList = await base44.entities.DriverDocument.list();
         setDocuments(docsList);
-        const activeDriverIds = new Set(active.map(d => d.id));
+        const companyDriverIds = new Set(active.map(d => d.id));
 
         const activeCount = active.length;
         const readyCount = active.filter(d => d.trip_readiness_pct === 100).length;
