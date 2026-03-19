@@ -221,6 +221,27 @@ export default function Drivers() {
     return result;
   }, [drivers, documents, filters, docTypeFilter, docStatusFilter, visaTypeFilter, a1SwitzerlandFilter]);
 
+  const toggleSelect = (driverId) => {
+    setSelectedDriverIds(prev => {
+      const next = new Set(prev);
+      if (next.has(driverId)) next.delete(driverId);
+      else next.add(driverId);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedDriverIds(new Set());
+    } else {
+      setSelectedDriverIds(new Set(filteredDrivers.map(d => d.id)));
+    }
+  };
+
+  const clearSelection = () => setSelectedDriverIds(new Set());
+
+  const isAllSelected = selectedDriverIds.size === filteredDrivers.length && filteredDrivers.length > 0;
+
   const handleSaveDriver = async (savedDriver) => {
     setIsCreating(false);
     if (savedDriver) {

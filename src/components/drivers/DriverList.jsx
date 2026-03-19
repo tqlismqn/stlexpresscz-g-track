@@ -2,7 +2,7 @@ import React from 'react';
 import DriverListItem from './DriverListItem';
 import { useTranslation } from 'react-i18next';
 
-export default function DriverList({ drivers, documents, selectedDriver, onSelectDriver, isLoading }) {
+export default function DriverList({ drivers, documents, selectedDriver, onSelectDriver, isLoading, selectedDriverIds, onToggleSelect }) {
   const { t } = useTranslation();
 
   if (isLoading) {
