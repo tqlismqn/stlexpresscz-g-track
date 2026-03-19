@@ -16,5 +16,13 @@
   "dashboard": { "active_drivers": "Активных водителей", "ready_for_trip": "Готовы к рейсу", "expiring_documents": "Истекающие документы", "expired_documents": "Просроченные", "active_count": "{{count}} активных", "on_leave_count": "{{count}} в отпуске", "inactive_short": "{{count}} неакт.", "archived_short": "{{count}} архив", "updated_at": "Обновлено:", "documents_attention": "Документы, требующие внимания", "expired_tab": "Просроченные ({{count}})", "expiring_tab": "Истекают ({{count}})", "no_expired": "Нет просроченных документов", "no_expiring": "Нет истекающих документов", "trip_readiness": "Готовность к рейсу", "ready": "Готовы к рейсу", "not_ready": "Не готовы", "ready_count": "Готовы {{count}}", "not_ready_count": "Не готовы {{count}}" },
   "tags": { "on_leave": "В отпуске", "medical_leave": "На больничном", "fired": "Уволен", "resigned": "Уволился", "no_show": "Не пришёл", "manage": "Управление тегами", "none_available": "Нет доступных тегов" },
   "visa_types": { "docasna_ochrana": "Временная защита", "povoleni_k_pobytu": "Разрешение на проживание", "trvaly_pobyt": "ПМЖ", "vizum": "Виза", "vizum_strpeni": "Виза терпения", "other": "Другой тип" },
+  "export": {
+    "select_all": "Выбрать все",
+    "selected_count": "{{count}} выбрано",
+    "clear_selection": "Очистить",
+    "export_csv": "Экспорт CSV",
+    "export_pdf": "Экспорт PDF",
+    "export": "Экспорт"
+  },
   "settings": { "title": "Настройки", "language": "Язык", "theme": "Тема", "dark_mode": "Тёмная тема", "interface_language": "Язык интерфейса", "changes_apply_immediately": "Изменения применяются сразу" }
 }

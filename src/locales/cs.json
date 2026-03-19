@@ -16,5 +16,13 @@
   "dashboard": { "active_drivers": "Aktivních řidičů", "ready_for_trip": "Připraveni na cestu", "expiring_documents": "Končící dokumenty", "expired_documents": "Prošlé", "active_count": "{{count}} aktivních", "on_leave_count": "{{count}} na dovolené", "inactive_short": "{{count}} neakt.", "archived_short": "{{count}} archiv", "updated_at": "Aktualizováno:", "documents_attention": "Dokumenty vyžadující pozornost", "expired_tab": "Prošlé ({{count}})", "expiring_tab": "Končící ({{count}})", "no_expired": "Žádné prošlé dokumenty", "no_expiring": "Žádné končící dokumenty", "trip_readiness": "Připravenost na cestu", "ready": "Připraveni", "not_ready": "Nepřipraveni", "ready_count": "Připraveni {{count}}", "not_ready_count": "Nepřipraveni {{count}}" },
   "tags": { "on_leave": "Na dovolené", "medical_leave": "Nemocenská", "fired": "Propuštěn", "resigned": "Odešel sám", "no_show": "Nedostavil se", "manage": "Spravovat štítky", "none_available": "Žádné štítky k dispozici" },
   "visa_types": { "docasna_ochrana": "Dočasná ochrana", "povoleni_k_pobytu": "Povolení k pobytu", "trvaly_pobyt": "Trvalý pobyt", "vizum": "Vízum", "vizum_strpeni": "Vízum strpění", "other": "Jiný typ" },
+  "export": {
+    "select_all": "Vybrat vše",
+    "selected_count": "{{count}} vybráno",
+    "clear_selection": "Zrušit výběr",
+    "export_csv": "Export CSV",
+    "export_pdf": "Export PDF",
+    "export": "Export"
+  },
   "settings": { "title": "Nastavení", "language": "Jazyk", "theme": "Motiv", "dark_mode": "Tmavý režim", "interface_language": "Jazyk rozhraní", "changes_apply_immediately": "Změny se projeví ihned" }
 }

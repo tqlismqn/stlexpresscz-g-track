@@ -16,5 +16,13 @@
   "dashboard": { "active_drivers": "Active Drivers", "ready_for_trip": "Ready for Trip", "expiring_documents": "Expiring Documents", "expired_documents": "Expired", "active_count": "{{count}} active", "on_leave_count": "{{count}} on leave", "inactive_short": "{{count}} inactive", "archived_short": "{{count}} archived", "updated_at": "Updated:", "documents_attention": "Documents Requiring Attention", "expired_tab": "Expired ({{count}})", "expiring_tab": "Expiring ({{count}})", "no_expired": "No expired documents", "no_expiring": "No expiring documents", "trip_readiness": "Trip Readiness", "ready": "Ready for trip", "not_ready": "Not ready", "ready_count": "Ready {{count}}", "not_ready_count": "Not ready {{count}}" },
   "tags": { "on_leave": "On leave", "medical_leave": "Medical leave", "fired": "Fired", "resigned": "Resigned", "no_show": "No-show", "manage": "Manage tags", "none_available": "No tags available" },
   "visa_types": { "docasna_ochrana": "Temporary protection", "povoleni_k_pobytu": "Residence permit", "trvaly_pobyt": "Permanent residence", "vizum": "Visa", "vizum_strpeni": "Tolerance visa", "other": "Other type" },
+  "export": {
+    "select_all": "Select all",
+    "selected_count": "{{count}} selected",
+    "clear_selection": "Clear",
+    "export_csv": "Export CSV",
+    "export_pdf": "Export PDF",
+    "export": "Export"
+  },
   "settings": { "title": "Settings", "language": "Language", "theme": "Theme", "dark_mode": "Dark Mode", "interface_language": "Interface language", "changes_apply_immediately": "Changes apply immediately" }
 }
