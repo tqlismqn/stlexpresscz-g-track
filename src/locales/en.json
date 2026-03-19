@@ -43,5 +43,43 @@
     "page_of": "Page {{page}} of {{total}}",
     "drivers_count": "drivers"
   },
-  "settings": { "title": "Settings", "language": "Language", "theme": "Theme", "dark_mode": "Dark Mode", "interface_language": "Interface language", "changes_apply_immediately": "Changes apply immediately", "profile": "Profile", "profile_description": "Your personal information", "email": "Email", "role": "Role", "display_name": "Display Name", "display_name_placeholder": "Enter your name", "phone": "Phone", "phone_placeholder": "+420 ...", "save_profile": "Save", "saving": "Saving..." }
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "dark_mode": "Dark Mode",
+    "interface_language": "Interface language",
+    "changes_apply_immediately": "Changes apply immediately",
+    "display_name_placeholder": "Enter your name",
+    "phone_placeholder": "+420 ...",
+    "saving": "Saving...",
+    "tabs": {
+      "profile": "Profile",
+      "company": "Company",
+      "team": "Team",
+      "billing": "Billing",
+      "notifications": "Notifications"
+    },
+    "profile": {
+      "title": "Personal Information",
+      "description": "Manage your personal details and preferences",
+      "displayName": "Display Name",
+      "email": "Email",
+      "emailHelp": "Email cannot be changed",
+      "phone": "Phone",
+      "save": "Save Changes",
+      "saved": "Profile updated successfully",
+      "language": "Interface Language",
+      "leaveCompany": "Leave Company",
+      "leaveCompanyDesc": "You will be removed from {{company}}. This cannot be undone.",
+      "leaveComingSoon": "Coming soon"
+    },
+    "placeholder": {
+      "comingSoon": "This feature is coming in version 1.1",
+      "companyDesc": "Manage company information, address, and settings",
+      "teamDesc": "Manage team members, roles, and permissions",
+      "billingDesc": "Manage subscription and payment methods",
+      "notificationsDesc": "Configure email and in-app notifications"
+    }
+  }
 }

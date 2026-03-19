@@ -43,5 +43,43 @@
     "page_of": "Стр. {{page}} из {{total}}",
     "drivers_count": "водителей"
   },
-  "settings": { "title": "Настройки", "language": "Язык", "theme": "Тема", "dark_mode": "Тёмная тема", "interface_language": "Язык интерфейса", "changes_apply_immediately": "Изменения применяются сразу", "profile": "Профиль", "profile_description": "Ваши личные данные", "email": "Email", "role": "Роль", "display_name": "Отображаемое имя", "display_name_placeholder": "Введите ваше имя", "phone": "Телефон", "phone_placeholder": "+420 ...", "save_profile": "Сохранить", "saving": "Сохранение..." }
+  "settings": {
+    "title": "Настройки",
+    "language": "Язык",
+    "theme": "Тема",
+    "dark_mode": "Тёмная тема",
+    "interface_language": "Язык интерфейса",
+    "changes_apply_immediately": "Изменения применяются сразу",
+    "display_name_placeholder": "Введите ваше имя",
+    "phone_placeholder": "+420 ...",
+    "saving": "Сохранение...",
+    "tabs": {
+      "profile": "Профиль",
+      "company": "Компания",
+      "team": "Команда",
+      "billing": "Оплата",
+      "notifications": "Уведомления"
+    },
+    "profile": {
+      "title": "Личная информация",
+      "description": "Управление личными данными и предпочтениями",
+      "displayName": "Имя",
+      "email": "Email",
+      "emailHelp": "Email нельзя изменить",
+      "phone": "Телефон",
+      "save": "Сохранить",
+      "saved": "Профиль обновлён",
+      "language": "Язык интерфейса",
+      "leaveCompany": "Покинуть компанию",
+      "leaveCompanyDesc": "Вы будете удалены из {{company}}. Это действие необратимо.",
+      "leaveComingSoon": "Скоро"
+    },
+    "placeholder": {
+      "comingSoon": "Эта функция появится в версии 1.1",
+      "companyDesc": "Управление информацией о компании, адресом и настройками",
+      "teamDesc": "Управление участниками, ролями и правами доступа",
+      "billingDesc": "Управление подпиской и способами оплаты",
+      "notificationsDesc": "Настройка email и уведомлений в приложении"
+    }
+  }
 }

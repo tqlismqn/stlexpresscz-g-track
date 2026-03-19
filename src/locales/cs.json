@@ -43,5 +43,43 @@
     "page_of": "Str. {{page}} z {{total}}",
     "drivers_count": "řidičů"
   },
-  "settings": { "title": "Nastavení", "language": "Jazyk", "theme": "Motiv", "dark_mode": "Tmavý režim", "interface_language": "Jazyk rozhraní", "changes_apply_immediately": "Změny se projeví ihned", "profile": "Profil", "profile_description": "Vaše osobní údaje", "email": "Email", "role": "Role", "display_name": "Zobrazované jméno", "display_name_placeholder": "Zadejte své jméno", "phone": "Telefon", "phone_placeholder": "+420 ...", "save_profile": "Uložit", "saving": "Ukládání..." }
+  "settings": {
+    "title": "Nastavení",
+    "language": "Jazyk",
+    "theme": "Motiv",
+    "dark_mode": "Tmavý režim",
+    "interface_language": "Jazyk rozhraní",
+    "changes_apply_immediately": "Změny se projeví ihned",
+    "display_name_placeholder": "Zadejte své jméno",
+    "phone_placeholder": "+420 ...",
+    "saving": "Ukládání...",
+    "tabs": {
+      "profile": "Profil",
+      "company": "Firma",
+      "team": "Tým",
+      "billing": "Fakturace",
+      "notifications": "Oznámení"
+    },
+    "profile": {
+      "title": "Osobní údaje",
+      "description": "Správa osobních údajů a preferencí",
+      "displayName": "Zobrazované jméno",
+      "email": "Email",
+      "emailHelp": "Email nelze změnit",
+      "phone": "Telefon",
+      "save": "Uložit změny",
+      "saved": "Profil aktualizován",
+      "language": "Jazyk rozhraní",
+      "leaveCompany": "Opustit firmu",
+      "leaveCompanyDesc": "Budete odebráni z {{company}}. Tuto akci nelze vrátit.",
+      "leaveComingSoon": "Již brzy"
+    },
+    "placeholder": {
+      "comingSoon": "Tato funkce bude dostupná ve verzi 1.1",
+      "companyDesc": "Správa informací o firmě, adresy a nastavení",
+      "teamDesc": "Správa členů týmu, rolí a oprávnění",
+      "billingDesc": "Správa předplatného a platebních metod",
+      "notificationsDesc": "Nastavení emailových a aplikačních oznámení"
+    }
+  }
 }
