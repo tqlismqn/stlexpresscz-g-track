@@ -24,7 +24,7 @@ const LANGUAGES = [
 export default function Settings() {
   const { t } = useTranslation();
   const { currentUser, refreshUser } = useAuth();
-  const { permissions, isOwner, activeMembership } = useMembership();
+  const { permissions, isOwner, activeMembership, companyName, companyId } = useMembership();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [displayName, setDisplayName] = useState(currentUser?.display_name || currentUser?.full_name || '');
@@ -178,7 +178,7 @@ export default function Settings() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-red-800">
-                  {t('settings.profile.leaveCompanyDesc', { company: activeMembership?.company_id || 'Company' })}
+                  {t('settings.profile.leaveCompanyDesc', { company: companyName || companyId || 'Company' })}
                 </p>
                 <Button variant="outline" className="border-red-300 text-red-700 hover:bg-red-50" disabled title={t('settings.profile.leaveComingSoon')}>
                   {t('settings.profile.leaveCompany')}
