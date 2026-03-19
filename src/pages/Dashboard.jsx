@@ -26,6 +26,7 @@ export default function Dashboard() {
   });
   const [drivers, setDrivers] = useState([]);
   const [activeDrivers, setActiveDrivers] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(null);
 
