@@ -1,19 +1,21 @@
 export const DOCUMENT_TYPES = {
-  work_contract: { name: 'Трудовой договор', abbr: 'CON', section: 1, hasNumber: true, hasFrom: true, hasTo: true, indefiniteByDefault: true },
-  transport_licence: { name: 'Лицензия', abbr: 'LIC', section: 1, hasNumber: true, hasFrom: true, hasTo: true },
-  a1_certificate: { name: 'Сертификат A1', abbr: 'A1', section: 1, hasNumber: true, hasFrom: true, hasTo: true, hasA1CHCheckbox: true },
-  declaration: { name: 'Декларация', abbr: 'DEC', section: 1, hasNumber: true, hasFrom: true, hasTo: true },
-  insurance: { name: 'Страховка', abbr: 'INS', section: 1, hasNumber: true, hasFrom: true, hasTo: true },
-  visa: { name: 'Виза', abbr: 'VIS', section: 1, hasNumber: true, hasFrom: true, hasTo: true, nonEUOnly: true, hasVisaType: true },
-  passport: { name: 'Паспорт', abbr: 'PAS', section: 1, hasNumber: true, hasFrom: true, hasTo: true },
-  driver_license: { name: 'Водительское удостоверение', abbr: 'DL', section: 2, hasNumber: true, hasFrom: true, hasTo: true },
-  adr_certificate: { name: 'ADR', abbr: 'ADR', section: 2, hasNumber: true, hasFrom: true, hasTo: true },
-  chip_card: { name: 'Тахокарта', abbr: 'TCH', section: 2, hasNumber: true, hasFrom: true, hasTo: true },
-  code95: { name: 'Код 95', abbr: 'C95', section: 2, hasNumber: false, hasFrom: true, hasTo: true },
-  medical_certificate: { name: 'Медобследование', abbr: 'MED', section: 3, hasNumber: false, hasFrom: true, hasTo: true, autoFillTo: { years: 2 } },
-  psihotest: { name: 'Психотест', abbr: 'PSI', section: 3, hasNumber: false, hasFrom: true, hasTo: true },
-  travel_insurance: { name: 'Тревел-страховка', abbr: 'TIS', section: 3, hasNumber: false, hasFrom: true, hasTo: true, nonEUOnly: true },
+  work_contract:       { i18nKey: 'doc_types.work_contract',       abbr: 'CON', section: 1, hasNumber: true,  hasFrom: true, hasTo: true, indefiniteByDefault: true },
+  transport_licence:   { i18nKey: 'doc_types.transport_licence',   abbr: 'LIC', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+  a1_certificate:      { i18nKey: 'doc_types.a1_certificate',      abbr: 'A1',  section: 1, hasNumber: true,  hasFrom: true, hasTo: true, hasA1CHCheckbox: true },
+  declaration:         { i18nKey: 'doc_types.declaration',         abbr: 'DEC', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+  insurance:           { i18nKey: 'doc_types.insurance',           abbr: 'INS', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+  visa:                { i18nKey: 'doc_types.visa',                abbr: 'VIS', section: 1, hasNumber: true,  hasFrom: true, hasTo: true, nonEUOnly: true, hasVisaType: true },
+  passport:            { i18nKey: 'doc_types.passport',            abbr: 'PAS', section: 1, hasNumber: true,  hasFrom: true, hasTo: true },
+  driver_license:      { i18nKey: 'doc_types.driver_license',      abbr: 'DL',  section: 2, hasNumber: true,  hasFrom: true, hasTo: true },
+  adr_certificate:     { i18nKey: 'doc_types.adr_certificate',     abbr: 'ADR', section: 2, hasNumber: true,  hasFrom: true, hasTo: true },
+  chip_card:           { i18nKey: 'doc_types.chip_card',           abbr: 'TCH', section: 2, hasNumber: true,  hasFrom: true, hasTo: true },
+  code95:              { i18nKey: 'doc_types.code95',              abbr: 'C95', section: 2, hasNumber: false, hasFrom: true, hasTo: true },
+  medical_certificate: { i18nKey: 'doc_types.medical_certificate', abbr: 'MED', section: 3, hasNumber: false, hasFrom: true, hasTo: true, autoFillTo: { years: 2 } },
+  psihotest:           { i18nKey: 'doc_types.psihotest',           abbr: 'PSI', section: 3, hasNumber: false, hasFrom: true, hasTo: true },
+  travel_insurance:    { i18nKey: 'doc_types.travel_insurance',    abbr: 'TIS', section: 3, hasNumber: false, hasFrom: true, hasTo: true, nonEUOnly: true },
 };
+
+export const DOCUMENT_TYPE_KEYS = Object.keys(DOCUMENT_TYPES);
 
 export const SECTIONS = {
   1: 'Основные документы',
