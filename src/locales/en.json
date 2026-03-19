@@ -37,7 +37,9 @@
     "phone": "Phone",
     "email": "Email",
     "readiness": "Readiness %",
-    "tags": "Tags"
+    "tags": "Tags",
+    "exported_date": "Exported: {{date}}",
+    "showing_drivers": "Showing {{count}} drivers"
   },
   "settings": { "title": "Settings", "language": "Language", "theme": "Theme", "dark_mode": "Dark Mode", "interface_language": "Interface language", "changes_apply_immediately": "Changes apply immediately" }
 }
