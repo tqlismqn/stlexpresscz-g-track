@@ -23,6 +23,7 @@ export default function Drivers() {
   const [docTypeFilter, setDocTypeFilter] = useState('all');
   const [docStatusFilter, setDocStatusFilter] = useState('any');
   const [visaTypeFilter, setVisaTypeFilter] = useState('any');
+  const [a1SwitzerlandFilter, setA1SwitzerlandFilter] = useState(false);
 
   const [selectedTab, setSelectedTab] = useState('overview');
 
@@ -177,6 +178,11 @@ export default function Drivers() {
           if (driver.visa_type !== visaTypeFilter) return false;
         }
 
+        // A1 Switzerland sub-filter
+        if (docTypeFilter === 'a1_certificate' && a1SwitzerlandFilter) {
+          if (!matchingDoc || !matchingDoc.a1_switzerland) return false;
+        }
+
         if (docStatusFilter === 'missing') return !matchingDoc;
         if (!matchingDoc) return false;
         if (docStatusFilter === 'any') return true;
@@ -195,6 +201,13 @@ export default function Drivers() {
       });
     }
 
+    // Step 4b: Standalone A1 Switzerland filter (when no doc type filter active)
+    if (docTypeFilter === 'all' && a1SwitzerlandFilter) {
+      result = result.filter(driver => {
+        return documents.some(d => d.driver_id === driver.id && d.document_type === 'a1_certificate' && d.a1_switzerland);
+      });
+    }
+
     // Step 5: Sort
     result.sort((a, b) => {
       if (filters.sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
@@ -203,7 +216,7 @@ export default function Drivers() {
     });
 
     return result;
-  }, [drivers, documents, filters, docTypeFilter, docStatusFilter, visaTypeFilter]);
+  }, [drivers, documents, filters, docTypeFilter, docStatusFilter, visaTypeFilter, a1SwitzerlandFilter]);
 
   const handleSaveDriver = async (savedDriver) => {
     setIsCreating(false);
@@ -232,6 +245,8 @@ export default function Drivers() {
             onDocStatusChange={setDocStatusFilter}
             visaTypeFilter={visaTypeFilter}
             onVisaTypeChange={setVisaTypeFilter}
+            a1SwitzerlandFilter={a1SwitzerlandFilter}
+            onA1SwitzerlandChange={setA1SwitzerlandFilter}
             filteredCount={filteredDrivers.length}
             totalCount={drivers.filter(d => d.status !== 'archived').length}
           />
