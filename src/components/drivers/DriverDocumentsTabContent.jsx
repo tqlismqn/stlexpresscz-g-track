@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Pencil, X, RotateCcw } from 'lucide-react';
+import DocumentEditModal from './DocumentEditModal';
 
 const STATUS_COLORS = {
   valid: 'bg-green-500',
