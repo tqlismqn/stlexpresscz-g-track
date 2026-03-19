@@ -37,9 +37,7 @@
     "phone": "Телефон",
     "email": "Email",
     "readiness": "Готовность %",
-    "tags": "Теги",
-    "exported_date": "Экспорт: {{date}}",
-    "showing_drivers": "Показано {{count}} водителей"
+    "tags": "Теги"
   },
   "settings": { "title": "Настройки", "language": "Язык", "theme": "Тема", "dark_mode": "Тёмная тема", "interface_language": "Язык интерфейса", "changes_apply_immediately": "Изменения применяются сразу" }
 }

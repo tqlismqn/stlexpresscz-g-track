@@ -10,7 +10,7 @@ import DriverDetail from '@/components/drivers/DriverDetail';
 import DriverFilters from '@/components/drivers/DriverFilters';
 import FloatingExportToolbar from '@/components/drivers/FloatingExportToolbar';
 import { formatDriverId } from '@/lib/driverUtils';
-import { generateCSV, downloadCSV, generatePDF, downloadPDF } from '@/utils/exportHelpers';
+import { generateCSV, downloadCSV } from '@/utils/exportHelpers';
 
 export default function Drivers() {
   const location = useLocation();
@@ -241,14 +241,6 @@ export default function Drivers() {
 
   const clearSelection = () => setSelectedDriverIds(new Set());
 
-  const handleExportPDF = (templateKey) => {
-    const driversToExport = selectedDriverIds.size > 0
-      ? filteredDrivers.filter(d => selectedDriverIds.has(d.id))
-      : filteredDrivers;
-    const doc = generatePDF(driversToExport, documents, templateKey, t);
-    downloadPDF(doc, templateKey);
-  };
-
   const handleExportCSV = (templateKey) => {
     const driversToExport = selectedDriverIds.size > 0
       ? filteredDrivers.filter(d => selectedDriverIds.has(d.id))
@@ -294,7 +286,6 @@ export default function Drivers() {
             filteredCount={filteredDrivers.length}
             totalCount={drivers.filter(d => d.status !== 'archived').length}
             onExportCSV={handleExportCSV}
-            onExportPDF={handleExportPDF}
           />
         </div>
       </div>
@@ -333,7 +324,6 @@ export default function Drivers() {
             selectedCount={selectedDriverIds.size}
             onClearSelection={clearSelection}
             onExportCSV={handleExportCSV}
-            onExportPDF={handleExportPDF}
           />
         )}
       </AnimatePresence>

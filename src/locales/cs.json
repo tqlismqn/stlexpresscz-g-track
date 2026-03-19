@@ -37,9 +37,7 @@
     "phone": "Telefon",
     "email": "Email",
     "readiness": "Připravenost %",
-    "tags": "Štítky",
-    "exported_date": "Exportováno: {{date}}",
-    "showing_drivers": "Zobrazeno {{count}} řidičů"
+    "tags": "Štítky"
   },
   "settings": { "title": "Nastavení", "language": "Jazyk", "theme": "Motiv", "dark_mode": "Tmavý režim", "interface_language": "Jazyk rozhraní", "changes_apply_immediately": "Změny se projeví ihned" }
 }

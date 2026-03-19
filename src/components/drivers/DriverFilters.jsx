@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Search, Plus, X, Filter, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV, onExportPDF }) {
+export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV }) {
   const { t } = useTranslation();
   const [exportOpen, setExportOpen] = useState(false);
   const exportRef = useRef(null);
@@ -205,25 +205,16 @@ export default function DriverFilters({ filters, setFilters, counts = {}, onCrea
             {t('export.export')} <ChevronDown className="w-3.5 h-3.5" />
           </button>
           {exportOpen && (
-            <div className="absolute top-full mt-1 right-0 w-64 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-20">
+            <div className="absolute top-full mt-1 right-0 w-56 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-20">
               {exportTemplates.map(tpl => (
-                <div key={tpl.key} className="flex items-center gap-2 px-3 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-0">
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-800 truncate">{tpl.icon} {tpl.label}</div>
-                  </div>
-                  <button
-                    onClick={() => { setExportOpen(false); onExportCSV(tpl.key); }}
-                    className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium flex-shrink-0"
-                  >
-                    CSV
-                  </button>
-                  <button
-                    onClick={() => { setExportOpen(false); onExportPDF(tpl.key); }}
-                    className="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 font-medium flex-shrink-0"
-                  >
-                    PDF
-                  </button>
-                </div>
+                <button
+                  key={tpl.key}
+                  onClick={() => { setExportOpen(false); onExportCSV(tpl.key); }}
+                  className="w-full text-left px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-sm font-medium text-gray-800">{tpl.icon} {tpl.label}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">{tpl.desc}</div>
+                </button>
               ))}
             </div>
           )}
