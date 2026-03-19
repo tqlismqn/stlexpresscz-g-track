@@ -5,12 +5,21 @@ import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
+import { useRef } from 'react';
 
 export default function Layout() {
   const location = useLocation();
   const { currentUser } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const hasRestoredLang = useRef(false);
+
+  if (currentUser?.language && !hasRestoredLang.current) {
+    if (i18n.language !== currentUser.language) {
+      i18n.changeLanguage(currentUser.language);
+    }
+    hasRestoredLang.current = true;
+  }
 
   const navigation = [
     { label: t('nav.dashboard'), icon: LayoutDashboard, path: '/Dashboard', section: 'main' },
