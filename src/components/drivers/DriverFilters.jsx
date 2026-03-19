@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 
 export default function DriverFilters({ filters, setFilters, counts = {}, onCreateDriver, docTypeFilter, docStatusFilter, onDocTypeChange, onDocStatusChange, visaTypeFilter, onVisaTypeChange, a1SwitzerlandFilter, onA1SwitzerlandChange, filteredCount, totalCount, isAllSelected, onToggleSelectAll, hasFilteredResults, onExportCSV }) {
   const { t } = useTranslation();
-  const [exportOpen, setExportOpen] = React.useState(false);
-  const exportRef = React.useRef(null);
+  const [exportOpen, setExportOpen] = useState(false);
+  const exportRef = useRef(null);
   const docFiltersActive = docTypeFilter !== 'all' || docStatusFilter !== 'any' || visaTypeFilter !== 'any' || a1SwitzerlandFilter;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!exportOpen) return;
     const handler = (e) => {
       if (exportRef.current && !exportRef.current.contains(e.target)) setExportOpen(false);
