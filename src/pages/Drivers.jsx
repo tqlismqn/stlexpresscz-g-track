@@ -260,7 +260,7 @@ export default function Drivers() {
         <div className="w-full px-6 py-4">
           <DriverFilters
             filters={filters}
-            setFilters={setFilters}
+            setFilters={(val) => { setFilters(val); clearSelection(); }}
             counts={counts}
             onCreateDriver={() => { setSelectedDriver(null); setIsCreating(true); }}
             docTypeFilter={docTypeFilter}
@@ -290,6 +290,8 @@ export default function Drivers() {
             selectedDriver={selectedDriver}
             onSelectDriver={(d) => { setSelectedDriver(d); setIsCreating(false); }}
             isLoading={isLoading}
+            selectedDriverIds={selectedDriverIds}
+            onToggleSelect={toggleSelect}
           />
         </div>
 
