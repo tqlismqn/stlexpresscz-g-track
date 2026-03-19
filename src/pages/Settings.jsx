@@ -14,6 +14,7 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { User, Building2, Users, CreditCard, Bell } from 'lucide-react';
+import TeamTab from '@/components/settings/TeamTab';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
@@ -201,17 +202,9 @@ export default function Settings() {
           </Card>
         </TabsContent>
 
-        {/* Team Tab - Placeholder */}
+        {/* Team Tab */}
         <TabsContent value="team">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('settings.tabs.team')}</CardTitle>
-              <CardDescription>{t('settings.placeholder.teamDesc')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">{t('settings.placeholder.comingSoon')}</p>
-            </CardContent>
-          </Card>
+          <TeamTab />
         </TabsContent>
 
         {/* Billing Tab - Placeholder */}
