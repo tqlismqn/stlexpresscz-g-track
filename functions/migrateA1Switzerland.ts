@@ -87,6 +87,8 @@ Deno.serve(async (req) => {
     updated: [],
   };
 
+  const updatePromises = [];
+
   for (const name of CH_DRIVERS) {
     const key = name.trim().toLowerCase();
     const matched = driversByName.get(key);
@@ -105,11 +107,13 @@ Deno.serve(async (req) => {
       }
 
       const currentDoc = docs[0]; // latest by expiry_date
-      await sr.entities.DriverDocument.update(currentDoc.id, { a1_switzerland: true });
       results.updated_documents++;
       results.updated.push(`${name} → doc ${currentDoc.id}`);
+      updatePromises.push(sr.entities.DriverDocument.update(currentDoc.id, { a1_switzerland: true }));
     }
   }
+
+  await Promise.all(updatePromises);
 
   console.log('=== A1 Switzerland Migration Results ===');
   console.log(`Total in CH list: ${results.total_in_list}`);
