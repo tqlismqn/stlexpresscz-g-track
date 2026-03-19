@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Activity, FileEdit, RefreshCw, UserPlus, FilePlus, Clock } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { format, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
 
 const DriverHistory = base44.entities.DriverHistory;
 
