@@ -13,6 +13,7 @@ export function MembershipProvider({ children }) {
   const [permissions, setPermissions] = useState([]);
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
+  const setupCompleted = useRef(false);
 
   // Load memberships when user changes
   useEffect(() => {
