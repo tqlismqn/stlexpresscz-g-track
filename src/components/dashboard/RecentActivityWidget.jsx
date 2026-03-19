@@ -41,17 +41,27 @@ function getIconBg(action) {
   }
 }
 
-function timeAgo(dateString, t) {
+function formatTimeAgo(dateString, t) {
+  if (!dateString) return '';
   const date = new Date(dateString);
   const now = new Date();
-  const mins = differenceInMinutes(now, date);
-  const hours = differenceInHours(now, date);
-  const days = differenceInDays(now, date);
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
 
-  if (mins < 60) return t('dashboard.minutes_ago', { count: Math.max(1, mins) });
-  if (hours < 24) return t('dashboard.hours_ago', { count: hours });
-  if (days < 7) return t('dashboard.days_ago', { count: days });
-  return format(date, 'dd.MM.yyyy');
+  const formattedDate = date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  let relative;
+  if (diffMins < 60) {
+    relative = `${diffMins} ${t('dashboard.min_short')}`;
+  } else if (diffHours < 24) {
+    relative = `${diffHours}${t('dashboard.hour_short')}`;
+  } else {
+    relative = `${diffDays}${t('dashboard.day_short')}`;
+  }
+
+  return `${formattedDate} (${relative})`;
 }
 
 export default function RecentActivityWidget({ drivers = [] }) {
