@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('expired');
+  const [activeTab, setActiveTab] = useState('expiring');
   const [expiredDocs, setExpiredDocs] = useState([]);
   const [expiringDocs, setExpiringDocs] = useState([]);
   const [expiredCount, setExpiredCount] = useState(0);
@@ -34,7 +34,7 @@ export default function ExpiringDocumentsWidget({ activeDrivers = [] }) {
               daysValue: daysOverdue
             };
           })
-          .sort((a, b) => b.daysValue - a.daysValue)
+          .sort((a, b) => a.daysValue - b.daysValue)
           .slice(0, 20);
 
         // Process expiring documents

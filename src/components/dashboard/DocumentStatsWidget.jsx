@@ -49,7 +49,7 @@ export default function DocumentStatsWidget({ documents = [], activeDriverIds = 
           </thead>
           <tbody>
             {sortedTypes.map(({ key, config, valid, expiring, expired, missing, total }) => (
-              <tr key={key} className="border-b border-gray-100 hover:bg-gray-50">
+              <tr key={key} className={`border-b border-gray-100 ${expired > 10 ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-gray-50'}`}>
                 <td className="py-2 font-medium whitespace-nowrap">
                   <span className="text-gray-400 text-xs mr-1.5">{config.abbr}</span>
                   {t(config.i18nKey)}
