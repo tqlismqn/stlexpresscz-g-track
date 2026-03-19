@@ -10,6 +10,7 @@ export function MembershipProvider({ children }) {
   const [allMemberships, setAllMemberships] = useState([]);
   const [role, setRole] = useState(null);
   const [permissions, setPermissions] = useState([]);
+  const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Load memberships when user changes
@@ -49,6 +50,16 @@ export function MembershipProvider({ children }) {
           setRole(roleData);
           setPermissions(roleData.permissions || []);
         }
+
+        // 4. Fetch Company to get company name
+        if (active?.company_id) {
+          try {
+            const companyData = await base44.entities.Company.get(active.company_id);
+            setCompany(companyData);
+          } catch (e) {
+            console.error('MembershipContext: Failed to fetch company', e);
+          }
+        }
       } catch (error) {
         console.error('MembershipContext: Failed to load membership', error);
       } finally {
@@ -78,6 +89,16 @@ export function MembershipProvider({ children }) {
         setRole(roleData);
         setPermissions(roleData.permissions || []);
       }
+
+      // Fetch new company
+      if (target.company_id) {
+        try {
+          const companyData = await base44.entities.Company.get(target.company_id);
+          setCompany(companyData);
+        } catch (e) {
+          console.error('MembershipContext: Failed to fetch company', e);
+        }
+      }
     } catch (error) {
       console.error('MembershipContext: Failed to switch company', error);
     } finally {
@@ -90,6 +111,8 @@ export function MembershipProvider({ children }) {
     allMemberships,
     role,
     permissions,
+    company,
+    companyName: company?.name || '',
     isOwner: activeMembership?.is_owner === true,
     companyId: activeMembership?.company_id || null,
     loading,
