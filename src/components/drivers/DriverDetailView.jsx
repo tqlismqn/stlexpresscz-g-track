@@ -820,7 +820,6 @@ export default function DriverDetailView({ driver, documents = [], onSave, isCre
               <button
                 onClick={() => {
                   setIsEditing(false);
-                  setDocumentsEditing(false);
                   setActiveTab(pendingTab);
                   setShowUnsavedModal(false);
                   setPendingTab(null);
