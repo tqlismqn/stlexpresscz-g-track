@@ -254,7 +254,7 @@ export async function generateAndDownloadPDF(drivers, allDocuments, templateKey,
   // Step 3: Build HTML table
   const templateName = TEMPLATE_NAMES[templateKey] || templateKey;
   const title = `G-Track — ${templateName}`;
-  const subtitle = `Exported: ${new Date().toLocaleDateString('cs-CZ')} • ${drivers.length} drivers`;
+  const subtitle = `${t('export.generated_at')} ${new Date().toLocaleDateString()} — ${drivers.length} ${t('export.drivers_count')}`;
 
   let html = `<div style="font-family:Arial,sans-serif;">`;
   html += `<h2 style="margin:0 0 4px 0;font-size:18px;color:#1e3a5f;">${title}</h2>`;
