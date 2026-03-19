@@ -1,18 +1,4 @@
-const DOCUMENT_TYPES = [
-  'work_contract',
-  'transport_licence',
-  'a1_certificate',
-  'declaration',
-  'insurance',
-  'visa',
-  'passport',
-  'driver_license',
-  'medical_certificate',
-  'psihotest',
-  'adr_certificate',
-  'chip_card',
-  'code95',
-];
+import { DOCUMENT_TYPE_KEYS } from '@/lib/documentTypes';
 
 function escapeCSV(value) {
   const str = value == null ? '' : String(value);
