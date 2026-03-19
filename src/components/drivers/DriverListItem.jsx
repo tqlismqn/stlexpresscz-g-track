@@ -68,7 +68,7 @@ function getReadinessTextColor(pct) {
 
 
 
-export default function DriverListItem({ driver, documents, isSelected, onSelect }) {
+export default function DriverListItem({ driver, documents, isSelected, onSelect, isChecked, onToggleSelect }) {
   const { t } = useTranslation();
   const { tagMap } = useDriverTags();
 

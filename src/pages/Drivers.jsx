@@ -2,11 +2,13 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Toaster } from 'sonner';
+import { AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import DriverList from '@/components/drivers/DriverList';
 import DriverDetail from '@/components/drivers/DriverDetail';
 import DriverFilters from '@/components/drivers/DriverFilters';
+import FloatingExportToolbar from '@/components/drivers/FloatingExportToolbar';
 import { formatDriverId } from '@/lib/driverUtils';
 
 export default function Drivers() {
