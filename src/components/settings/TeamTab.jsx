@@ -251,6 +251,8 @@ export default function TeamTab() {
         company_id: companyId,
         role_id: inviteRoleId,
         invited_by: currentUser?.id,
+        invited_by_name: activeMembership?.user_full_name || '',
+        invited_by_email: activeMembership?.user_email || '',
         status: 'pending',
         expires_at: expiresAt.toISOString(),
       });

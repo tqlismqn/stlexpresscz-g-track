@@ -52,7 +52,12 @@ export default function Layout() {
 
   const handleInviteClick = async (invitation) => {
     setInviteModal({ open: true, invitation });
-    setInviteDetails({ companyName: inviteCompanyNames[invitation.company_id] || '...', roleName: '...', invitedByName: '', invitedByEmail: '' });
+    setInviteDetails({
+      companyName: inviteCompanyNames[invitation.company_id] || '...',
+      roleName: '...',
+      invitedByName: invitation.invited_by_name || t('layout.unknown_inviter'),
+      invitedByEmail: invitation.invited_by_email || '',
+    });
     try {
       let companyName = inviteCompanyNames[invitation.company_id];
       if (!companyName) {
@@ -61,20 +66,12 @@ export default function Layout() {
       }
       const role = await base44.entities.Role.get(invitation.role_id);
       const roleName = role?.name || invitation.role_id;
-      let invitedByName = '';
-      let invitedByEmail = '';
-      if (invitation.invited_by) {
-        try {
-          const inviterMemberships = await base44.entities.Membership.filter({ user_id: invitation.invited_by, company_id: invitation.company_id });
-          if (inviterMemberships?.length > 0) {
-            invitedByName = inviterMemberships[0].user_full_name || '';
-            invitedByEmail = inviterMemberships[0].user_email || '';
-          }
-        } catch (e) {
-          invitedByName = t('layout.unknown_inviter');
-        }
-      }
-      setInviteDetails({ companyName, roleName, invitedByName, invitedByEmail });
+      setInviteDetails({
+        companyName,
+        roleName,
+        invitedByName: invitation.invited_by_name || t('layout.unknown_inviter'),
+        invitedByEmail: invitation.invited_by_email || '',
+      });
     } catch (e) {
       console.error('Failed to load invite details:', e);
     }
