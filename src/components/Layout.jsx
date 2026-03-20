@@ -14,7 +14,7 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
-  const { permissions, companyId, companyName, allMemberships, hasMultipleCompanies, switchCompany, activeMembership } = useMembership();
+  const { permissions, companyId, companyName, allMemberships, hasMultipleCompanies, switchCompany, activeMembership, companiesMap } = useMembership();
   const { t, i18n } = useTranslation();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const hasRestoredLang = useRef(false);
@@ -77,7 +77,7 @@ export default function Layout() {
                 <DropdownMenuLabel>{t('header.switchCompany')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {allMemberships.map(membership => {
-                  const memberCompanyName = membership.company_id === companyId ? companyName : `${t('common.loading')}...`;
+                  const memberCompanyName = companiesMap[membership.company_id]?.name || t('common.loading');
                   return (
                     <DropdownMenuItem
                       key={membership.id}

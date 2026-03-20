@@ -12,6 +12,7 @@ export function MembershipProvider({ children }) {
   const [role, setRole] = useState(null);
   const [permissions, setPermissions] = useState([]);
   const [company, setCompany] = useState(null);
+  const [companiesMap, setCompaniesMap] = useState({});
   const [loading, setLoading] = useState(true);
   const setupCompleted = useRef(false);
 
@@ -79,15 +80,30 @@ export function MembershipProvider({ children }) {
           setPermissions(roleData.permissions || []);
         }
 
-        // 4. Fetch Company to get company name
+        // 4. Fetch Company data for active membership + all other memberships
+        const newCompaniesMap = {};
         if (active?.company_id) {
           try {
             const companyData = await base44.entities.Company.get(active.company_id);
             setCompany(companyData);
+            newCompaniesMap[active.company_id] = companyData;
           } catch (e) {
             console.error('MembershipContext: Failed to fetch company', e);
           }
         }
+        
+        // Fetch company names for other memberships
+        for (const membership of activeMemberships) {
+          if (membership.company_id && !newCompaniesMap[membership.company_id]) {
+            try {
+              const companyData = await base44.entities.Company.get(membership.company_id);
+              newCompaniesMap[membership.company_id] = companyData;
+            } catch (e) {
+              console.error('MembershipContext: Failed to fetch company for membership', membership.id, e);
+            }
+          }
+        }
+        setCompaniesMap(newCompaniesMap);
       } catch (error) {
         console.error('MembershipContext: Failed to load membership', error);
       } finally {
@@ -141,6 +157,7 @@ export function MembershipProvider({ children }) {
     permissions,
     company,
     companyName: company?.name || '',
+    companiesMap,
     isOwner: activeMembership?.is_owner === true,
     companyId: activeMembership?.company_id || null,
     loading,
