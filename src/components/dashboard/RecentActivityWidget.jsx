@@ -64,7 +64,7 @@ function formatTimeAgo(dateString, t) {
   return `${formattedDate} (${relative})`;
 }
 
-export default function RecentActivityWidget({ drivers = [] }) {
+export default function RecentActivityWidget({ drivers = [], companyId }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [activities, setActivities] = useState([]);
@@ -73,9 +73,10 @@ export default function RecentActivityWidget({ drivers = [] }) {
   const driverMap = new Map(drivers.map(d => [d.id, d]));
 
   useEffect(() => {
+    if (!companyId) return;
     const load = async () => {
       try {
-        const records = await DriverHistory.list('-created_date', 10);
+        const records = await DriverHistory.filter({ company_id: companyId }, '-created_date', 10);
         setActivities(records);
       } catch (err) {
         console.error('Failed to load DriverHistory:', err);
@@ -84,7 +85,7 @@ export default function RecentActivityWidget({ drivers = [] }) {
       }
     };
     load();
-  }, []);
+  }, [companyId]);
 
   if (loading) {
     return <div className="bg-white rounded-lg shadow p-6">{t('common.loading')}</div>;
