@@ -42,6 +42,19 @@
     "page_of": "Page {{page}} of {{total}}",
     "drivers_count": "drivers"
   },
+  "layout": {
+    "invitations": "Invitations",
+    "pending_invitation": "Pending",
+    "invitation_title": "Company Invitation",
+    "invitation_company": "Company",
+    "invitation_role": "Role",
+    "invitation_invited_by": "Invited by",
+    "invite_accepted": "Invitation accepted! Switching to new company...",
+    "invite_declined": "Invitation declined",
+    "invite_error": "Failed to process invitation",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
   "settings": {
     "title": "Settings",
     "language": "Language",

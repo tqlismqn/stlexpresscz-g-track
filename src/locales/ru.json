@@ -42,6 +42,19 @@
     "page_of": "Стр. {{page}} из {{total}}",
     "drivers_count": "водителей"
   },
+  "layout": {
+    "invitations": "Приглашения",
+    "pending_invitation": "Ожидает",
+    "invitation_title": "Приглашение в компанию",
+    "invitation_company": "Компания",
+    "invitation_role": "Роль",
+    "invitation_invited_by": "Пригласил",
+    "invite_accepted": "Приглашение принято! Переключение на новую компанию...",
+    "invite_declined": "Приглашение отклонено",
+    "invite_error": "Ошибка обработки приглашения",
+    "accept": "Принять",
+    "decline": "Отклонить"
+  },
   "settings": {
     "title": "Настройки",
     "language": "Язык",

@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Truck, FileText, Settings, LogOut, Menu, ChevronDown, Bell, Building2, User, LogOut as LogOutIcon, Check } from 'lucide-react';
+import { LayoutDashboard, Users, Truck, FileText, Settings, LogOut, Menu, ChevronDown, Bell, Building2, User, LogOut as LogOutIcon, Check, Mail } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useMembership } from '@/lib/MembershipContext';
 import { hasPermission } from '@/lib/permissions';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
-import { useRef } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function Layout() {
   const location = useLocation();

@@ -42,6 +42,19 @@
     "page_of": "Str. {{page}} z {{total}}",
     "drivers_count": "řidičů"
   },
+  "layout": {
+    "invitations": "Pozvánky",
+    "pending_invitation": "Čeká",
+    "invitation_title": "Pozvánka do společnosti",
+    "invitation_company": "Společnost",
+    "invitation_role": "Role",
+    "invitation_invited_by": "Pozval",
+    "invite_accepted": "Pozvánka přijata! Přepínání na novou společnost...",
+    "invite_declined": "Pozvánka odmítnuta",
+    "invite_error": "Chyba zpracování pozvánky",
+    "accept": "Přijmout",
+    "decline": "Odmítnout"
+  },
   "settings": {
     "title": "Nastavení",
     "language": "Jazyk",
