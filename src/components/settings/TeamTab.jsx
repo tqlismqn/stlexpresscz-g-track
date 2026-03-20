@@ -145,7 +145,7 @@ export default function TeamTab() {
   function getAdminCount() {
     const adminRole = allRoles.find(r => r.name === 'admin' && r.is_template);
     if (!adminRole) return 0;
-    return members.filter(m => m.membership.role_id === adminRole.id && !m.user.is_platform_admin).length;
+    return members.filter(m => m.membership.role_id === adminRole.id).length;
   }
 
   // CHANGE ROLE handler
@@ -225,7 +225,7 @@ export default function TeamTab() {
     if (!inviteEmail || !inviteRoleId) return;
 
     // Guard: check if already a member
-    const existingMember = members.find(m => m.user?.email === inviteEmail);
+    const existingMember = members.find(m => m.user_email === inviteEmail);
     if (existingMember) {
       toast.error(t('settings.team.alreadyMember'));
       return;
@@ -418,16 +418,16 @@ export default function TeamTab() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {members.map(({ membership, user, role, isCurrentUser }) => (
+            {members.map(({ membership, user_full_name, user_email, role, isCurrentUser }) => (
               <div key={membership.id} className="flex items-center justify-between p-3 rounded-lg border">
                 <div className="flex items-center gap-3">
                   {/* Avatar (initials) */}
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium">
-                    {(user?.display_name || user?.full_name || user?.email || '?').substring(0, 2).toUpperCase()}
+                    {(user_full_name || user_email || '?').substring(0, 2).toUpperCase()}
                   </div>
                   <div>
                     <div className="font-medium flex items-center gap-2">
-                      {user?.display_name || user?.full_name || user?.email}
+                      {user_full_name || user_email}
                       {membership.is_owner && (
                         <Badge variant="outline" className="text-amber-600 border-amber-300 bg-amber-50 gap-1">
                           <Crown className="h-3 w-3" />
@@ -438,7 +438,7 @@ export default function TeamTab() {
                         <Badge variant="outline" className="text-muted-foreground">{t('settings.team.you')}</Badge>
                       )}
                     </div>
-                    <div className="text-sm text-muted-foreground">{user?.email}</div>
+                    <div className="text-sm text-muted-foreground">{user_email}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -453,13 +453,13 @@ export default function TeamTab() {
                         <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setChangeRoleDialog({ open: true, member: { membership, user, role, isCurrentUser } })}>
+                        <DropdownMenuItem onClick={() => setChangeRoleDialog({ open: true, member: { membership, user_full_name, user_email, role, isCurrentUser } })}>
                           <Shield className="h-4 w-4 mr-2" />
                           {t('settings.team.changeRole')}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive"
-                          onClick={() => setRemoveDialog({ open: true, member: { membership, user, role, isCurrentUser } })}
+                          onClick={() => setRemoveDialog({ open: true, member: { membership, user_full_name, user_email, role, isCurrentUser } })}
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           {t('settings.team.removeMember')}
@@ -602,7 +602,7 @@ export default function TeamTab() {
           <DialogHeader>
             <DialogTitle>{t('settings.team.changeRoleTitle')}</DialogTitle>
             <DialogDescription>
-              {t('settings.team.changeRoleDesc', { name: changeRoleDialog.member?.user?.display_name || '' })}
+              {t('settings.team.changeRoleDesc', { name: changeRoleDialog.member?.user_full_name || '' })}
             </DialogDescription>
           </DialogHeader>
           <Select onValueChange={handleChangeRole} disabled={saving}>
@@ -629,7 +629,7 @@ export default function TeamTab() {
               {t('settings.team.removeTitle')}
             </DialogTitle>
             <DialogDescription>
-              {t('settings.team.removeDesc', { name: removeDialog.member?.user?.display_name || '' })}
+              {t('settings.team.removeDesc', { name: removeDialog.member?.user_full_name || '' })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
