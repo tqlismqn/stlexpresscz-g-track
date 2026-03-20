@@ -143,10 +143,11 @@ export default function TeamTab() {
   }
 
   // Count admins (for guard: cannot remove/downgrade last admin)
+  // Excludes platform admins from the count
   function getAdminCount() {
     const adminRole = allRoles.find(r => r.name === 'admin' && r.is_template);
     if (!adminRole) return 0;
-    return members.filter(m => m.membership.role_id === adminRole.id).length;
+    return members.filter(m => m.membership.role_id === adminRole.id && !m.membership.is_platform_admin).length;
   }
 
   // CHANGE ROLE handler
@@ -430,16 +431,20 @@ export default function TeamTab() {
               <Users className="h-5 w-5" />
               {t('settings.team.membersTitle')}
             </CardTitle>
-            <CardDescription>{t('settings.team.membersDesc', { count: members.length })}</CardDescription>
+            <CardDescription>{t('settings.team.membersDesc', { count: members.filter(m => !m.membership.is_platform_admin || activeMembership?.is_platform_admin).length })}</CardDescription>
           </div>
-          <Button onClick={() => setInviteDialog(true)} size="sm">
-            <UserPlus className="h-4 w-4 mr-2" />
-            {t('settings.team.inviteMember')}
-          </Button>
+          {hasPermission(permissions, 'settings_team') && (
+            <Button onClick={() => setInviteDialog(true)} size="sm">
+              <UserPlus className="h-4 w-4 mr-2" />
+              {t('settings.team.inviteMember')}
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {members.map(({ membership, user_full_name, user_email, role, isCurrentUser }) => (
+            {members.map(({ membership, user_full_name, user_email, role, isCurrentUser }) => {
+              if (membership.is_platform_admin && !activeMembership?.is_platform_admin) return null;
+              return (
               <div key={membership.id} className="flex items-center justify-between p-3 rounded-lg border">
                 <div className="flex items-center gap-3">
                   {/* Avatar (initials) */}
