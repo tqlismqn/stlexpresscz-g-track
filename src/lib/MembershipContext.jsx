@@ -105,6 +105,16 @@ export function MembershipProvider({ children }) {
           }
         }
         setCompaniesMap(newCompaniesMap);
+
+        // 5. Fetch pending invitations for this user's email
+        if (currentUser.email) {
+          try {
+            const invites = await base44.entities.Invitation.filter({ email: currentUser.email, status: 'pending' });
+            setPendingInvitations(invites || []);
+          } catch (e) {
+            setPendingInvitations([]);
+          }
+        }
       } catch (error) {
         console.error('MembershipContext: Failed to load membership', error);
       } finally {
