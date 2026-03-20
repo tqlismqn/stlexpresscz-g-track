@@ -173,6 +173,10 @@ export function MembershipProvider({ children }) {
   }, [currentUser?.email]);
 
   const acceptInvitation = useCallback(async (invitation) => {
+    // Step 1: Temporarily switch user's company_id to bypass RLS for Company B
+    await base44.auth.updateMe({ company_id: invitation.company_id });
+
+    // Step 2: Now create Membership (RLS passes because user.company_id matches)
     const newMembership = await base44.entities.Membership.create({
       user_id: currentUser.id,
       company_id: invitation.company_id,
@@ -182,12 +186,19 @@ export function MembershipProvider({ children }) {
       user_full_name: currentUser.full_name || currentUser.display_name || currentUser.email,
       user_email: currentUser.email,
     });
+
+    // Step 3: Update Invitation status (RLS now passes too)
     await base44.entities.Invitation.update(invitation.id, { status: 'accepted' });
+
+    // Step 4: Refresh memberships
     const updatedMemberships = await base44.entities.Membership.filter({ user_id: currentUser.id });
     const activeMemberships = updatedMemberships.filter(m => m.status === 'active');
     setAllMemberships(activeMemberships);
     await refreshInvitations();
+
+    // Step 5: Switch to new company (also updates User.company_id permanently)
     await switchCompany(newMembership.id);
+
     return newMembership;
   }, [currentUser, refreshInvitations, switchCompany]);
 
