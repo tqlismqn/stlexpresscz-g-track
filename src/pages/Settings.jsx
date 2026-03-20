@@ -35,15 +35,12 @@ export default function Settings() {
 
   // Tab definitions
   const tabs = [
-    { id: 'profile', icon: User, labelKey: 'settings.tabs.profile', permission: null },
-    { id: 'company', icon: Building2, labelKey: 'settings.tabs.company', permission: 'settings_company' },
-    { id: 'team', icon: Users, labelKey: 'settings.tabs.team', permission: 'settings_team' },
-    { id: 'billing', icon: CreditCard, labelKey: 'settings.tabs.billing', permission: 'settings_billing' },
-    { id: 'notifications', icon: Bell, labelKey: 'settings.tabs.notifications', permission: 'settings_notifications' },
+    { id: 'profile', icon: User, labelKey: 'settings.tabs.profile' },
+    { id: 'company', icon: Building2, labelKey: 'settings.tabs.company' },
+    { id: 'team', icon: Users, labelKey: 'settings.tabs.team' },
+    { id: 'billing', icon: CreditCard, labelKey: 'settings.tabs.billing' },
+    { id: 'notifications', icon: Bell, labelKey: 'settings.tabs.notifications' },
   ];
-
-  // Filter visible tabs
-  const visibleTabs = tabs.filter(tab => !tab.permission || hasPermission(permissions, tab.permission));
 
   // Tab state management
   const activeTab = searchParams.get('tab') || 'profile';

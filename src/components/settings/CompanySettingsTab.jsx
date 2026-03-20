@@ -112,32 +112,32 @@ export default function CompanySettingsTab() {
             {/* Name */}
             <div>
               <Label>{t('settings.company.name')}</Label>
-              <Input className="mt-1" value={formData.name} onChange={set('name')} />
+              <Input className="mt-1" value={formData.name} onChange={set('name')} disabled={!canEdit} />
             </div>
             {/* Legal Name */}
             <div>
               <Label>{t('settings.company.legal_name')}</Label>
-              <Input className="mt-1" value={formData.legal_name} onChange={set('legal_name')} />
+              <Input className="mt-1" value={formData.legal_name} onChange={set('legal_name')} disabled={!canEdit} />
             </div>
             {/* VAT Number */}
             <div>
               <Label>{t('settings.company.vat_number')}</Label>
-              <Input className="mt-1" value={formData.vat_number} onChange={set('vat_number')} />
+              <Input className="mt-1" value={formData.vat_number} onChange={set('vat_number')} disabled={!canEdit} />
             </div>
             {/* Registration Number */}
             <div>
               <Label>{t('settings.company.registration_number')}</Label>
-              <Input className="mt-1" value={formData.registration_number} onChange={set('registration_number')} />
+              <Input className="mt-1" value={formData.registration_number} onChange={set('registration_number')} disabled={!canEdit} />
             </div>
             {/* Address */}
             <div>
               <Label>{t('settings.company.address')}</Label>
-              <Input className="mt-1" value={formData.address} onChange={set('address')} />
+              <Input className="mt-1" value={formData.address} onChange={set('address')} disabled={!canEdit} />
             </div>
             {/* City */}
             <div>
               <Label>{t('settings.company.city')}</Label>
-              <Input className="mt-1" value={formData.city} onChange={set('city')} />
+              <Input className="mt-1" value={formData.city} onChange={set('city')} disabled={!canEdit} />
             </div>
             {/* Country */}
             <div>
@@ -148,7 +148,7 @@ export default function CompanySettingsTab() {
                 } else {
                   setFormData(prev => ({ ...prev, country: val }));
                 }
-              }}>
+              }} disabled={!canEdit}>
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder="—" />
                 </SelectTrigger>
