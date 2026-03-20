@@ -200,11 +200,13 @@ export default function CompanySettingsTab() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
-            <Button onClick={handleSave} disabled={saving}>
-              {saving ? t('settings.company.saving') : t('settings.company.save')}
-            </Button>
-          </div>
+          {canEdit && (
+            <div className="flex justify-end pt-2">
+              <Button onClick={handleSave} disabled={saving}>
+                {saving ? t('settings.company.saving') : t('settings.company.save')}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
