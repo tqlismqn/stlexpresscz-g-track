@@ -209,6 +209,10 @@ export function MembershipProvider({ children }) {
     loading,
     switchCompany,
     hasMultipleCompanies: allMemberships.length > 1,
+    pendingInvitations,
+    refreshInvitations,
+    acceptInvitation,
+    declineInvitation,
   };
 
   return (
