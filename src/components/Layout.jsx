@@ -17,10 +17,90 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
-  const { permissions, companyId, companyName, allMemberships, hasMultipleCompanies, switchCompany, activeMembership, companiesMap } = useMembership();
+  const { permissions, companyId, companyName, allMemberships, hasMultipleCompanies, switchCompany, activeMembership, companiesMap, pendingInvitations, acceptInvitation, declineInvitation } = useMembership();
   const { t, i18n } = useTranslation();
+  const { toast } = useToast();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const hasRestoredLang = useRef(false);
+
+  const [inviteModal, setInviteModal] = useState({ open: false, invitation: null });
+  const [inviteDetails, setInviteDetails] = useState({ companyName: '', roleName: '', invitedByName: '', invitedByEmail: '' });
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [inviteCompanyNames, setInviteCompanyNames] = useState({});
+
+  // Fetch company names for pending invitations
+  useEffect(() => {
+    if (!pendingInvitations || pendingInvitations.length === 0) {
+      setInviteCompanyNames({});
+      return;
+    }
+    async function fetchCompanyNames() {
+      const names = { ...inviteCompanyNames };
+      for (const inv of pendingInvitations) {
+        if (!inv.company_id || names[inv.company_id]) continue;
+        try {
+          const company = await base44.entities.Company.get(inv.company_id);
+          names[inv.company_id] = company?.name || inv.company_id;
+        } catch (e) {
+          // skip failed lookups
+        }
+      }
+      setInviteCompanyNames(names);
+    }
+    fetchCompanyNames();
+  }, [pendingInvitations]);
+
+  const handleInviteClick = async (invitation) => {
+    setInviteModal({ open: true, invitation });
+    setInviteDetails({ companyName: inviteCompanyNames[invitation.company_id] || '...', roleName: '...', invitedByName: '', invitedByEmail: '' });
+    try {
+      let companyName = inviteCompanyNames[invitation.company_id];
+      if (!companyName) {
+        const company = await base44.entities.Company.get(invitation.company_id);
+        companyName = company?.name || invitation.company_id;
+      }
+      const role = await base44.entities.Role.get(invitation.role_id);
+      const roleName = role?.name || invitation.role_id;
+      let invitedByName = '';
+      let invitedByEmail = '';
+      if (invitation.invited_by) {
+        const inviterMemberships = await base44.entities.Membership.filter({ user_id: invitation.invited_by, company_id: invitation.company_id });
+        if (inviterMemberships?.length > 0) {
+          invitedByName = inviterMemberships[0].user_full_name || '';
+          invitedByEmail = inviterMemberships[0].user_email || '';
+        }
+      }
+      setInviteDetails({ companyName, roleName, invitedByName, invitedByEmail });
+    } catch (e) {
+      console.error('Failed to load invite details:', e);
+    }
+  };
+
+  const handleAcceptInvitation = async () => {
+    setInviteLoading(true);
+    try {
+      await acceptInvitation(inviteModal.invitation);
+      toast({ title: t('layout.invite_accepted') });
+      setInviteModal({ open: false, invitation: null });
+    } catch (e) {
+      toast({ title: t('layout.invite_error'), variant: 'destructive' });
+    } finally {
+      setInviteLoading(false);
+    }
+  };
+
+  const handleDeclineInvitation = async () => {
+    setInviteLoading(true);
+    try {
+      await declineInvitation(inviteModal.invitation);
+      toast({ title: t('layout.invite_declined') });
+      setInviteModal({ open: false, invitation: null });
+    } catch (e) {
+      toast({ title: t('layout.invite_error'), variant: 'destructive' });
+    } finally {
+      setInviteLoading(false);
+    }
+  };
 
   // Graceful fallback: if permissions haven't loaded, show all items
   const canView = (permId) => !permissions.length || hasPermission(permissions, permId);
