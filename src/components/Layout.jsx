@@ -353,6 +353,47 @@ export default function Layout() {
           <Outlet />
         </div>
       </div>
+
+      {/* Invitation Acceptance Modal */}
+      <Dialog open={inviteModal.open} onOpenChange={(open) => !open && setInviteModal({ open: false, invitation: null })}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5 text-amber-500" />
+              {t('layout.invitation_title')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('layout.invitation_invited_by')}: {inviteDetails.invitedByName || inviteDetails.invitedByEmail || '...'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="flex items-center justify-between py-2 border-b">
+              <span className="text-sm text-muted-foreground">{t('layout.invitation_company')}</span>
+              <span className="font-semibold">{inviteDetails.companyName}</span>
+            </div>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-sm text-muted-foreground">{t('layout.invitation_role')}</span>
+              <Badge variant="secondary" className="capitalize">{inviteDetails.roleName}</Badge>
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={handleDeclineInvitation}
+              disabled={inviteLoading}
+            >
+              {t('layout.decline')}
+            </Button>
+            <Button
+              onClick={handleAcceptInvitation}
+              disabled={inviteLoading}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              {t('layout.accept')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
