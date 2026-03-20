@@ -19,7 +19,6 @@ export default function Layout() {
   const { currentUser, logout } = useAuth();
   const { permissions, companyId, companyName, allMemberships, hasMultipleCompanies, switchCompany, activeMembership, companiesMap, pendingInvitations, acceptInvitation, declineInvitation } = useMembership();
   const { t, i18n } = useTranslation();
-  const { toast } = useToast();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const hasRestoredLang = useRef(false);
 

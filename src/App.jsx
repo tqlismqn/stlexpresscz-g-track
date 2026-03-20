@@ -62,7 +62,6 @@ function App() {
           <Router>
             <I18nProvider>
               <AuthenticatedApp />
-              <Toaster />
               <SonnerToaster />
             </I18nProvider>
           </Router>
