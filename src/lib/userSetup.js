@@ -29,7 +29,6 @@ export async function handleNewUserSetup(userEmail, userId) {
         company_id: invitation.company_id
       });
 
-      console.log(`User ${userEmail} joined company ${invitation.company_id} via invitation`);
       return { scenario: 'invited', membership: newMembership };
 
     } else {
@@ -54,7 +53,6 @@ export async function handleNewUserSetup(userEmail, userId) {
         company_id: newCompany.id
       });
 
-      console.log(`New tenant created for ${userEmail}: company=${newCompany.id}`);
       return { scenario: 'new_tenant', membership: newMembership, company: newCompany };
     }
 

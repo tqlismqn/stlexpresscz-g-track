@@ -104,7 +104,7 @@ export default function RecentActivityWidget({ drivers = [], companyId }) {
         ) : (
           activities.map(activity => {
             const driver = driverMap.get(activity.driver_id);
-            const driverName = driver?.name || activity.driver_id || '—';
+            const driverName = driver?.name || t('dashboard.unknown_driver');
 
             return (
               <div
