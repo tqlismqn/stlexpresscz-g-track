@@ -161,6 +161,41 @@ export function MembershipProvider({ children }) {
     }
   }, [allMemberships]);
 
+  const refreshInvitations = useCallback(async () => {
+    if (!currentUser?.email) return;
+    try {
+      const invites = await base44.entities.Invitation.filter({ email: currentUser.email, status: 'pending' });
+      setPendingInvitations(invites || []);
+    } catch (e) {
+      console.error('Failed to fetch invitations:', e);
+      setPendingInvitations([]);
+    }
+  }, [currentUser?.email]);
+
+  const acceptInvitation = useCallback(async (invitation) => {
+    const newMembership = await base44.entities.Membership.create({
+      user_id: currentUser.id,
+      company_id: invitation.company_id,
+      role_id: invitation.role_id,
+      is_owner: false,
+      status: 'active',
+      user_full_name: currentUser.full_name || currentUser.display_name || currentUser.email,
+      user_email: currentUser.email,
+    });
+    await base44.entities.Invitation.update(invitation.id, { status: 'accepted' });
+    const updatedMemberships = await base44.entities.Membership.filter({ user_id: currentUser.id });
+    const activeMemberships = updatedMemberships.filter(m => m.status === 'active');
+    setAllMemberships(activeMemberships);
+    await refreshInvitations();
+    await switchCompany(newMembership.id);
+    return newMembership;
+  }, [currentUser, refreshInvitations, switchCompany]);
+
+  const declineInvitation = useCallback(async (invitation) => {
+    await base44.entities.Invitation.update(invitation.id, { status: 'declined' });
+    await refreshInvitations();
+  }, [refreshInvitations]);
+
   const value = {
     activeMembership,
     allMemberships,
