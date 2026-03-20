@@ -157,7 +157,7 @@ function PreviousDocumentRow({ doc, docTypeName, onMarkAsReturned, t }) {
 
 export default function DriverDocumentsTabContent({ driver, documents = [], onDocumentsChange }) {
   const { t } = useTranslation();
-  const { permissions } = useMembership();
+  const { permissions, companyId } = useMembership();
 
   const SECTIONS = {
     1: t('documents.sections.main'),
@@ -219,6 +219,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       await DriverDocument.update(oldDoc.id, { return_status: 'pending_return' });
       await DriverDocument.create({
         driver_id: driver.id,
+        company_id: companyId,
         document_type: oldDoc.document_type,
         issue_date: null,
         expiry_date: null,
@@ -228,6 +229,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
       });
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
+        company_id: companyId,
         action: 'updated',
         field_name: oldDoc.document_type,
         old_value: oldDoc.expiry_date || '',
@@ -247,6 +249,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     await DriverDocument.update(doc.id, { return_status: 'returned' });
     await base44.entities.DriverHistory.create({
       driver_id: driver.id,
+      company_id: companyId,
       action: 'updated',
       field_name: 'return_status',
       old_value: 'pending_return',
@@ -264,6 +267,7 @@ export default function DriverDocumentsTabContent({ driver, documents = [], onDo
     try {
       const createPayload = {
         driver_id: driver.id,
+        company_id: companyId,
         document_type: newDoc.document_type === 'other' ? 'other' : newDoc.document_type,
         document_number: newDoc.document_number || '',
         issue_date: newDoc.issue_date || null,

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function DriverCommentsTab({ driver, isTerminated }) {
   const { currentUser } = useAuth();
-  const { permissions } = useMembership();
+  const { permissions, companyId } = useMembership();
   const { t } = useTranslation();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -41,6 +41,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
     try {
       await base44.entities.DriverComment.create({
         driver_id: driver.id,
+        company_id: companyId,
         text: newComment,
         author: currentUser?.display_name || currentUser?.full_name || currentUser?.email?.split('@')[0] || 'Unknown'
       });
@@ -49,6 +50,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
       const truncated = newComment.length > 100 ? newComment.substring(0, 100) + '...' : newComment;
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
+        company_id: companyId,
         action: 'comment_added',
         description: t('toasts.comment_added'),
         new_value: truncated,
@@ -75,6 +77,7 @@ export default function DriverCommentsTab({ driver, isTerminated }) {
       // Create history record for deletion
       await base44.entities.DriverHistory.create({
         driver_id: driver.id,
+        company_id: companyId,
         action: 'comment_deleted',
         description: t('toasts.comment_deleted'),
         old_value: truncated,

@@ -25,7 +25,8 @@ export async function handleNewUserSetup(userEmail, userId) {
       });
 
       await base44.auth.updateMe({
-        last_active_membership_id: newMembership.id
+        last_active_membership_id: newMembership.id,
+        company_id: invitation.company_id
       });
 
       console.log(`User ${userEmail} joined company ${invitation.company_id} via invitation`);
@@ -49,7 +50,8 @@ export async function handleNewUserSetup(userEmail, userId) {
       });
 
       await base44.auth.updateMe({
-        last_active_membership_id: newMembership.id
+        last_active_membership_id: newMembership.id,
+        company_id: newCompany.id
       });
 
       console.log(`New tenant created for ${userEmail}: company=${newCompany.id}`);
