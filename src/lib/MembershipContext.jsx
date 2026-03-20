@@ -235,9 +235,19 @@ export function MembershipProvider({ children }) {
   }, [currentUser, refreshInvitations]);
 
   const declineInvitation = useCallback(async (invitation) => {
+    const originalCompanyId = activeMembership?.company_id || null;
+
+    // Temporarily switch to invitation's company for RLS
+    await base44.auth.updateMe({ company_id: invitation.company_id });
+
+    // Now update invitation (RLS will pass)
     await base44.entities.Invitation.update(invitation.id, { status: 'declined' });
+
+    // Restore original company_id
+    await base44.auth.updateMe({ company_id: originalCompanyId });
+
     await refreshInvitations();
-  }, [refreshInvitations]);
+  }, [activeMembership, refreshInvitations]);
 
   const value = {
     activeMembership,
