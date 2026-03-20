@@ -39,7 +39,8 @@ const TIER_BADGES = {
 
 export default function CompanySettingsTab() {
   const { t } = useTranslation();
-  const { companyId } = useMembership();
+  const { companyId, permissions } = useMembership();
+  const canEdit = permissions?.includes('settings_company');
   const [originalData, setOriginalData] = useState(null);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
