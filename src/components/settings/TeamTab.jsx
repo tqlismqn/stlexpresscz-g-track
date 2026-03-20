@@ -503,7 +503,8 @@ export default function TeamTab() {
                   )}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
@@ -558,10 +559,12 @@ export default function TeamTab() {
             </CardTitle>
             <CardDescription>{t('settings.team.rolesDesc')}</CardDescription>
           </div>
-          <Button onClick={() => setCreateRoleDialog(true)} size="sm" variant="outline">
-            <Plus className="h-4 w-4 mr-2" />
-            {t('settings.team.createRole')}
-          </Button>
+          {hasPermission(permissions, 'settings_team') && (
+            <Button onClick={() => setCreateRoleDialog(true)} size="sm" variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              {t('settings.team.createRole')}
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
