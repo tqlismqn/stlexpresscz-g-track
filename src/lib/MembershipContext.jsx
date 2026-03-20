@@ -14,6 +14,7 @@ export function MembershipProvider({ children }) {
   const [company, setCompany] = useState(null);
   const [companiesMap, setCompaniesMap] = useState({});
   const [loading, setLoading] = useState(true);
+  const [pendingInvitations, setPendingInvitations] = useState([]);
   const setupCompleted = useRef(false);
 
   // Load memberships when user changes
