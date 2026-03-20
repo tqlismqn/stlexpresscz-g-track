@@ -190,17 +190,9 @@ export default function Settings() {
           )}
         </TabsContent>
 
-        {/* Company Tab - Placeholder */}
+        {/* Company Tab */}
         <TabsContent value="company">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('settings.tabs.company')}</CardTitle>
-              <CardDescription>{t('settings.placeholder.companyDesc')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">{t('settings.placeholder.comingSoon')}</p>
-            </CardContent>
-          </Card>
+          <CompanySettingsTab />
         </TabsContent>
 
         {/* Team Tab */}
