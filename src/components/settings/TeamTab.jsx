@@ -444,65 +444,63 @@ export default function TeamTab() {
           <div className="space-y-3">
             {members.map(({ membership, user_full_name, user_email, role, isCurrentUser }) => {
               if (membership.is_platform_admin && !activeMembership?.is_platform_admin) return null;
-              return (<div key={membership.id} className="flex items-center justify-between p-3 rounded-lg border">
-                <div className="flex items-center gap-3">
-                  {/* Avatar (initials) */}
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium">
-                    {(user_full_name || user_email || '?').substring(0, 2).toUpperCase()}
-                  </div>
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      {user_full_name || user_email}
-                      {membership.is_owner && (
-                        <Badge variant="outline" className="text-amber-600 border-amber-300 bg-amber-50 gap-1">
-                          <Crown className="h-3 w-3" />
-                          {t('settings.team.owner')}
-                        </Badge>
-                      )}
-                      {isCurrentUser && (
-                        <Badge variant="outline" className="text-muted-foreground">{t('settings.team.you')}</Badge>
-                      )}
+              return (
+                <div key={membership.id} className="flex items-center justify-between p-3 rounded-lg border">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium">
+                      {(user_full_name || user_email || '?').substring(0, 2).toUpperCase()}
                     </div>
-                    <div className="text-sm text-muted-foreground">{user_email}</div>
+                    <div>
+                      <div className="font-medium flex items-center gap-2">
+                        {user_full_name || user_email}
+                        {membership.is_owner && (
+                          <Badge variant="outline" className="text-amber-600 border-amber-300 bg-amber-50 gap-1">
+                            <Crown className="h-3 w-3" />
+                            {t('settings.team.owner')}
+                          </Badge>
+                        )}
+                        {isCurrentUser && (
+                          <Badge variant="outline" className="text-muted-foreground">{t('settings.team.you')}</Badge>
+                        )}
+                      </div>
+                      <div className="text-sm text-muted-foreground">{user_email}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge variant={getRoleBadgeVariant(role?.name)}>
+                      {role?.name || 'unknown'}
+                    </Badge>
+                    {hasPermission(permissions, 'settings_team') && !isCurrentUser && !membership.is_owner && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setChangeRoleDialog({ open: true, member: { membership, user_full_name, user_email, role, isCurrentUser } })}>
+                            <Shield className="h-4 w-4 mr-2" />
+                            {t('settings.team.changeRole')}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={() => setRemoveDialog({ open: true, member: { membership, user_full_name, user_email, role, isCurrentUser } })}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            {t('settings.team.removeMember')}
+                          </DropdownMenuItem>
+                          {activeMembership?.is_owner && role?.name?.toLowerCase() === 'admin' && !isCurrentUser && (
+                            <DropdownMenuItem
+                              className="text-amber-600"
+                              onClick={() => setTransferOwnershipDialog({ open: true, member: { membership, user_full_name, user_email, role } })}
+                            >
+                              <Crown className="h-4 w-4 mr-2" />
+                              {t('settings.team.transferOwnership')}
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant={getRoleBadgeVariant(role?.name)}>
-                    {role?.name || 'unknown'}
-                  </Badge>
-
-                  {/* Actions dropdown — only visible to users with settings_team permission, not for self or owner */}
-                  {hasPermission(permissions, 'settings_team') && !isCurrentUser && !membership.is_owner && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setChangeRoleDialog({ open: true, member: { membership, user_full_name, user_email, role, isCurrentUser } })}>
-                          <Shield className="h-4 w-4 mr-2" />
-                          {t('settings.team.changeRole')}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => setRemoveDialog({ open: true, member: { membership, user_full_name, user_email, role, isCurrentUser } })}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          {t('settings.team.removeMember')}
-                        </DropdownMenuItem>
-                        {activeMembership?.is_owner && role?.name?.toLowerCase() === 'admin' && !isCurrentUser && (
-                          <DropdownMenuItem
-                            className="text-amber-600"
-                            onClick={() => setTransferOwnershipDialog({ open: true, member: { membership, user_full_name, user_email, role } })}
-                          >
-                            <Crown className="h-4 w-4 mr-2" />
-                            {t('settings.team.transferOwnership')}
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </div>
-              </div>
               );
             })}
           </div>
