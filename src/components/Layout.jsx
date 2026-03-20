@@ -11,7 +11,7 @@ import { useMembership } from '@/lib/MembershipContext';
 import { hasPermission } from '@/lib/permissions';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 export default function Layout() {
   const location = useLocation();
