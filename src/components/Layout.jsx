@@ -147,13 +147,18 @@ export default function Layout() {
 
         {/* CENTER: Company Switcher */}
         <div className="flex items-center">
-          {hasMultipleCompanies ? (
+          {(hasMultipleCompanies || pendingInvitations?.length > 0) ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-white/10 transition-colors text-sm font-medium text-white">
+                <button className="relative flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-white/10 transition-colors text-sm font-medium text-white">
                   <Building2 className="h-4 w-4 text-white/60" />
                   {companyName || t('settings.tabs.company')}
                   <ChevronDown className="h-3 w-3 text-white/60" />
+                  {pendingInvitations?.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center leading-none">
+                      {pendingInvitations.length}
+                    </span>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-64">
@@ -172,6 +177,27 @@ export default function Layout() {
                     </DropdownMenuItem>
                   );
                 })}
+                {pendingInvitations?.length > 0 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="flex items-center gap-2">
+                      <Mail className="h-3.5 w-3.5" />
+                      {t('layout.invitations')}
+                    </DropdownMenuLabel>
+                    {pendingInvitations.map(inv => (
+                      <DropdownMenuItem
+                        key={inv.id}
+                        onClick={() => handleInviteClick(inv)}
+                        className="flex items-center justify-between cursor-pointer"
+                      >
+                        <span className="truncate">{inviteCompanyNames[inv.company_id] || t('common.loading')}</span>
+                        <span className="ml-2 shrink-0 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full">
+                          {t('layout.pending_invitation')}
+                        </span>
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
