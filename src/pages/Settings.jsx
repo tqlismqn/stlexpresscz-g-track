@@ -25,7 +25,7 @@ const LANGUAGES = [
 export default function Settings() {
   const { t } = useTranslation();
   const { currentUser, refreshUser } = useAuth();
-  const { permissions, isOwner, activeMembership, companyName, companyId } = useMembership();
+  const { isOwner, companyName, companyId } = useMembership();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [displayName, setDisplayName] = useState(currentUser?.display_name || currentUser?.full_name || '');
