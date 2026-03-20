@@ -444,8 +444,7 @@ export default function TeamTab() {
           <div className="space-y-3">
             {members.map(({ membership, user_full_name, user_email, role, isCurrentUser }) => {
               if (membership.is_platform_admin && !activeMembership?.is_platform_admin) return null;
-              return (
-              <div key={membership.id} className="flex items-center justify-between p-3 rounded-lg border">
+              return (<div key={membership.id} className="flex items-center justify-between p-3 rounded-lg border">
                 <div className="flex items-center gap-3">
                   {/* Avatar (initials) */}
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium">
@@ -472,8 +471,8 @@ export default function TeamTab() {
                     {role?.name || 'unknown'}
                   </Badge>
 
-                  {/* Actions dropdown — only visible to admins, not for self or owner */}
-                  {!isCurrentUser && !membership.is_owner && (
+                  {/* Actions dropdown — only visible to users with settings_team permission, not for self or owner */}
+                  {hasPermission(permissions, 'settings_team') && !isCurrentUser && !membership.is_owner && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
