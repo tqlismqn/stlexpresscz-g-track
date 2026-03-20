@@ -120,6 +120,12 @@
       "roleInUse": "Cannot delete — this role is assigned to team members",
       "savePermissions": "Save Permissions",
       "templateReadOnly": "Template role permissions cannot be modified",
+      "transferOwnership": "Transfer Ownership",
+      "transferOwnershipDesc": "Transfer company ownership to {{name}}?",
+      "transferOwnershipWarning": "You will lose owner privileges. You will remain as admin but will no longer be able to delete the company or transfer ownership.",
+      "confirmTransfer": "Transfer Ownership",
+      "transferSuccess": "Ownership transferred successfully",
+      "transferError": "Failed to transfer ownership",
       "module": {
         "dashboard": "Dashboard",
         "drivers": "Drivers",

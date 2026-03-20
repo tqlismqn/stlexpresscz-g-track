@@ -90,6 +90,7 @@ export default function TeamTab() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRoleId, setInviteRoleId] = useState('');
   const [saving, setSaving] = useState(false);
+  const [transferOwnershipDialog, setTransferOwnershipDialog] = useState({ open: false, member: null });
 
   // Roles management
   const [expandedRoles, setExpandedRoles] = useState({});
@@ -260,6 +261,26 @@ export default function TeamTab() {
     } catch (err) {
       console.error('Failed to send invite', err);
       toast.error(t('toasts.save_error'));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  // TRANSFER OWNERSHIP handler
+  async function handleTransferOwnership() {
+    const member = transferOwnershipDialog.member;
+    if (!member) return;
+    try {
+      setSaving(true);
+      await base44.entities.Membership.update(activeMembership.id, { is_owner: false });
+      await base44.entities.Membership.update(member.membership.id, { is_owner: true });
+      setTransferOwnershipDialog({ open: false, member: null });
+      toast.success(t('settings.team.transferSuccess'));
+      await loadTeamData();
+    } catch (err) {
+      console.error('Failed to transfer ownership', err);
+      toast.error(t('settings.team.transferError'));
+      setTransferOwnershipDialog({ open: false, member: null });
     } finally {
       setSaving(false);
     }
@@ -464,6 +485,15 @@ export default function TeamTab() {
                           <Trash2 className="h-4 w-4 mr-2" />
                           {t('settings.team.removeMember')}
                         </DropdownMenuItem>
+                        {activeMembership?.is_owner && role?.name?.toLowerCase() === 'admin' && !isCurrentUser && (
+                          <DropdownMenuItem
+                            className="text-amber-600"
+                            onClick={() => setTransferOwnershipDialog({ open: true, member: { membership, user_full_name, user_email, role } })}
+                          >
+                            <Crown className="h-4 w-4 mr-2" />
+                            {t('settings.team.transferOwnership')}
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   )}
@@ -675,6 +705,35 @@ export default function TeamTab() {
             <Button onClick={handleInvite} disabled={saving || !inviteEmail || !inviteRoleId}>
               <UserPlus className="h-4 w-4 mr-2" />
               {t('settings.team.sendInvite')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Transfer Ownership Dialog */}
+      <Dialog open={transferOwnershipDialog.open} onOpenChange={(open) => !open && setTransferOwnershipDialog({ open: false, member: null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-amber-500" />
+              {t('settings.team.transferOwnership')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('settings.team.transferOwnershipDesc', { name: transferOwnershipDialog.member?.user_full_name || '' })}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
+            {t('settings.team.transferOwnershipWarning')}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTransferOwnershipDialog({ open: false, member: null })}>{t('common.cancel')}</Button>
+            <Button
+              onClick={handleTransferOwnership}
+              disabled={saving}
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+            >
+              <Crown className="h-4 w-4 mr-2" />
+              {t('settings.team.confirmTransfer')}
             </Button>
           </DialogFooter>
         </DialogContent>

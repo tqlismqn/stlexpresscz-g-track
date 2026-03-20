@@ -120,6 +120,12 @@
       "roleInUse": "Nelze smazat — tato role je přiřazena členům",
       "savePermissions": "Uložit oprávnění",
       "templateReadOnly": "Oprávnění šablonových rolí nelze měnit",
+      "transferOwnership": "Převést vlastnictví",
+      "transferOwnershipDesc": "Převést vlastnictví společnosti na {{name}}?",
+      "transferOwnershipWarning": "Ztratíte oprávnění vlastníka. Zůstanete administrátorem, ale nebudete moci mazat společnost ani převádět vlastnictví.",
+      "confirmTransfer": "Převést vlastnictví",
+      "transferSuccess": "Vlastnictví úspěšně převedeno",
+      "transferError": "Chyba při převodu vlastnictví",
       "module": {
         "dashboard": "Panel",
         "drivers": "Řidiči",
