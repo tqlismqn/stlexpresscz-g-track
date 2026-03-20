@@ -15,11 +15,12 @@ import { Users, UserPlus, MoreVertical, Shield, ShieldCheck, Eye, Mail, Trash2, 
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Switch } from '@/components/ui/switch';
+import { hasPermission } from '@/lib/permissions';
 
 export default function TeamTab() {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
-  const { companyId, activeMembership } = useMembership();
+  const { companyId, activeMembership, permissions } = useMembership();
 
   // Permission modules grouped by category
   const PERMISSION_MODULES = [
