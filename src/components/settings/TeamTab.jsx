@@ -117,25 +117,17 @@ export default function TeamTab() {
       // 2. Fetch memberships for this company
       const memberships = await base44.entities.Membership.filter({ company_id: companyId, status: 'active' });
 
-      // 3. For each membership, fetch User and resolve Role name (sequential, NOT Promise.all)
-      const enrichedMembers = [];
-      for (const membership of memberships) {
-        try {
-          const user = await base44.entities.User.get(membership.user_id);
-          if (user.is_platform_admin) {
-            continue;
-          }
-          const role = roles.find(r => r.id === membership.role_id);
-          enrichedMembers.push({
-            membership,
-            user,
-            role,
-            isCurrentUser: membership.user_id === currentUser?.id,
-          });
-        } catch (err) {
-          console.error('Failed to fetch user for membership', membership.id, err);
-        }
-      }
+      // 3. Enrich memberships with denormalized user fields (no User.get() needed)
+      const enrichedMembers = memberships.map(membership => {
+        const role = roles.find(r => r.id === membership.role_id);
+        return {
+          membership,
+          user_full_name: membership.user_full_name,
+          user_email: membership.user_email,
+          role,
+          isCurrentUser: membership.user_id === currentUser?.id,
+        };
+      });
       setMembers(enrichedMembers);
 
       // 4. Fetch pending invitations
