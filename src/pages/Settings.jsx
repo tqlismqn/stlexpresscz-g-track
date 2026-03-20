@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { User, Building2, Users, CreditCard, Bell } from 'lucide-react';
 import TeamTab from '@/components/settings/TeamTab';
+import CompanySettingsTab from '@/components/settings/CompanySettingsTab';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
