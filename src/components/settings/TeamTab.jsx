@@ -510,6 +510,7 @@ export default function TeamTab() {
       </Card>
 
       {/* === SECTION 2: PENDING INVITATIONS === */}
+
       {pendingInvitations.length > 0 && (
         <Card>
           <CardHeader>
