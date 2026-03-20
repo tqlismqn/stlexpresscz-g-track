@@ -11,6 +11,9 @@ const Toaster = ({
     (<Sonner
       theme={theme}
       className="toaster group"
+      position="top-right"
+      duration={4000}
+      closeButton
       toastOptions={{
         classNames: {
           toast:
@@ -20,6 +23,8 @@ const Toaster = ({
             "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+          success: "border-l-4 border-l-green-500",
+          error: "border-l-4 border-l-red-500",
         },
       }}
       {...props} />)
