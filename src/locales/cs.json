@@ -53,7 +53,8 @@
     "invite_declined": "Pozvánka odmítnuta",
     "invite_error": "Chyba zpracování pozvánky",
     "accept": "Přijmout",
-    "decline": "Odmítnout"
+    "decline": "Odmítnout",
+    "unknown_inviter": "Neznámý"
   },
   "settings": {
     "title": "Nastavení",

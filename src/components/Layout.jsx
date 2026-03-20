@@ -64,10 +64,14 @@ export default function Layout() {
       let invitedByName = '';
       let invitedByEmail = '';
       if (invitation.invited_by) {
-        const inviterMemberships = await base44.entities.Membership.filter({ user_id: invitation.invited_by, company_id: invitation.company_id });
-        if (inviterMemberships?.length > 0) {
-          invitedByName = inviterMemberships[0].user_full_name || '';
-          invitedByEmail = inviterMemberships[0].user_email || '';
+        try {
+          const inviterMemberships = await base44.entities.Membership.filter({ user_id: invitation.invited_by, company_id: invitation.company_id });
+          if (inviterMemberships?.length > 0) {
+            invitedByName = inviterMemberships[0].user_full_name || '';
+            invitedByEmail = inviterMemberships[0].user_email || '';
+          }
+        } catch (e) {
+          invitedByName = t('layout.unknown_inviter');
         }
       }
       setInviteDetails({ companyName, roleName, invitedByName, invitedByEmail });

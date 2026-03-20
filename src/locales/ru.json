@@ -53,7 +53,8 @@
     "invite_declined": "Приглашение отклонено",
     "invite_error": "Ошибка обработки приглашения",
     "accept": "Принять",
-    "decline": "Отклонить"
+    "decline": "Отклонить",
+    "unknown_inviter": "Неизвестно"
   },
   "settings": {
     "title": "Настройки",

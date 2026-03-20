@@ -173,10 +173,10 @@ export function MembershipProvider({ children }) {
   }, [currentUser?.email]);
 
   const acceptInvitation = useCallback(async (invitation) => {
-    // Step 1: Temporarily switch user's company_id to bypass RLS for Company B
+    // Step 1: Switch user's company_id for RLS
     await base44.auth.updateMe({ company_id: invitation.company_id });
 
-    // Step 2: Now create Membership (RLS passes because user.company_id matches)
+    // Step 2: Create Membership
     const newMembership = await base44.entities.Membership.create({
       user_id: currentUser.id,
       company_id: invitation.company_id,
@@ -187,20 +187,52 @@ export function MembershipProvider({ children }) {
       user_email: currentUser.email,
     });
 
-    // Step 3: Update Invitation status (RLS now passes too)
+    // Step 3: Update Invitation status
     await base44.entities.Invitation.update(invitation.id, { status: 'accepted' });
 
-    // Step 4: Refresh memberships
+    // Step 4: Refresh memberships and update state
     const updatedMemberships = await base44.entities.Membership.filter({ user_id: currentUser.id });
     const activeMemberships = updatedMemberships.filter(m => m.status === 'active');
     setAllMemberships(activeMemberships);
+
+    // Step 5: Rebuild companiesMap including new company
+    const companyIds = [...new Set(activeMemberships.map(m => m.company_id))];
+    const newCompaniesMap = {};
+    for (const cid of companyIds) {
+      try {
+        const company = await base44.entities.Company.get(cid);
+        newCompaniesMap[cid] = company;
+      } catch (e) {
+        // skip
+      }
+    }
+    setCompaniesMap(newCompaniesMap);
+
+    // Step 6: Refresh invitations
     await refreshInvitations();
 
-    // Step 5: Switch to new company (also updates User.company_id permanently)
-    await switchCompany(newMembership.id);
+    // Step 7: Set active membership and update user directly (don't rely on switchCompany finding it in old state)
+    await base44.auth.updateMe({ company_id: invitation.company_id, last_active_membership_id: newMembership.id });
+    setActiveMembership(newMembership);
+
+    // Step 8: Fetch and set role/permissions for new membership
+    if (newMembership.role_id) {
+      try {
+        const roleData = await base44.entities.Role.get(newMembership.role_id);
+        setRole(roleData);
+        setPermissions(roleData.permissions || []);
+      } catch (e) {
+        // skip
+      }
+    }
+
+    // Step 9: Set company for new membership
+    if (newCompaniesMap[invitation.company_id]) {
+      setCompany(newCompaniesMap[invitation.company_id]);
+    }
 
     return newMembership;
-  }, [currentUser, refreshInvitations, switchCompany]);
+  }, [currentUser, refreshInvitations]);
 
   const declineInvitation = useCallback(async (invitation) => {
     await base44.entities.Invitation.update(invitation.id, { status: 'declined' });
