@@ -163,17 +163,17 @@ export default function CompanySettingsTab() {
             {/* Phone */}
             <div>
               <Label>{t('settings.company.phone')}</Label>
-              <Input className="mt-1" value={formData.phone} onChange={set('phone')} />
+              <Input className="mt-1" value={formData.phone} onChange={set('phone')} disabled={!canEdit} />
             </div>
             {/* Email */}
             <div>
               <Label>{t('settings.company.email')}</Label>
-              <Input className="mt-1" type="email" value={formData.email} onChange={set('email')} />
+              <Input className="mt-1" type="email" value={formData.email} onChange={set('email')} disabled={!canEdit} />
             </div>
             {/* Timezone */}
             <div>
               <Label>{t('settings.company.timezone')}</Label>
-              <Select value={formData.timezone} onValueChange={setSelect('timezone')}>
+              <Select value={formData.timezone} onValueChange={setSelect('timezone')} disabled={!canEdit}>
                 <SelectTrigger className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
@@ -187,7 +187,7 @@ export default function CompanySettingsTab() {
             {/* Language */}
             <div>
               <Label>{t('settings.company.language')}</Label>
-              <Select value={formData.language} onValueChange={setSelect('language')}>
+              <Select value={formData.language} onValueChange={setSelect('language')} disabled={!canEdit}>
                 <SelectTrigger className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
