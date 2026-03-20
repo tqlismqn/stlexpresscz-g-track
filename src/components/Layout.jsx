@@ -80,10 +80,10 @@ export default function Layout() {
     setInviteLoading(true);
     try {
       await acceptInvitation(inviteModal.invitation);
-      toast({ title: t('layout.invite_accepted') });
+      toast.success(t('layout.invite_accepted'));
       setInviteModal({ open: false, invitation: null });
     } catch (e) {
-      toast({ title: t('layout.invite_error'), variant: 'destructive' });
+      toast.error(t('layout.invite_error'));
     } finally {
       setInviteLoading(false);
     }
@@ -93,10 +93,10 @@ export default function Layout() {
     setInviteLoading(true);
     try {
       await declineInvitation(inviteModal.invitation);
-      toast({ title: t('layout.invite_declined') });
+      toast.success(t('layout.invite_declined'));
       setInviteModal({ open: false, invitation: null });
     } catch (e) {
-      toast({ title: t('layout.invite_error'), variant: 'destructive' });
+      toast.error(t('layout.invite_error'));
     } finally {
       setInviteLoading(false);
     }
