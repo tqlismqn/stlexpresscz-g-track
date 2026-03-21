@@ -275,8 +275,8 @@ export default function TeamTab() {
         });
         toast.success(t('settings.team.inviteSentWithEmail'));
       } catch (emailError) {
-        console.error('Email send failed:', emailError);
-        toast.success(t('settings.team.inviteSentNoEmail'));
+        console.error('Email send failed:', emailError, emailError?.message, emailError?.response);
+        toast.error(t('settings.team.inviteSentNoEmail'));
       }
     } catch (err) {
       console.error('Failed to send invite', err);
@@ -549,7 +549,7 @@ export default function TeamTab() {
                       <div>
                         <div className="font-medium">{invitation.email}</div>
                         <div className="text-sm text-muted-foreground">
-                          {t('settings.team.expires')}: {new Date(invitation.expires_at).toLocaleDateString()}
+                          {t('settings.team.expires')}: {new Date(invitation.expires_at).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                         </div>
                       </div>
                     </div>
