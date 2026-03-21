@@ -140,6 +140,8 @@
       "confirmTransfer": "Transfer Ownership",
       "transferSuccess": "Ownership transferred successfully",
       "transferError": "Failed to transfer ownership",
+      "inviteSentWithEmail": "Invitation sent and email delivered",
+      "inviteSentNoEmail": "Invitation created, but email could not be sent",
       "module": {
         "dashboard": "Dashboard",
         "drivers": "Drivers",

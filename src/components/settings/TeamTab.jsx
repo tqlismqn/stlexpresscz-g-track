@@ -20,7 +20,7 @@ import { hasPermission } from '@/lib/permissions';
 export default function TeamTab() {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
-  const { companyId, activeMembership, permissions } = useMembership();
+  const { companyId, companyName, activeMembership, permissions } = useMembership();
 
   // Permission modules grouped by category
   const PERMISSION_MODULES = [
@@ -268,7 +268,7 @@ export default function TeamTab() {
       try {
         await base44.functions.invoke('sendInvitationEmail', {
           email: emailInvite,
-          companyName: activeMembership?.company_id || companyId,
+          companyName: companyName || companyId,
           roleName: selectedRole?.name || '',
           inviterName: currentUser?.full_name || activeMembership?.user_full_name || '',
           inviterEmail: currentUser?.email || activeMembership?.user_email || '',

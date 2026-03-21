@@ -140,6 +140,8 @@
       "confirmTransfer": "Передать владение",
       "transferSuccess": "Владение успешно передано",
       "transferError": "Ошибка передачи владения",
+      "inviteSentWithEmail": "Приглашение отправлено, email доставлен",
+      "inviteSentNoEmail": "Приглашение создано, но email не удалось отправить",
       "module": {
         "dashboard": "Панель",
         "drivers": "Водители",

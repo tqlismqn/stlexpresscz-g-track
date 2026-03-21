@@ -140,6 +140,8 @@
       "confirmTransfer": "Převést vlastnictví",
       "transferSuccess": "Vlastnictví úspěšně převedeno",
       "transferError": "Chyba při převodu vlastnictví",
+      "inviteSentWithEmail": "Pozvánka odeslána, email doručen",
+      "inviteSentNoEmail": "Pozvánka vytvořena, ale email se nepodařilo odeslat",
       "module": {
         "dashboard": "Panel",
         "drivers": "Řidiči",
