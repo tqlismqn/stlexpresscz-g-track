@@ -258,10 +258,26 @@ export default function TeamTab() {
       });
 
       setInviteDialog(false);
+      const emailInvite = inviteEmail;
       setInviteEmail('');
       setInviteRoleId('');
-      toast.success(t('settings.team.inviteSent'));
       await loadTeamData();
+
+      // Send invitation email (non-blocking — invitation is already created)
+      const selectedRole = allRoles.find(r => r.id === inviteRoleId);
+      try {
+        await base44.functions.invoke('sendInvitationEmail', {
+          email: emailInvite,
+          companyName: activeMembership?.company_id || companyId,
+          roleName: selectedRole?.name || '',
+          inviterName: currentUser?.full_name || activeMembership?.user_full_name || '',
+          inviterEmail: currentUser?.email || activeMembership?.user_email || '',
+        });
+        toast.success(t('settings.team.inviteSentWithEmail'));
+      } catch (emailError) {
+        console.error('Email send failed:', emailError);
+        toast.success(t('settings.team.inviteSentNoEmail'));
+      }
     } catch (err) {
       console.error('Failed to send invite', err);
       toast.error(t('toasts.save_error'));
