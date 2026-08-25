@@ -1,0 +1,48 @@
+{
+  "name": "Role",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Role name (e.g., Administrator, HR Manager, Viewer)"
+    },
+    "is_template": {
+      "type": "boolean",
+      "default": false,
+      "description": "True for built-in template roles shared across all tenants, false for custom roles"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Array of permission IDs (e.g., ['dashboard_view', 'drivers_view', 'driver_create'])"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Null for template roles, company ID for custom roles"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "data.is_platform_admin": "true"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "data.is_platform_admin": "true"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "data.is_platform_admin": "true"
+      }
+    }
+  }
+}

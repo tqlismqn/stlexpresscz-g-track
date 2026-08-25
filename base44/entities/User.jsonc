@@ -1,0 +1,47 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The role of the user in the app",
+      "enum": [
+        "admin",
+        "user"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "description": "Preferred UI language",
+      "enum": [
+        "en",
+        "ru",
+        "cs"
+      ],
+      "default": "ru"
+    },
+    "display_name": {
+      "type": "string",
+      "title": "Display Name",
+      "description": "User's display name shown throughout the app"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone",
+      "description": "User's phone number"
+    },
+    "company_id": {
+      "type": "string",
+      "title": "Company ID",
+      "description": "ID of the company this user belongs to"
+    },
+    "is_platform_admin": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user is a platform-wide administrator (G-Track staff, invisible to client teams)"
+    }
+  },
+  "required": [
+    "role"
+  ]
+}

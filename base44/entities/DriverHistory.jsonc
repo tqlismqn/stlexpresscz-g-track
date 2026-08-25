@@ -1,0 +1,115 @@
+{
+  "name": "DriverHistory",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "driver_id": {
+      "type": "string",
+      "description": "Driver ID"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "ID of the company that owns this history record"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "created",
+        "updated",
+        "status_changed",
+        "archived",
+        "restored",
+        "comment_added"
+      ],
+      "description": "Action type"
+    },
+    "field_name": {
+      "type": "string",
+      "description": "Field name that was changed (nullable)"
+    },
+    "old_value": {
+      "type": "string",
+      "description": "Previous value (nullable)"
+    },
+    "new_value": {
+      "type": "string",
+      "description": "New value (nullable)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description"
+    },
+    "changed_by": {
+      "type": "string",
+      "default": "Admin",
+      "description": "User who made the change"
+    }
+  },
+  "required": [
+    "driver_id",
+    "action",
+    "description"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    }
+  }
+}

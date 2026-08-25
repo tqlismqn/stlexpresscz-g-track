@@ -1,0 +1,136 @@
+{
+  "name": "Company",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Company name"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Unique company identifier"
+    },
+    "settings": {
+      "type": "object",
+      "description": "Company settings",
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "date_format": {
+          "type": "string"
+        }
+      }
+    },
+    "legal_name": {
+      "type": "string",
+      "description": "\u042e\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043a\u043e\u0435 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435"
+    },
+    "vat_number": {
+      "type": "string",
+      "description": "\u0418\u041d\u041d/VAT \u043d\u043e\u043c\u0435\u0440"
+    },
+    "registration_number": {
+      "type": "string",
+      "description": "\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u043e\u043d\u043d\u044b\u0439 \u043d\u043e\u043c\u0435\u0440 / I\u010cO"
+    },
+    "address": {
+      "type": "string",
+      "description": "\u0410\u0434\u0440\u0435\u0441"
+    },
+    "city": {
+      "type": "string",
+      "description": "\u0413\u043e\u0440\u043e\u0434"
+    },
+    "country": {
+      "type": "string",
+      "description": "\u0421\u0442\u0440\u0430\u043d\u0430"
+    },
+    "phone": {
+      "type": "string",
+      "description": "\u0422\u0435\u043b\u0435\u0444\u043e\u043d"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "URL \u043b\u043e\u0433\u043e\u0442\u0438\u043f\u0430 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0438"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "Europe/Prague",
+      "description": "\u0427\u0430\u0441\u043e\u0432\u043e\u0439 \u043f\u043e\u044f\u0441"
+    },
+    "language": {
+      "type": "string",
+      "default": "cs",
+      "description": "\u041e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u044f\u0437\u044b\u043a"
+    },
+    "subscription_tier": {
+      "type": "string",
+      "enum": [
+        "free_trial",
+        "starter",
+        "professional",
+        "enterprise"
+      ],
+      "default": "free_trial",
+      "description": "\u0422\u0430\u0440\u0438\u0444\u043d\u044b\u0439 \u043f\u043b\u0430\u043d"
+    },
+    "subscription_expires_at": {
+      "type": "string",
+      "format": "date",
+      "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u041a\u043e\u043c\u043f\u0430\u043d\u0438\u044f \u0430\u043a\u0442\u0438\u0432\u043d\u0430"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending_deletion",
+        "suspended"
+      ],
+      "default": "active",
+      "description": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0438"
+    },
+    "deletion_scheduled_at": {
+      "type": "string",
+      "description": "\u0414\u0430\u0442\u0430 \u0437\u0430\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u043e\u0433\u043e \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u044f"
+    }
+  },
+  "required": [
+    "name",
+    "slug"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "data.is_platform_admin": "true"
+      }
+    },
+    "update": {
+      "$or": [
+        {
+          "id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "data.is_platform_admin": "true"
+      }
+    }
+  }
+}

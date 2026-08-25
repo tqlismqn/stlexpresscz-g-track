@@ -1,0 +1,78 @@
+{
+  "name": "DriverComment",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "driver_id": {
+      "type": "string",
+      "description": "Driver ID"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "ID of the company that owns this comment"
+    },
+    "text": {
+      "type": "string",
+      "description": "Comment text"
+    },
+    "author": {
+      "type": "string",
+      "default": "Admin",
+      "description": "Comment author"
+    }
+  },
+  "required": [
+    "driver_id",
+    "text"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.company_id": "true"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    }
+  }
+}

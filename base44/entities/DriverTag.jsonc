@@ -1,0 +1,107 @@
+{
+  "name": "DriverTag",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "tag_id": {
+      "type": "string",
+      "description": "Unique identifier (e.g., 'on_leave', 'fired', 'no_show')"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "ID of the company that owns this tag"
+    },
+    "label_key": {
+      "type": "string",
+      "description": "i18n key for the tag label (e.g., 'tags.on_leave')"
+    },
+    "color": {
+      "type": "string",
+      "description": "Tailwind CSS classes for styling (e.g., 'bg-teal-100 text-teal-800')"
+    },
+    "allowed_statuses": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "candidate",
+          "active",
+          "archived"
+        ]
+      },
+      "description": "Which driver statuses can have this tag"
+    },
+    "sort_order": {
+      "type": "integer",
+      "description": "Display order in tag lists"
+    }
+  },
+  "required": [
+    "tag_id",
+    "label_key",
+    "color",
+    "allowed_statuses"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    }
+  }
+}

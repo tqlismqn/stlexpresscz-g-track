@@ -1,0 +1,156 @@
+{
+  "name": "DriverDocument",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "driver_id": {
+      "type": "string",
+      "description": "Driver ID"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "ID of the company that owns this document"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "work_contract",
+        "transport_licence",
+        "a1_certificate",
+        "declaration",
+        "insurance",
+        "travel_insurance",
+        "visa",
+        "passport",
+        "driver_license",
+        "medical_certificate",
+        "psihotest",
+        "adr_certificate",
+        "chip_card",
+        "code95"
+      ]
+    },
+    "issue_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "document_number": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "valid",
+        "expiring",
+        "expired",
+        "missing",
+        "pending_renewal"
+      ],
+      "description": "Document status computed based on expiry_date"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "a1_switzerland": {
+      "type": "boolean",
+      "default": false,
+      "description": "Indicates if A1 certificate covers Switzerland (CH)"
+    },
+    "visa_type": {
+      "type": "string",
+      "enum": [
+        "vizum",
+        "povoleni_k_pobytu",
+        "docasna_ochrana",
+        "zamestnanecka_karta",
+        "modra_karta",
+        "dlouhodoby_pobyt",
+        "trvaly_pobyt",
+        "vizum_strpeni",
+        "other"
+      ],
+      "description": "Visa subtype, only used when document_type is visa"
+    },
+    "return_status": {
+      "type": "string",
+      "enum": [
+        "pending_return",
+        "returned"
+      ],
+      "description": "Tracks whether a physical document has been returned. Used for transport_licence."
+    }
+  },
+  "required": [
+    "driver_id",
+    "document_type"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    }
+  }
+}

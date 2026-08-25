@@ -1,0 +1,104 @@
+{
+  "name": "Invitation",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Email address of the invited user"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Company ID the user is invited to"
+    },
+    "role_id": {
+      "type": "string",
+      "description": "Role ID to assign on acceptance"
+    },
+    "invited_by": {
+      "type": "string",
+      "description": "User ID of the person who sent the invitation"
+    },
+    "invited_by_name": {
+      "type": "string",
+      "description": "Inviter's display name, copied at invitation time"
+    },
+    "invited_by_email": {
+      "type": "string",
+      "description": "Inviter's email, copied at invitation time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "expired"
+      ],
+      "default": "pending",
+      "description": "Invitation status"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO datetime when the invitation expires (typically 7 days from creation)"
+    }
+  },
+  "required": [
+    "email",
+    "company_id",
+    "role_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "data.email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "name": "Driver",
+  "type": "object",
+  "visibility": "Authenticated",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Full name"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Company ID"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "active",
+        "archived"
+      ],
+      "default": "candidate"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Array of DriverTag record IDs assigned to this driver"
+    },
+    "archive_reason_tag_id": {
+      "type": "string",
+      "description": "ID of the DriverTag that represents the archiving reason (fired, resigned, no_show). Required when status is archived."
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date"
+    },
+    "nationality_group": {
+      "type": "string",
+      "enum": [
+        "EU",
+        "non-EU"
+      ]
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO country code (e.g. MD, UA, RO)"
+    },
+    "visa_type": {
+      "type": "string",
+      "enum": [
+        "povoleni_k_pobytu",
+        "vizum",
+        "docasna_ochrana",
+        "trvaly_pobyt",
+        "vizum_strpeni",
+        "other"
+      ]
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "passport_number": {
+      "type": "string"
+    },
+    "driving_license_number": {
+      "type": "string"
+    },
+    "rodne_cislo": {
+      "type": "string",
+      "description": "Czech tax ID, only for non-EU"
+    },
+    "address": {
+      "type": "string"
+    },
+    "misto_vykonu_prace": {
+      "type": "string",
+      "enum": [
+        "praha",
+        "kladno"
+      ]
+    },
+    "pas_souhlas": {
+      "type": "boolean",
+      "default": false
+    },
+    "bank_name": {
+      "type": "string"
+    },
+    "bank_account": {
+      "type": "string"
+    },
+    "fired_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "fired_reason": {
+      "type": "string"
+    },
+    "trip_readiness_pct": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Computed field: percentage of required documents with valid/expiring/pending_renewal status"
+    },
+    "internal_number": {
+      "type": "integer",
+      "description": "Sequential internal driver number (DRV-001, DRV-002, ...)"
+    }
+  },
+  "required": [
+    "name",
+    "company_id",
+    "nationality_group"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "data.company_id": "{{user.data.company_id}}"
+        },
+        {
+          "user_condition": {
+            "data.is_platform_admin": "true"
+          }
+        }
+      ]
+    }
+  }
+}
